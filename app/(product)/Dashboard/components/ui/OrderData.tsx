@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 
 interface OrderDataProps {
   tokenSymbol: string;
+  chainId?: number;
 }
 
 interface OrderData {
@@ -25,45 +26,49 @@ const VALID_TRADING_PAIRS = [
   'TRXUSDT', 'ETCUSDT', 'XLMUSDT', 'HBARUSDT', 'THETAUSDT', 'XTZUSDT', 'EOSUSDT'
 ];
 
-export default function OrderData({ tokenSymbol }: OrderDataProps) {
+export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) {
   const [orderData, setOrderData] = useState<OrderData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [tokenInfo, setTokenInfo] = useState<any>(null);
+  const [tokenError, setTokenError] = useState<string | null>(null);
+
+  useEffect(() => {
+    setTokenInfo(null);
+    setTokenError(null);
+    fetch(`/api/token-metadata?symbols=${tokenSymbol}&chainId=${chainId}`)
+      .then(res => res.json())
+      .then(tokens => setTokenInfo(tokens[0]))
+      .catch(() => setTokenError('Failed to load token info'));
+  }, [tokenSymbol, chainId]);
 
   useEffect(() => {
     const fetchOrderData = async () => {
       setIsLoading(true);
       setError(null);
-      
+      setOrderData(null);
       try {
-        const symbol = `${tokenSymbol.toUpperCase()}USDT`;
-        
+        if (!tokenInfo) return;
+        const symbol = `${tokenInfo.symbol.toUpperCase()}USDT`;
         // Check if the trading pair is valid
         if (!VALID_TRADING_PAIRS.includes(symbol)) {
-          throw new Error(`${tokenSymbol.toUpperCase()}/USDT trading pair not available on Binance`);
+          throw new Error(`${tokenInfo.symbol.toUpperCase()}/USDT trading pair not available on Binance`);
         }
-
         const response = await fetch(`https://api.binance.com/api/v3/trades?symbol=${symbol}&limit=1000`);
-        
         if (response.status === 400) {
-          throw new Error(`${tokenSymbol.toUpperCase()}/USDT trading pair not found on Binance`);
+          throw new Error(`${tokenInfo.symbol.toUpperCase()}/USDT trading pair not found on Binance`);
         }
-        
         if (!response.ok) {
           throw new Error(`Failed to fetch trade history: ${response.status} ${response.statusText}`);
         }
-        
         const trades = await response.json();
-
         if (!Array.isArray(trades) || trades.length === 0) {
           throw new Error('No trade data available for this pair');
         }
-
         let buys = 0;
         let sells = 0;
         let buyVolume = 0;
         let sellVolume = 0;
-
         trades.forEach((trade: { isBuyerMaker: boolean; qty: string }) => {
           if (trade.isBuyerMaker) {
             sells++;
@@ -73,11 +78,9 @@ export default function OrderData({ tokenSymbol }: OrderDataProps) {
             buyVolume += parseFloat(trade.qty);
           }
         });
-
         // Approximate buyers and sellers with buys and sells due to lack of unique participant data
         const buyers = buys;
         const sellers = sells;
-
         setOrderData({ buys, sells, buyVolume, sellVolume, buyers, sellers });
       } catch (err) {
         setError((err as Error).message);
@@ -85,15 +88,13 @@ export default function OrderData({ tokenSymbol }: OrderDataProps) {
         setIsLoading(false);
       }
     };
-
-    fetchOrderData();
-  }, [tokenSymbol]);
+    if (tokenInfo) fetchOrderData();
+  }, [tokenInfo]);
 
   const renderSection = (label1: string, label2: string, value1: number, value2: number) => {
     const total = value1 + value2 || 1; // Avoid division by zero
     const width1 = (value1 / total) * 100;
     const width2 = (value2 / total) * 100;
-
     return (
       <>
       <Card className="h-fit gap-2 mx-4 px-0 py-3 border-none dark:bg-zinc-900/80 bg-zinc-100 shadow-none">
@@ -115,6 +116,56 @@ export default function OrderData({ tokenSymbol }: OrderDataProps) {
       </>
     );
   };
+
+  if (!tokenInfo && !tokenError) {
+    return (
+      <Card className="h-full w-full rounded-none bg-transparent flex flex-col gap-2">
+        <CardTitle className="px-5">
+          <div className="flex flex-row gap-5">
+            <Skeleton className="h-6 w-6 rounded-full" />
+            <Skeleton className="h-4 w-24" />
+          </div>
+        </CardTitle>
+        {[1, 2, 3].map((i) => (
+          <div key={i}>
+            <CardDescription className="flex justify-between px-5">
+              <Skeleton className="h-4 w-16" />
+              <Skeleton className="h-4 w-16" />
+            </CardDescription>
+            <CardDescription className="flex justify-between px-5">
+              <Skeleton className="h-4 w-12" />
+              <Skeleton className="h-4 w-12" />
+            </CardDescription>
+            <CardContent className="flex flex-row gap-1 p-0">
+              <Skeleton className="h-4 w-full bg-emerald-600 rounded-sm" />
+              <Skeleton className="h-4 w-full bg-rose-600 rounded-sm" />
+            </CardContent>
+          </div>
+        ))}
+      </Card>
+    );
+  }
+
+  if (tokenError) {
+    return (
+      <Card className="h-full w-full rounded-none bg-transparent flex flex-col gap-3">
+        <CardTitle className="px-5">
+          <div className="flex flex-row gap-3 items-center mb-3">
+            <div className="h-6 w-6 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+              <span className="text-[#0E76FD] text-[8px] font-bold">
+                <Scale width={17} height={17} />
+              </span>
+            </div>
+            <h1 className="dark:text-white text-black font-semibold text-md sm:text-md">Strength Index</h1>
+          </div>
+        </CardTitle>
+        <div className="px-5 flex flex-col gap-2">
+          <h2 className="text-red-500 font-medium text-sm">Unable to load order data</h2>
+          <p className="text-zinc-500 text-xs">{tokenError}</p>
+        </div>
+      </Card>
+    );
+  }
 
   if (isLoading) {
     return (

@@ -67,7 +67,7 @@ export default function Page() {
 
                   <div className="justify-start items-start flex lg:flex-row md:flex-col sm:flex-col gap-1 w-full h-full overflow-hidden">
 
-                    <div className="lg:max-w-[350px] md:w-[350px] bg-transparent overflow-clip h-full">
+                    <div className="lg:max-w-[400px] md:w-[400px] bg-transparent overflow-clip h-full">
                       <div className="h-full w-full bg-transparent">
                         <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip" type="auto">
                           <ScrollArea.Viewport className="w-full overflow-clip h-[1392px] flex lg:flex-col md:flex-row sm:flex-row px-1  ">

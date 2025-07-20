@@ -2,9 +2,9 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from "@/components/ui/skeleton";
-import { COINGECKO_IDS } from "@/src/constants";
 import { PercentDiamond } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useEffect, useState } from 'react';
 
 interface MarketStatsProps {
   tokenSymbol: string;
@@ -22,37 +22,44 @@ interface MarketData {
   circulatingSupplyChange: number;
 }
 
-// Fetch function for market data
-const fetchMarketData = async (tokenSymbol: string): Promise<MarketData> => {
-      const coingeckoId = COINGECKO_IDS[tokenSymbol.toLowerCase()];
-      if (!coingeckoId) {
-    throw new Error('Token not supported');
-      }
+export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsProps) {
+  const [tokenInfo, setTokenInfo] = useState<any>(null);
+  const [tokenError, setTokenError] = useState<string | null>(null);
 
-        const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
-        const headers: HeadersInit = {};
-        if (apiKey) headers["x-cg-demo-api-key"] = apiKey;
+  useEffect(() => {
+    setTokenInfo(null);
+    setTokenError(null);
+    fetch(`/api/token-metadata?symbols=${tokenSymbol}&chainId=${chainId}`)
+      .then(res => res.json())
+      .then(tokens => setTokenInfo(tokens[0]))
+      .catch(() => setTokenError('Failed to load token info'));
+  }, [tokenSymbol, chainId]);
 
-        const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coingeckoId}`, { headers });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch market data: ${res.status} ${res.statusText}`);
-  }
+  const coingeckoId = tokenInfo?.coingeckoId;
 
-        const data = await res.json();
-  
-  return {
-          volume24h: data.market_data.total_volume.usd,
-          volume24hChange: data.market_data.price_change_percentage_24h,
-          marketCap: data.market_data.market_cap.usd,
-          marketCapChange: data.market_data.market_cap_change_percentage_24h,
-          fdv: data.market_data.current_price.usd * data.market_data.total_supply,
-          fdvChange: data.market_data.price_change_percentage_24h,
-          circulatingSupply: data.market_data.circulating_supply,
-          circulatingSupplyChange: data.market_data.circulating_supply_change_24h || 0
+  // Fetch function for market data
+  const fetchMarketData = async (): Promise<MarketData> => {
+    if (!coingeckoId) throw new Error('Token not supported');
+    const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
+    const headers: HeadersInit = {};
+    if (apiKey) headers["x-cg-demo-api-key"] = apiKey;
+    const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coingeckoId}`, { headers });
+    if (!res.ok) {
+      throw new Error(`Failed to fetch market data: ${res.status} ${res.statusText}`);
+    }
+    const data = await res.json();
+    return {
+      volume24h: data.market_data.total_volume.usd,
+      volume24hChange: data.market_data.price_change_percentage_24h,
+      marketCap: data.market_data.market_cap.usd,
+      marketCapChange: data.market_data.market_cap_change_percentage_24h,
+      fdv: data.market_data.current_price.usd * data.market_data.total_supply,
+      fdvChange: data.market_data.price_change_percentage_24h,
+      circulatingSupply: data.market_data.circulating_supply,
+      circulatingSupplyChange: data.market_data.circulating_supply_change_24h || 0
+    };
   };
-}
 
-export default function MarketStats({ tokenSymbol }: MarketStatsProps) {
   const {
     data: marketData,
     isLoading,
@@ -60,14 +67,68 @@ export default function MarketStats({ tokenSymbol }: MarketStatsProps) {
     refetch,
     isError
   } = useQuery({
-    queryKey: ['marketStats', tokenSymbol.toLowerCase()],
-    queryFn: () => fetchMarketData(tokenSymbol),
+    queryKey: ['marketStats', coingeckoId],
+    queryFn: fetchMarketData,
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes (formerly cacheTime)
     retry: 3,
     retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    enabled: !!tokenSymbol,
+    enabled: !!coingeckoId,
   });
+
+  if (!tokenInfo && !tokenError) {
+    return (
+      <div className="grid grid-rows-2 gap-2 p-4 w-full bg-transparent rounded-2xl">
+        <div className="w-full flex justify-between items-center">
+          <Skeleton className="h-6 w-40" />
+        </div>
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-2">
+          {[...Array(4)].map((_, i) => (
+            <Skeleton key={i} className="h-20 w-full rounded-2xl" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (tokenError) {
+    return (
+      <div className="p-4 w-full dark:bg-zinc-950 bg-white rounded gap-5 h-fit">
+        <div className='grid grid-col-2 gap-3 w-full'>
+          <div className='grid grid-cols-2 gap-3 w-full'>
+            <div className='gap-2 flex flex-col'>
+              <Skeleton className='w-full  rounded-3xl h-6'/>
+              <Skeleton className='w-full  rounded-3xl h-8'/>
+            </div>
+            <div className='gap-2 flex flex-col'>
+              <Skeleton className='w-full  rounded-3xl h-6'/>
+              <Skeleton className='w-full  rounded-3xl h-8'/>
+            </div>
+            <div className='gap-2 flex flex-col'>
+              <Skeleton className='w-full  rounded-3xl h-6'/>
+              <Skeleton className='w-full  rounded-3xl h-8'/>
+            </div>
+            <div className='gap-2 flex flex-col'>
+              <Skeleton className='w-full  rounded-3xl h-6'/>
+              <Skeleton className='w-full  rounded-3xl h-8'/>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-col gap-2">
+          <h1 className="text-red-500 font-medium text-sm">Error loading token info</h1>
+          <p className="text-zinc-500 text-xs">{tokenError}</p>
+          <Button 
+            onClick={() => window.location.reload()} 
+            size="sm" 
+            variant="outline"
+            className="w-fit"
+          >
+            Retry
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   if (isLoading) {
     return (
