@@ -9,6 +9,13 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "Content-Type",
 };
 
+function getTradingViewSymbol(token: any) {
+  // Fallback: use COINBASE:{symbol}USD for mainnet, else just {symbol}USD
+  if (token.tradingViewSymbol) return token.tradingViewSymbol;
+  if (token.chainId === 1) return `COINBASE:${token.symbol.toUpperCase()}USD`;
+  return `${token.symbol.toUpperCase()}USD`;
+}
+
 export async function OPTIONS() {
   return new Response(null, { status: 200, headers: corsHeaders });
 }
@@ -24,7 +31,9 @@ export async function GET(request: NextRequest) {
     if (chainId) where.chainId = Number(chainId);
     if (symbol) where.symbol = symbol;
     if (address) where.address = address.toLowerCase();
-    const tokens = await prisma.token.findMany({ where });
+    let tokens = await prisma.token.findMany({ where });
+    // Add tradingViewSymbol to each token
+    tokens = tokens.map(token => ({ ...token, tradingViewSymbol: getTradingViewSymbol(token) }));
     return new Response(JSON.stringify(tokens), {
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });

@@ -1,22 +1,23 @@
 import React, { useEffect, useRef } from 'react';
-import { getTradingViewSymbol } from '@/src/constants';
 import { useTheme } from '@/context/ThemeContext';
 
 interface TradingViewLiveChartProps {
   tokenSymbol: string;
+  tradingViewSymbol?: string;
   theme?: 'light' | 'dark';
   interval?: string;
 }
 
 const LiveChart = ({ 
   tokenSymbol,
+  tradingViewSymbol,
   interval = "60",
   theme: propTheme
 }: TradingViewLiveChartProps) => {
   const { resolvedTheme } = useTheme();
   const containerRef = useRef<HTMLDivElement>(null);
-  const tradingViewSymbol = getTradingViewSymbol(tokenSymbol);
-  
+  // Use tradingViewSymbol prop if provided, else fallback to tokenSymbol
+  const symbol = tradingViewSymbol || tokenSymbol;
   // Use propTheme if provided, otherwise use resolvedTheme from context
   const theme = propTheme || resolvedTheme;
 
@@ -34,7 +35,7 @@ const LiveChart = ({
       script.type = 'text/javascript';
       script.innerHTML = JSON.stringify({
         autosize: true,
-        symbol: tradingViewSymbol,
+        symbol,
         hide_side_toolbar: false,
         interval,
         timezone: "Etc/UTC",
@@ -55,7 +56,7 @@ const LiveChart = ({
         containerRef.current.innerHTML = '';
       }
     };
-  }, [tradingViewSymbol, interval, theme]);
+  }, [symbol, interval, theme]);
   
   return (
     <div 

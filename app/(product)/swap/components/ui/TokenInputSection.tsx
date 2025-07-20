@@ -13,6 +13,8 @@ interface TokenInputSectionProps {
   onTokenChange: (token: string) => void
   onAmountChange: (amount: string) => void;
   disabled?: boolean;
+  tokens?: any[]; // Accept dynamic tokens
+  tokenMap?: Record<string, any>; // Accept dynamic token map
 }
 
 
@@ -24,7 +26,9 @@ export const TokenInputSection = ({
   chainId,
   onTokenChange,
   onAmountChange,
-  disabled = false
+  disabled = false,
+  tokens,
+  tokenMap
 }: TokenInputSectionProps) => {
 
   const [fromToken, setFromToken] = useState("")
@@ -34,7 +38,7 @@ export const TokenInputSection = ({
 
 
   
-  const tokenInfo = token ? MAINNET_TOKENS_BY_SYMBOL[token.toLowerCase()] : null;
+  const tokenInfo = tokenMap && token ? tokenMap[token.toLowerCase()] : (token ? MAINNET_TOKENS_BY_SYMBOL[token.toLowerCase()] : null);
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const sanitizeDecimalPlaces = (value: string, decimals: number): string => {
       const [integerPart, decimalPart] = value.split('.');

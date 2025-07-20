@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { 
   Dialog,
   DialogTrigger,
@@ -18,13 +18,34 @@ interface TokenPickerProps {
   value: string;
   onValueChange: (value: string) => void;
   label?: string;
+  tokens?: any[]; // Accept dynamic tokens
+  chainId?: number; // Accept chainId for fetching tokens
 }
 
-export function TokenPicker({ value, onValueChange }: TokenPickerProps) {
+export function TokenPicker({ value, onValueChange, tokens, label, chainId }: TokenPickerProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+  const [fetchedTokens, setFetchedTokens] = useState<any[]>([]);
 
-  const filteredTokens = MAINNET_TOKENS.filter(token =>
+  // Fetch tokens if not provided
+  useEffect(() => {
+    if (!tokens && chainId) {
+      fetch(`/api/tokens?chainId=${chainId}`)
+        .then(res => res.json())
+        .then(setFetchedTokens)
+        .catch(() => setFetchedTokens([]));
+    }
+  }, [tokens, chainId]);
+
+  // Use dynamic tokens if provided, else fallback to fetched, else constants
+  const tokenList = tokens && tokens.length > 0
+    ? tokens
+    : (fetchedTokens.length > 0 ? fetchedTokens : MAINNET_TOKENS);
+  const tokenMap = tokenList.length > 0
+    ? Object.fromEntries(tokenList.map(t => [t.symbol.toLowerCase(), t]))
+    : MAINNET_TOKENS_BY_SYMBOL;
+
+  const filteredTokens = tokenList.filter(token =>
     token.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
     token.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
@@ -40,15 +61,15 @@ export function TokenPicker({ value, onValueChange }: TokenPickerProps) {
           {value ? (
             <>
               <Avatar className="h-6 w-6">
-              <AvatarImage src={MAINNET_TOKENS_BY_SYMBOL[value]?.logoURL} />
-            </Avatar>
-            <span className="font-medium text-xs text-black dark:text-white">{value.toUpperCase()}</span>
-          </>
-        ) : (
-          "Select Token"
-        )}
-        <ChevronDown size={25} color="grey" strokeWidth={2}  className="" />
-      </Button>
+                <AvatarImage src={tokenMap[value]?.logoURL} />
+              </Avatar>
+              <span className="font-medium text-xs text-black dark:text-white">{value.toUpperCase()}</span>
+            </>
+          ) : (
+            "Select Token"
+          )}
+          <ChevronDown size={25} color="grey" strokeWidth={2}  className="" />
+        </Button>
       </DialogTrigger>
 
       {open && (

@@ -113,6 +113,10 @@ export default function PriceView({
     return MAINNET_TOKENS_BY_SYMBOL;
   };
 
+  // Construct token list and map for the picker/input
+  const tokenList = dbTokens.filter(t => t.chainId === chainId);
+  const tokenMap = tokensByChain(chainId);
+
   const sellTokenObject = tokensByChain(chainId)[fromToken];
   const buyTokenObject = tokensByChain(chainId)[toToken];
 
@@ -261,6 +265,8 @@ export default function PriceView({
                 setTradeDirection("sell");
                 setSellAmount(sanitizedValue)
               }}
+              tokens={tokenList}
+              tokenMap={tokenMap}
             />
           </section>
 
@@ -316,6 +322,8 @@ export default function PriceView({
                 setBuyAmount(sanitizedValue);
               }}
               disabled
+              tokens={tokenList}
+              tokenMap={tokenMap}
             />
           </section>
           </div>

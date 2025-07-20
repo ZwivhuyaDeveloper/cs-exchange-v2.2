@@ -6,10 +6,6 @@ import {
   CardContent,
   CardHeader,
 } from "@/components/ui/card";
-import { 
-  COINGECKO_IDS,
-  MAINNET_TOKENS_BY_SYMBOL
-} from "@/src/constants";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { Separator } from "@radix-ui/react-separator";
@@ -37,13 +33,28 @@ export function TradingChart({
   const [showBuyChart, setShowBuyChart] = useState(true);
   const [marketData, setMarketData] = useState<TokenMarketData | null>(null);
   const [loadingMarketData, setLoadingMarketData] = useState(true);
-  const { resolvedTheme } = useTheme(); // Get current theme
-  
+  const [tokens, setTokens] = useState<any[]>([]);
+  const [tokenError, setTokenError] = useState<string | null>(null);
+  const { resolvedTheme } = useTheme();
+
+  // Fetch tokens from the API
+  useEffect(() => {
+    fetch(`/api/tokens?chainId=1`)
+      .then(res => res.json())
+      .then(setTokens)
+      .catch(() => setTokenError("Failed to load tokens"));
+  }, []);
+
+  // Helper to get token info by symbol
+  const getTokenInfo = (symbol?: string) => {
+    if (!symbol) return undefined;
+    return tokens.find(t => t.symbol.toLowerCase() === symbol.toLowerCase());
+  };
+
   // Determine which token to display in the chart
   const currentTokenSymbol = showBuyChart ? buyTokenSymbol : sellTokenSymbol;
-  const tokenInfo = currentTokenSymbol 
-    ? MAINNET_TOKENS_BY_SYMBOL[currentTokenSymbol.toLowerCase()]
-    : undefined;
+  const tokenInfo = getTokenInfo(currentTokenSymbol);
+  const tradingViewSymbol = tokenInfo?.tradingViewSymbol;
 
   // Update parent component with current chart token
   useEffect(() => {
@@ -52,25 +63,19 @@ export function TradingChart({
     }
   }, [currentTokenSymbol, setCurrentChartToken]);
 
-    // Fetch market data when token changes
+  // Fetch market data when token changes
   useEffect(() => {
     const fetchMarketData = async () => {
       if (!tokenInfo || !currentTokenSymbol) return;
-      
       setLoadingMarketData(true);
       try {
-        const coingeckoId = COINGECKO_IDS[tokenInfo.symbol.toLowerCase()];
-        if (!coingeckoId) throw new Error("CoinGecko ID not found");
-        
+        if (!tokenInfo.coingeckoId) throw new Error("CoinGecko ID not found");
         const response = await fetch(
-          `https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoId}&vs_currencies=usd&include_24hr_change=true`
+          `https://api.coingecko.com/api/v3/simple/price?ids=${tokenInfo.coingeckoId}&vs_currencies=usd&include_24hr_change=true`
         );
-        
         if (!response.ok) throw new Error('Failed to fetch market data');
-        
         const data = await response.json();
-        const tokenData = data[coingeckoId];
-        
+        const tokenData = data[tokenInfo.coingeckoId];
         if (tokenData) {
           setMarketData({
             currentPrice: tokenData.usd,
@@ -78,20 +83,17 @@ export function TradingChart({
           });
         }
       } catch (error) {
-        console.error("Error fetching market data:", error);
+        setMarketData(null);
       } finally {
         setLoadingMarketData(false);
       }
     };
-
     fetchMarketData();
   }, [currentTokenSymbol, tokenInfo]);
 
   // Get the other token for the toggle button
   const otherTokenSymbol = showBuyChart ? sellTokenSymbol : buyTokenSymbol;
-  const otherTokenInfo = otherTokenSymbol 
-    ? MAINNET_TOKENS_BY_SYMBOL[otherTokenSymbol.toLowerCase()]
-    : undefined;
+  const otherTokenInfo = getTokenInfo(otherTokenSymbol);
 
   // Loading state when token info is not available
   if (!tokenInfo || !currentTokenSymbol) {
@@ -106,18 +108,14 @@ export function TradingChart({
               </div>
             </div>
           </div>
-          
           <div className="h-8 w-24 bg-zinc-700 rounded animate-pulse" />
         </CardHeader>
-        
         <Separator className="w-full h-px bg-zinc-700" />
-        
         <CardContent className="h-[410px] sm:h-[410px] w-full bg-transparent p-0">
           <div className="w-full h-full bg-zinc-800 animate-pulse flex items-center justify-center">
             <div className="text-zinc-500">Loading chart...</div>
           </div>
         </CardContent>
-        
         <Separator className="w-full h-px bg-zinc-700" />
       </Card>
     );
@@ -128,7 +126,7 @@ export function TradingChart({
       <CardHeader className="flex flex-row items-center justify-between h-full py-4 dark:bg-[#0F0F0F] bg-white rounded-none ">
         <div className="flex items-center gap-2 flex-row justify-start">
           <Image 
-            src={tokenInfo.logoURL} 
+            src={tokenInfo.logoURL || ""}
             alt={tokenInfo.name}
             className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
             width={40}
@@ -165,11 +163,9 @@ export function TradingChart({
             )}
           </div>
         </div>
-
         <div className="flex flex-row items-center gap-2 justify-center w-3xl h-fit">
           <ChartStats tokenSymbol={currentTokenSymbol} />
         </div>
-        
         {otherTokenSymbol && (
           <button 
             onClick={() => setShowBuyChart(!showBuyChart)}
@@ -182,7 +178,7 @@ export function TradingChart({
               </span>
               {otherTokenInfo && (
                 <Image 
-                  src={otherTokenInfo.logoURL} 
+                  src={otherTokenInfo.logoURL || ""}
                   alt={otherTokenInfo.name}
                   className="h-5 w-5 rounded-full"
                   width={20}
@@ -193,14 +189,13 @@ export function TradingChart({
           </button>
         )}
       </CardHeader>
-
       <CardContent className="h-[550px] sm:h-[550px] w-full p-0 flex dark:bg-[#0F0F0F] bg-white">
         <LiveChart 
           tokenSymbol={currentTokenSymbol} 
-          theme={resolvedTheme} // Pass theme to LiveChart
+          tradingViewSymbol={tradingViewSymbol}
+          theme={resolvedTheme}
         />
       </CardContent>
-      
     </Card>
   )
 }
