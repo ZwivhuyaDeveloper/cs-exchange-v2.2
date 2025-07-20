@@ -31,18 +31,41 @@ export default function QuoteView({
   chainId: number;
 }) {
   console.log("price", price);
-  const sellTokenInfo = (chainId: number) => {
-    if (chainId === 1) {
-      return MAINNET_TOKENS_BY_ADDRESS[price.sellToken.toLowerCase()];
+  const [dbTokens, setDbTokens] = useState<any[]>([]);
+
+  // Fetch tokens from the database
+  useEffect(() => {
+    async function fetchTokens() {
+      try {
+        const tokensRes = await fetch(`/api/tokens?chainId=${chainId}`);
+        const tokens = await tokensRes.json();
+        setDbTokens(tokens);
+      } catch (err) {
+        // fallback: do nothing, keep using constants
+      }
     }
-    return MAINNET_TOKENS_BY_ADDRESS[price.sellToken.toLowerCase()];
+    fetchTokens();
+  }, [chainId]);
+
+  // Helper to get token info by address from dbTokens
+  const tokensByAddress = (chainId: number) => {
+    if (dbTokens.length > 0) {
+      const tokens = dbTokens.filter(t => t.chainId === chainId);
+      const byAddress: Record<string, any> = {};
+      tokens.forEach(t => { byAddress[t.address.toLowerCase()] = t; });
+      return byAddress;
+    }
+    // fallback to constants
+    return MAINNET_TOKENS_BY_ADDRESS;
+  };
+
+  // Replace MAINNET_TOKENS_BY_ADDRESS usage with tokensByAddress(chainId)
+  const sellTokenInfo = (chainId: number) => {
+    return tokensByAddress(chainId)[price.sellToken.toLowerCase()] || MAINNET_TOKENS_BY_ADDRESS[price.sellToken.toLowerCase()];
   };
 
   const buyTokenInfo = (chainId: number) => {
-    if (chainId === 1) {
-      return MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()];
-    }
-    return MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()];
+    return tokensByAddress(chainId)[price.buyToken.toLowerCase()] || MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()];
   };
 
   const { signTypedDataAsync } = useSignTypedData();

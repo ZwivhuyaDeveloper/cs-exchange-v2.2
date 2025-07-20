@@ -69,7 +69,9 @@ export default function PriceView({
   const [sellTokenTax, setSellTokenTax] = useState({buyTaxBps: "0", sellTaxBps: "0",});
   const [loading, setLoading] = useState(false);
   const [apiError, setApiError] = useState<string | null>(null);
-  
+  const [dbTokens, setDbTokens] = useState<any[]>([]);
+  const [dbChains, setDbChains] = useState<any[]>([]);
+
 
   const sanitizeDecimalPlaces = (value: string, decimals: number): string => {
     const [integerPart, decimalPart] = value.split('.');
@@ -77,7 +79,34 @@ export default function PriceView({
     return `${integerPart}.${decimalPart.slice(0, decimals)}`;
   }
 
+  // Fetch tokens and chains from the database
+  useEffect(() => {
+    async function fetchTokensAndChains() {
+      try {
+        const [tokensRes, chainsRes] = await Promise.all([
+          fetch(`/api/tokens?chainId=${chainId}`),
+          fetch(`/api/chains`),
+        ]);
+        const tokens = await tokensRes.json();
+        const chains = await chainsRes.json();
+        setDbTokens(tokens);
+        setDbChains(chains);
+      } catch (err) {
+        // fallback: do nothing, keep using constants
+      }
+    }
+    fetchTokensAndChains();
+  }, [chainId]);
+
+  // Helper to get tokens by symbol from dbTokens
   const tokensByChain = (chainId: number) => {
+    if (dbTokens.length > 0) {
+      const tokens = dbTokens.filter(t => t.chainId === chainId);
+      const bySymbol: Record<string, any> = {};
+      tokens.forEach(t => { bySymbol[t.symbol.toLowerCase()] = t; });
+      return bySymbol;
+    }
+    // fallback to constants
     if (chainId === 1) {
       return MAINNET_TOKENS_BY_SYMBOL;
     }

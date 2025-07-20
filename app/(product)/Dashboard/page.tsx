@@ -22,6 +22,7 @@ import { ChartAreaLinear} from "@/app/(product)/Dashboard/components/ui/Linear-C
 
 export default function Page() {
 
+  // Use tokens that are seeded in the DB (e.g., 'link', 'comp')
   const [fromToken, setFromToken] = useState("link");
   const [toToken, setToToken] = useState("comp");
   const [currentChartToken, setCurrentChartToken] = useState(fromToken);
@@ -45,6 +46,8 @@ export default function Page() {
   if (showIntro) {
     return <LoadingIntro onComplete={() => setShowIntro(false)} />;
   }
+  // Use the correct chainId for mainnet (1) or polygon (137) as needed
+  const chainId = 1;
   return (
     <div className=" w-full h-full dark:bg-black bg-zinc-200">
       <div className="backdrop-filter backdrop-blur-3xl  w-full gap-0 flex">
@@ -129,7 +132,7 @@ export default function Page() {
                                   throw new Error("Function not implemented.")
                                 } } setFinalize={function (finalize: boolean): void {
                                   throw new Error("Function not implemented.")
-                                } } chainId={0}                              
+                                } } chainId={chainId}                              
                               />
                               <div className="h-fit w-full mt-1">
                                 <ChartBarStacked/>
