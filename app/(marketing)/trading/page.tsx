@@ -1,4 +1,12 @@
 
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Crypto Trading Bots & Automation | AlphaChain Platform',
+  description: 'Automate your crypto trading with AlphaChain’s AI-powered bots. Enjoy lightning-fast execution, advanced analytics, and secure API integration for top exchanges.',
+  keywords: 'crypto trading bots, trading automation, AI trading, secure API, AlphaChain bots, automated trading, exchange integration',
+};
+
 import Header from '../components/layout/Header'
 import TradingHero from './components/TradingHero'
 import TradingFeatures from './components/TradingFeatures'

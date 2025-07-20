@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Crypto Swap Exchange | Fast, Secure Token Swaps | AlphaChain',
+  description: 'Swap cryptocurrencies instantly with AlphaChain’s secure, non-custodial exchange. Enjoy lightning-fast trades, best rates, and cross-chain support for 200+ tokens.',
+  keywords: 'crypto swap, token exchange, instant swap, cross-chain, secure trading, AlphaChain swap, best rates',
+};
+
 import Header from "../components/layout/Header";
 
 import Footer from "../components/layout/Footer";

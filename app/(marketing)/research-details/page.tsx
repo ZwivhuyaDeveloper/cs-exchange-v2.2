@@ -1,3 +1,11 @@
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Crypto Research Terminal | Analytics & Reports | AlphaChain',
+  description: 'Access institutional-grade crypto research, technical indicators, and fundamental analysis. AlphaChain’s research terminal empowers traders with actionable insights and whale tracking.',
+  keywords: 'crypto research, blockchain analytics, market reports, technical analysis, whale tracking, AlphaChain research terminal',
+};
+
 import Footer from "@/app/(marketing)/components/layout/Footer";
 import Header from "@/app/(marketing)/components/layout/Header";
 import ResearchHero from "./components/ResearchHero";
