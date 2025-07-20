@@ -71,6 +71,9 @@ export default function PriceView({
   const [apiError, setApiError] = useState<string | null>(null);
   const [dbTokens, setDbTokens] = useState<any[]>([]);
   const [dbChains, setDbChains] = useState<any[]>([]);
+  const [tokenMap, setTokenMap] = useState<Record<string, any>>({});
+  const [tokenLoading, setTokenLoading] = useState(false);
+  const [tokenError, setTokenError] = useState<string | null>(null);
 
 
   const sanitizeDecimalPlaces = (value: string, decimals: number): string => {
@@ -98,6 +101,29 @@ export default function PriceView({
     fetchTokensAndChains();
   }, [chainId]);
 
+  // Fetch token metadata for fromToken and toToken
+  useEffect(() => {
+    async function fetchTokenMetadata() {
+      if (!fromToken && !toToken) return;
+      setTokenLoading(true);
+      setTokenError(null);
+      try {
+        const symbols = [fromToken, toToken].filter(Boolean).join(",");
+        if (!symbols) return;
+        const res = await fetch(`/api/token-metadata?symbols=${symbols}&chainId=${chainId}`);
+        const tokens = await res.json();
+        const map: Record<string, any> = {};
+        tokens.forEach((t: any) => { map[t.symbol.toLowerCase()] = t; });
+        setTokenMap(map);
+      } catch (err) {
+        setTokenError("Failed to load token metadata");
+      } finally {
+        setTokenLoading(false);
+      }
+    }
+    fetchTokenMetadata();
+  }, [fromToken, toToken, chainId]);
+
   // Helper to get tokens by symbol from dbTokens
   const tokensByChain = (chainId: number) => {
     if (dbTokens.length > 0) {
@@ -115,10 +141,10 @@ export default function PriceView({
 
   // Construct token list and map for the picker/input
   const tokenList = dbTokens.filter(t => t.chainId === chainId);
-  const tokenMap = tokensByChain(chainId);
+  const tokenMapForPicker = tokensByChain(chainId);
 
-  const sellTokenObject = tokensByChain(chainId)[fromToken];
-  const buyTokenObject = tokensByChain(chainId)[toToken];
+  const sellTokenObject = tokenMap[fromToken];
+  const buyTokenObject = tokenMap[toToken];
 
   const sellTokenDecimals = sellTokenObject?.decimals || 18;
   const buyTokenDecimals = buyTokenObject?.decimals || 18;
@@ -283,7 +309,7 @@ export default function PriceView({
                 setBuyToken={setToToken}
                 setSellAmount={setSellAmount}
                 setBuyAmount={setBuyAmount}
-                tokensByChain={tokensByChain}        
+                tokenMap={tokenMap}        
                 />
             </div>
         </div>
@@ -340,7 +366,8 @@ export default function PriceView({
                       buyAmount={buyAmount}
                       buyTokenSymbol={toToken}
                       chainId={chainId}
-                      feeAmount={price?.fees?.integratorFee?.amount || "0"}
+                      tokenMap={tokenMap}
+                      feeAmount={price?.fees?.integratorFee?.amount || '0'}
                     />
                       </div>
                     </div>
@@ -354,7 +381,7 @@ export default function PriceView({
                   <p className="text-sm font-medium ">Gas Fee:</p>
                 </div>
                 <div>
-                  <AffiliateFeeBadge price={price} buyToken={toToken} />
+                  <AffiliateFeeBadge price={price} buyToken={toToken} tokenMap={tokenMap} />
                 </div>
               </div>
 
@@ -370,6 +397,7 @@ export default function PriceView({
                     sellToken={fromToken}
                     buyToken={toToken}
                     chainId={chainId}
+                    tokenMap={tokenMap}
                   />
                 </div>
               </div>
@@ -382,6 +410,7 @@ export default function PriceView({
                 sellTokenTax={sellTokenTax}
                 buyToken={buyToken}
                 sellToken={sellToken}
+                tokenMap={tokenMap}
               />
               </div>
 

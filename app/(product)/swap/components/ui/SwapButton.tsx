@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 import { Dispatch, SetStateAction, useState } from "react";
 import { motion } from "framer-motion"; // Import Framer Motion
-import { MAINNET_TOKENS_BY_SYMBOL } from "@/src/constants";
 
 type SwapButtonProps = {
   sellToken: string;
@@ -16,7 +15,14 @@ type SwapButtonProps = {
   setBuyToken: (token: string) => void;
   setSellAmount: (amount: string) => void;
   setBuyAmount: (amount: string) => void;
-  tokensByChain: (chainId: number) => typeof MAINNET_TOKENS_BY_SYMBOL;
+  tokenMap: {
+    [key: string]: {
+      decimals: number;
+      address: string;
+      logo: string;
+      symbol: string;
+    };
+  };
 };
 
 // Create a motion-wrapped version of the icon
@@ -32,7 +38,7 @@ export const SwapButton = ({
   setBuyToken,
   setSellAmount,
   setBuyAmount,
-  tokensByChain
+  tokenMap
 }: SwapButtonProps) => {
   const [isRotated, setIsRotated] = useState(false);
 
@@ -45,18 +51,14 @@ export const SwapButton = ({
   const handleSwapTokens = () => {
     const newSellToken = buyToken;
     const newBuyToken = sellToken;
-    
-    const newSellDecimals = tokensByChain(chainId)[newSellToken]?.decimals || 18;
-    const newBuyDecimals = tokensByChain(chainId)[newBuyToken]?.decimals || 18;
-    
+    const newSellDecimals = tokenMap?.[newSellToken]?.decimals || 18;
+    const newBuyDecimals = tokenMap?.[newBuyToken]?.decimals || 18;
     const sanitizedSell = sanitizeDecimalPlaces(buyAmount, newSellDecimals);
     const sanitizedBuy = sanitizeDecimalPlaces(sellAmount, newBuyDecimals);
-
     setSellToken(newSellToken);
     setBuyToken(newBuyToken);
     setSellAmount(sanitizedSell);
     setBuyAmount(sanitizedBuy);
-    
     setIsRotated(!isRotated);
   };
 

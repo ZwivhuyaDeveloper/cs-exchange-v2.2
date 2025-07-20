@@ -32,6 +32,9 @@ export default function QuoteView({
 }) {
   console.log("price", price);
   const [dbTokens, setDbTokens] = useState<any[]>([]);
+  const [tokenMap, setTokenMap] = useState<Record<string, any>>({});
+  const [tokenLoading, setTokenLoading] = useState(false);
+  const [tokenError, setTokenError] = useState<string | null>(null);
 
   // Fetch tokens from the database
   useEffect(() => {
@@ -47,6 +50,29 @@ export default function QuoteView({
     fetchTokens();
   }, [chainId]);
 
+  // Fetch token metadata for price.sellToken and price.buyToken
+  useEffect(() => {
+    async function fetchTokenMetadata() {
+      if (!price?.sellToken && !price?.buyToken) return;
+      setTokenLoading(true);
+      setTokenError(null);
+      try {
+        const symbols = [price.sellToken, price.buyToken].filter(Boolean).join(",");
+        if (!symbols) return;
+        const res = await fetch(`/api/token-metadata?symbols=${symbols}&chainId=${chainId}`);
+        const tokens = await res.json();
+        const map: Record<string, any> = {};
+        tokens.forEach((t: any) => { map[t.symbol.toLowerCase()] = t; });
+        setTokenMap(map);
+      } catch (err) {
+        setTokenError("Failed to load token metadata");
+      } finally {
+        setTokenLoading(false);
+      }
+    }
+    fetchTokenMetadata();
+  }, [price?.sellToken, price?.buyToken, chainId]);
+
   // Helper to get token info by address from dbTokens
   const tokensByAddress = (chainId: number) => {
     if (dbTokens.length > 0) {
@@ -60,13 +86,9 @@ export default function QuoteView({
   };
 
   // Replace MAINNET_TOKENS_BY_ADDRESS usage with tokensByAddress(chainId)
-  const sellTokenInfo = (chainId: number) => {
-    return tokensByAddress(chainId)[price.sellToken.toLowerCase()] || MAINNET_TOKENS_BY_ADDRESS[price.sellToken.toLowerCase()];
-  };
+  const sellTokenInfo = tokenMap[price.sellToken.toLowerCase()];
 
-  const buyTokenInfo = (chainId: number) => {
-    return tokensByAddress(chainId)[price.buyToken.toLowerCase()] || MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()];
-  };
+  const buyTokenInfo = tokenMap[price.buyToken.toLowerCase()];
 
   const { signTypedDataAsync } = useSignTypedData();
   const { data: walletClient } = useWalletClient();
@@ -155,16 +177,16 @@ export default function QuoteView({
           <div className="text-xl mb-2 text-white">You pay</div>
           <div className="flex items-center text-lg sm:text-3xl text-white">
             <Image
-              alt={sellTokenInfo(chainId).symbol}
+              alt={sellTokenInfo?.symbol}
               className="h-9 w-9 mr-2 rounded-md"
-              src={sellTokenInfo(chainId)?.logoURL || ""}
+              src={sellTokenInfo?.logoURL || ""}
               width={9}
               height={9}
             />
             <span>
-              {formatUnits(quote.sellAmount, sellTokenInfo(chainId).decimals)}
+              {formatUnits(quote.sellAmount, sellTokenInfo?.decimals)}
             </span>
-            <div className="ml-2">{sellTokenInfo(chainId).symbol}</div>
+            <div className="ml-2">{sellTokenInfo?.symbol}</div>
           </div>
         </div>
 
@@ -175,15 +197,15 @@ export default function QuoteView({
               width={9}
               height={9}
               alt={
-                MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()].symbol
+                buyTokenInfo?.symbol
               }
               className="h-9 w-9 mr-2 rounded-md"
-              src={MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()]?.logoURL || ""}
+              src={buyTokenInfo?.logoURL || ""}
             />
             <span>
-              {formatUnits(quote.buyAmount, buyTokenInfo(chainId).decimals)}
+              {formatUnits(quote.buyAmount, buyTokenInfo?.decimals)}
             </span>
-            <div className="ml-2">{buyTokenInfo(chainId).symbol}</div>
+            <div className="ml-2">{buyTokenInfo?.symbol}</div>
           </div>
         </div>
 
@@ -197,11 +219,11 @@ export default function QuoteView({
                 Number(
                   formatUnits(
                     BigInt(quote.fees.integratorFee.amount),
-                    buyTokenInfo(chainId).decimals
+                    buyTokenInfo?.decimals
                   )
                 ) +
                 " " +
-                buyTokenInfo(chainId).symbol
+                buyTokenInfo?.symbol
               : null}
           </div>
           {/* Tax Information Display */}
@@ -209,7 +231,7 @@ export default function QuoteView({
             {quote.tokenMetadata.buyToken.buyTaxBps &&
               quote.tokenMetadata.buyToken.buyTaxBps !== "0" && (
                 <p>
-                  {buyTokenInfo(chainId).symbol +
+                  {buyTokenInfo?.symbol +
                     ` Buy Tax: ${formatTax(
                       quote.tokenMetadata.buyToken.buyTaxBps
                     )}%`}
@@ -218,7 +240,7 @@ export default function QuoteView({
             {quote.tokenMetadata.sellToken.sellTaxBps &&
               quote.tokenMetadata.sellToken.sellTaxBps !== "0" && (
                 <p>
-                  {sellTokenInfo(chainId).symbol +
+                  {sellTokenInfo?.symbol +
                     ` Sell Tax: ${formatTax(
                       quote.tokenMetadata.sellToken.sellTaxBps
                     )}%`}

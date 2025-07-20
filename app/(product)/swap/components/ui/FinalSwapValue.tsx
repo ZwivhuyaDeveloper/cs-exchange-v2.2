@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { formatUnits } from "ethers";
-import { MAINNET_TOKENS_BY_SYMBOL, AFFILIATE_FEE } from "@/src/constants";
+import { AFFILIATE_FEE } from "@/src/constants";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface FinalSwapValueProps {
@@ -8,14 +8,10 @@ interface FinalSwapValueProps {
   buyTokenSymbol: string;
   chainId: number;
   feeAmount: string;
+  tokenMap: { [key: string]: any };
 }
 
-export const FinalSwapValue = ({
-  buyAmount,
-  buyTokenSymbol,
-  chainId,
-  feeAmount
-}: FinalSwapValueProps) => {
+export const FinalSwapValue = ({ buyAmount, buyTokenSymbol, chainId, feeAmount, tokenMap }: FinalSwapValueProps) => {
   const [formattedNetAmount, setFormattedNetAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +22,7 @@ export const FinalSwapValue = ({
         setLoading(true);
         setError(null);
 
-        const token = MAINNET_TOKENS_BY_SYMBOL[buyTokenSymbol.toLowerCase()];
+        const token = buyTokenSymbol ? tokenMap?.[buyTokenSymbol.toLowerCase()] : null;
         if (!token) {
           setError("Invalid token");
           return;
@@ -45,7 +41,7 @@ export const FinalSwapValue = ({
     };
 
     formatAmount();
-  }, [buyAmount, buyTokenSymbol, chainId]);
+  }, [buyAmount, buyTokenSymbol, chainId, tokenMap]);
 
   if (!buyAmount || parseFloat(buyAmount) <= 0) return null;
 

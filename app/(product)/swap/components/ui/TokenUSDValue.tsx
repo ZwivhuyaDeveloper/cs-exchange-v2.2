@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { MAINNET_TOKENS_BY_SYMBOL, COINGECKO_IDS } from "@/src/constants";
+import { COINGECKO_IDS } from "@/src/constants";
 import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -7,16 +7,17 @@ interface TokenUSDValueProps {
   amount: string;
   tokenSymbol: string;
   chainId: number;
+  tokenMap: { [key: string]: any };
 }
 
-export const TokenUSDValue = ({ amount, tokenSymbol, chainId }: TokenUSDValueProps) => {
+export const TokenUSDValue = ({ amount, tokenSymbol, chainId, tokenMap }: TokenUSDValueProps) => {
   const [usdPrice, setUsdPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
 
   // Get token info with safety checks
-  const token = tokenSymbol ? MAINNET_TOKENS_BY_SYMBOL[tokenSymbol.toLowerCase()] : null;
+  const token = tokenSymbol ? tokenMap?.[tokenSymbol.toLowerCase()] : null;
 
   // Validate if amount is a valid number
   const isValidAmount = useCallback(() => {

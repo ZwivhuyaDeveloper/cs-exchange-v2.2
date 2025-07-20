@@ -1,4 +1,3 @@
-import { MAINNET_TOKENS_BY_SYMBOL } from "@/src/constants";
 import { useState } from "react";
 
 interface TaxInfoProps {
@@ -14,12 +13,7 @@ interface TaxInfoProps {
   sellToken: string;
 }
 
-export function TaxInfo({
-  buyTokenTax,
-  sellTokenTax,
-  buyToken,
-  sellToken,
-}: TaxInfoProps) {
+export function TaxInfo({ buyTokenTax, sellTokenTax, buyToken, sellToken, tokenMap }: any) {
   const formatTax = (taxBps: string) => (parseFloat(taxBps) / 100).toFixed(2);
 
   const [isLoading, setIsLoading] = useState(true)
@@ -29,13 +23,13 @@ export function TaxInfo({
     <div className="text-slate-400 w-26 h-6 " title="Tax Info">
       {buyTokenTax.buyTaxBps !== "0" && (
         <p>
-          {MAINNET_TOKENS_BY_SYMBOL[buyToken].symbol +
+          {(tokenMap?.[buyToken]?.symbol || buyToken) +
             ` Buy Tax: ${formatTax(buyTokenTax.buyTaxBps)}%`}
         </p>
       )}
       {sellTokenTax.sellTaxBps !== "0" && (
         <p>
-          {MAINNET_TOKENS_BY_SYMBOL[sellToken].symbol +
+          {(tokenMap?.[sellToken]?.symbol || sellToken) +
             ` Sell Tax: ${formatTax(sellTokenTax.sellTaxBps)}%`}
         </p>
       )}

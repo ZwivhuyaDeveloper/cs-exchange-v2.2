@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { MAINNET_TOKENS_BY_SYMBOL } from "@/src/constants";
 import qs from "qs";
 import { formatUnits, parseUnits } from "viem";
 import { Badge } from '@/components/ui/badge';
@@ -11,11 +10,7 @@ interface TokenEquivalentValueProps {
   chainId: number;
 }
 
-export const TokenEquivalentValue = ({
-  sellToken,
-  buyToken,
-  chainId,
-}: TokenEquivalentValueProps) => {
+export const TokenEquivalentValue = ({ sellToken, buyToken, chainId, tokenMap }: any) => {
   const [equivalentAmount, setEquivalentAmount] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,8 +23,8 @@ export const TokenEquivalentValue = ({
       setError(null);
 
       try {
-        const sellTokenInfo = MAINNET_TOKENS_BY_SYMBOL[sellToken.toLowerCase()];
-        const buyTokenInfo = MAINNET_TOKENS_BY_SYMBOL[buyToken.toLowerCase()];
+        const sellTokenInfo = sellToken ? tokenMap?.[sellToken.toLowerCase()] : null;
+        const buyTokenInfo = buyToken ? tokenMap?.[buyToken.toLowerCase()] : null;
 
         if (!sellTokenInfo || !buyTokenInfo) {
           setError("Invalid token pair");

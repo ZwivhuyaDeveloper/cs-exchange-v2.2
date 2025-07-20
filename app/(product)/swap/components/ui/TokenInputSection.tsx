@@ -2,7 +2,6 @@ import { Input } from "@/components/ui/input";
 import { TokenPicker } from "./tokenPicker";
 import { TokenUSDValue } from "./TokenUSDValue";
 import { ChangeEvent, useState } from "react";
-import { MAINNET_TOKENS_BY_SYMBOL } from "@/src/constants";
 
 
 interface TokenInputSectionProps {
@@ -38,7 +37,7 @@ export const TokenInputSection = ({
 
 
   
-  const tokenInfo = tokenMap && token ? tokenMap[token.toLowerCase()] : (token ? MAINNET_TOKENS_BY_SYMBOL[token.toLowerCase()] : null);
+  const tokenInfo = tokenMap && token ? tokenMap[token.toLowerCase()] : null;
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const sanitizeDecimalPlaces = (value: string, decimals: number): string => {
       const [integerPart, decimalPart] = value.split('.');

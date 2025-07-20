@@ -10,45 +10,63 @@ import {
 import { Command, CommandInput, CommandList, CommandItem, CommandEmpty } from "@/components/ui/command";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { MAINNET_TOKENS, MAINNET_TOKENS_BY_SYMBOL } from "@/src/constants";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, X } from "lucide-react";
+import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, PaginationNext } from "@/components/ui/pagination";
 
 interface TokenPickerProps {
   value: string;
   onValueChange: (value: string) => void;
   label?: string;
-  tokens?: any[]; // Accept dynamic tokens
   chainId?: number; // Accept chainId for fetching tokens
 }
 
-export function TokenPicker({ value, onValueChange, tokens, label, chainId }: TokenPickerProps) {
+export function TokenPicker({ value, onValueChange, label, chainId }: TokenPickerProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [fetchedTokens, setFetchedTokens] = useState<any[]>([]);
+  const [tokens, setTokens] = useState<any[]>([]);
+  const [page, setPage] = useState(1);
+  const pageSize = 20;
 
-  // Fetch tokens if not provided
+  // Always fetch all tokens from DB
   useEffect(() => {
-    if (!tokens && chainId) {
-      fetch(`/api/tokens?chainId=${chainId}`)
-        .then(res => res.json())
-        .then(setFetchedTokens)
-        .catch(() => setFetchedTokens([]));
-    }
-  }, [tokens, chainId]);
+    const fetchTokens = async () => {
+      try {
+        const url = chainId ? `/api/tokens?chainId=${chainId}` : "/api/tokens";
+        const res = await fetch(url);
+        const data = await res.json();
+        setTokens(data);
+      } catch {
+        setTokens([]);
+      }
+    };
+    fetchTokens();
+  }, [chainId]);
 
-  // Use dynamic tokens if provided, else fallback to fetched, else constants
-  const tokenList = tokens && tokens.length > 0
-    ? tokens
-    : (fetchedTokens.length > 0 ? fetchedTokens : MAINNET_TOKENS);
-  const tokenMap = tokenList.length > 0
-    ? Object.fromEntries(tokenList.map(t => [t.symbol.toLowerCase(), t]))
-    : MAINNET_TOKENS_BY_SYMBOL;
+  // Sort tokens alphabetically by symbol
+  const sortedTokens = [...tokens].sort((a, b) => a.symbol.localeCompare(b.symbol));
 
-  const filteredTokens = tokenList.filter(token =>
-    token.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    token.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Show all tokens by default, filter only if searchQuery is not empty
+  const filteredTokens = searchQuery.trim() === ''
+    ? sortedTokens
+    : sortedTokens.filter(token =>
+        token.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        token.name.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredTokens.length / pageSize) || 1;
+  const paginatedTokens = filteredTokens.slice((page - 1) * pageSize, page * pageSize);
+
+  // Reset to first page on search
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery]);
+
+  // Build tokenMap for logo display
+  const tokenMap = tokens.length > 0
+    ? Object.fromEntries(tokens.map(t => [t.symbol.toLowerCase(), t]))
+    : {};
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -61,7 +79,7 @@ export function TokenPicker({ value, onValueChange, tokens, label, chainId }: To
           {value ? (
             <>
               <Avatar className="h-6 w-6">
-                <AvatarImage src={tokenMap[value]?.logoURL} />
+                <AvatarImage src={tokenMap[value]?.logoURL || tokenMap[value]?.logoURI} />
               </Avatar>
               <span className="font-medium text-xs text-black dark:text-white">{value.toUpperCase()}</span>
             </>
@@ -74,9 +92,10 @@ export function TokenPicker({ value, onValueChange, tokens, label, chainId }: To
 
       {open && (
         <DialogContent 
-          className="  flex items-center justify-center backdrop-filter backdrop-blur-lg w-full h-fit bg-black/30 p-5"
+          className="flex items-center justify-center backdrop-filter backdrop-blur-lg w-full h-fit bg-black/30 p-5"
           onClick={() => setOpen(false)}
         >
+          <DialogTitle className="sr-only">Select a token</DialogTitle>
           <div 
             className="relative max-w-full w-full justify-center items-center place-content-center p-0"
             onClick={(e) => e.stopPropagation()}
@@ -94,7 +113,7 @@ export function TokenPicker({ value, onValueChange, tokens, label, chainId }: To
               <ScrollArea className="h-fit">
                 <CommandList className="max-h-[400px] ">
                   <CommandEmpty>No token found.</CommandEmpty>
-                  {filteredTokens.map((token) => (
+                  {paginatedTokens.map((token) => (
                     <CommandItem
                       key={token.address}
                       value={token.address}
@@ -106,7 +125,7 @@ export function TokenPicker({ value, onValueChange, tokens, label, chainId }: To
                       className="flex items-center gap-4 p-3 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-3xl"
                     >
                       <Avatar className="h-6 w-6">
-                        <AvatarImage src={token.logoURL} />
+                        <AvatarImage src={token.logoURL || token.logoURI} />
                       </Avatar>
                       <div className="flex-1">
                         <div className="flex items-center gap-2 justify-between">
@@ -121,6 +140,28 @@ export function TokenPicker({ value, onValueChange, tokens, label, chainId }: To
                   ))}
                 </CommandList>
               </ScrollArea>
+              {/* Pagination controls always visible */}
+              <Pagination className="mt-2">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      aria-disabled={page === 1}
+                      className={page === 1 ? 'opacity-50 pointer-events-none' : ''}
+                    />
+                  </PaginationItem>
+                  <PaginationItem>
+                    <span className="px-2 text-xs">Page {page} of {totalPages}</span>
+                  </PaginationItem>
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      aria-disabled={page === totalPages}
+                      className={page === totalPages ? 'opacity-50 pointer-events-none' : ''}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
             </Command>
           </div>
         </DialogContent>

@@ -7,6 +7,11 @@ const nextConfig = {
   },
   reactStrictMode: true,
   images: {
+    domains: [
+      'assets.coingecko.com',
+      'raw.githubusercontent.com',
+      // add more domains here if needed
+    ],
     remotePatterns: [
       {
         protocol: 'https',

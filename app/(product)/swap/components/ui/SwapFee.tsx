@@ -1,14 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { formatUnits } from "ethers";
-import { MAINNET_TOKENS_BY_SYMBOL } from "@/src/constants";
 
-export function AffiliateFeeBadge({
-  price,
-  buyToken,
-}: {
-  price: any;
-  buyToken: string;
-}) {
+export function AffiliateFeeBadge({ price, buyToken, tokenMap }: any) {
   return (
     
     <Badge className="justify-end w-full items-end h-fit border-none bg-transparent gap-4 m-0 p-0">
@@ -19,11 +12,11 @@ export function AffiliateFeeBadge({
               Number(
                 formatUnits(
                   BigInt(price.fees.integratorFee.amount),
-                  MAINNET_TOKENS_BY_SYMBOL[buyToken].decimals
+                  tokenMap?.[buyToken]?.decimals || 18
                 )
-              ).toFixed(3) + // Changed here
+              ).toFixed(3) +
               " " +
-              MAINNET_TOKENS_BY_SYMBOL[buyToken].symbol
+              (tokenMap?.[buyToken]?.symbol || buyToken)
             : null}
         </div>
       </div>
