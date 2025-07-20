@@ -67,6 +67,8 @@ export default function PriceView({
   const [error, setError] = useState([]);
   const [buyTokenTax, setBuyTokenTax] = useState({buyTaxBps: "0", sellTaxBps: "0",});
   const [sellTokenTax, setSellTokenTax] = useState({buyTaxBps: "0", sellTaxBps: "0",});
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
   
 
   const sanitizeDecimalPlaces = (value: string, decimals: number): string => {
@@ -102,7 +104,8 @@ export default function PriceView({
   // Fetch price data and set the buyAmount whenever the sellAmount changes
   useEffect(() => {
     if (!sellTokenObject || !buyTokenObject) return;
-
+    setApiError(null);
+    setLoading(true);
     const params = {
       chainId: chainId,
       sellToken: sellTokenObject.address,
@@ -115,36 +118,42 @@ export default function PriceView({
       swapFeeToken: buyTokenObject.address,
       tradeSurplusRecipient: FEE_RECIPIENT,
     };
-
     async function main() {
-      // Clear buy amount if sell amount is empty
       if (sellAmount === "") {
         setBuyAmount("");
         setPrice(null);
+        setLoading(false);
         return;
       }
-
-      const response = await fetch(`/api/price?${qs.stringify(params)}`);
-      const data = await response.json();
-
-      if (data?.validationErrors?.length > 0) {
-        setError(data.validationErrors);
-      } else {
-        setError([]);
-      }
-      
-      if (data.buyAmount) {
-        const formattedBuyAmount = formatUnits(data.buyAmount, buyTokenDecimals);
-        setBuyAmount(formattedBuyAmount);
-        setPrice(data);
-      }
-      
-      if (data?.tokenMetadata) {
-        setBuyTokenTax(data.tokenMetadata.buyToken);
-        setSellTokenTax(data.tokenMetadata.sellToken);
+      try {
+        const response = await fetch(`/api/price?${qs.stringify(params)}`);
+        const data = await response.json();
+        if (data?.validationErrors?.length > 0) {
+          setError(data.validationErrors);
+          setApiError("Validation error: " + data.validationErrors.join(", "));
+        } else if (data?.error) {
+          setApiError(data.error);
+        } else if (data?.message === "Invalid authentication credentials") {
+          setApiError("Authentication error: Invalid API key or credentials.");
+        } else {
+          setError([]);
+          setApiError(null);
+        }
+        if (data.buyAmount) {
+          const formattedBuyAmount = formatUnits(data.buyAmount, buyTokenDecimals);
+          setBuyAmount(formattedBuyAmount);
+          setPrice(data);
+        }
+        if (data?.tokenMetadata) {
+          setBuyTokenTax(data.tokenMetadata.buyToken);
+          setSellTokenTax(data.tokenMetadata.sellToken);
+        }
+      } catch (err) {
+        setApiError("Network or server error. Please try again later.");
+      } finally {
+        setLoading(false);
       }
     }
-
     main();
   }, [
     sellTokenObject?.address,
@@ -174,6 +183,8 @@ export default function PriceView({
 
   return (
     <div className=" justify-center items-center gap-2 sm:w-fit md:w-fit w-fit h-fit max-h-fit px-1 pb-5"> 
+      {loading && <div className="text-center text-blue-500">Loading price...</div>}
+      {apiError && <div className="text-center text-red-500">{apiError}</div>}
       {/* swap */}
       <div className="w-[350px] h-fit  flex flex-col bg-transparent my-0 justify-start gap-2 px-3">
 

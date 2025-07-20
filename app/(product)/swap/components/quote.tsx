@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { formatUnits } from "ethers";
 import {
   useSignTypedData,
@@ -48,8 +48,13 @@ export default function QuoteView({
   const { signTypedDataAsync } = useSignTypedData();
   const { data: walletClient } = useWalletClient();
 
+  const [loading, setLoading] = useState(false);
+  const [apiError, setApiError] = useState<string | null>(null);
+
   // Fetch quote data
   useEffect(() => {
+    setApiError(null);
+    setLoading(true);
     const params = {
       chainId: chainId,
       sellToken: price.sellToken,
@@ -63,9 +68,24 @@ export default function QuoteView({
     };
 
     async function main() {
-      const response = await fetch(`/api/quote?${qs.stringify(params)}`);
-      const data = await response.json();
-      setQuote(data);
+      try {
+        const response = await fetch(`/api/quote?${qs.stringify(params)}`);
+        const data = await response.json();
+        if (data?.validationErrors?.length > 0) {
+          setApiError("Validation error: " + data.validationErrors.join(", "));
+        } else if (data?.error) {
+          setApiError(data.error);
+        } else if (data?.message === "Invalid authentication credentials") {
+          setApiError("Authentication error: Invalid API key or credentials.");
+        } else {
+          setApiError(null);
+        }
+        setQuote(data);
+      } catch (err) {
+        setApiError("Network or server error. Please try again later.");
+      } finally {
+        setLoading(false);
+      }
     }
     main();
   }, [
@@ -89,6 +109,13 @@ export default function QuoteView({
       hash,
     });
 
+  if (loading) {
+    return <div className="text-center text-blue-500">Loading quote...</div>;
+  }
+  if (apiError) {
+    return <div className="text-center text-red-500">{apiError}</div>;
+  }
+
   if (!quote) {
     return <div>Getting best quote...</div>;
   }
@@ -107,7 +134,7 @@ export default function QuoteView({
             <Image
               alt={sellTokenInfo(chainId).symbol}
               className="h-9 w-9 mr-2 rounded-md"
-              src={sellTokenInfo(chainId || 1)?.logoURL}
+              src={sellTokenInfo(chainId)?.logoURL || ""}
               width={9}
               height={9}
             />
@@ -128,7 +155,7 @@ export default function QuoteView({
                 MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()].symbol
               }
               className="h-9 w-9 mr-2 rounded-md"
-              src={MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()].logoURL}
+              src={MAINNET_TOKENS_BY_ADDRESS[price.buyToken.toLowerCase()]?.logoURL || ""}
             />
             <span>
               {formatUnits(quote.buyAmount, buyTokenInfo(chainId).decimals)}
