@@ -1,94 +1,168 @@
-// seed.ts
-import { PrismaClient } from '@prisma/client';
+#!/usr/bin/env ts-node
+import { PrismaClient, TokenType } from '@prisma/client';
 import {
-  POLYGON_TOKENS,
   MAINNET_TOKENS,
+  MAINNET_TOKENS_BY_SYMBOL,
+  POLYGON_TOKENS,
+  POLYGON_TOKENS_BY_SYMBOL,
+  TRADINGVIEW_TOKEN_LISTS,
   COINGECKO_IDS,
-  TOKEN_TO_TRADINGVIEW
+  TOKEN_TO_TRADINGVIEW,
 } from '../src/constants';
+
 
 const prisma = new PrismaClient();
 
+function getTokenType(type: string | undefined): TokenType {
+  if (type && Object.prototype.hasOwnProperty.call(TokenType, type.toUpperCase())) {
+    return TokenType[type.toUpperCase() as keyof typeof TokenType];
+  }
+  return TokenType.CRYPTO;
+}
+
 async function main() {
   // Seed Chains
-  await prisma.chain.upsert({
-    where: { id: 1 },
-    update: {},
-    create: {
-      id: 1,
-      name: 'Ethereum',
-      network: 'ethereum',
+  const chains = [
+    {
+      chainId: 1,
+      name: 'Ethereum Mainnet',
       nativeToken: 'ETH',
-      rpcUrl: 'https://mainnet.infura.io/v3/YOUR_PROJECT_ID',
+      rpcUrl: 'https://mainnet.infura.io/v3/YOUR_INFURA_KEY',
       explorerUrl: 'https://etherscan.io',
-      icon: 'https://cdn.worldvectorlogo.com/logos/ethereum-eth.svg',
-    }
-  });
-
-  await prisma.chain.upsert({
-    where: { id: 137 },
-    update: {},
-    create: {
-      id: 137,
+    },
+    {
+      chainId: 137,
       name: 'Polygon',
-      network: 'polygon',
       nativeToken: 'MATIC',
       rpcUrl: 'https://polygon-rpc.com',
       explorerUrl: 'https://polygonscan.com',
-      icon: 'https://cryptologos.cc/logos/polygon-matic-logo.svg',
-    }
-  });
+    },
+    // Add more chains as needed
+  ];
 
-  // Seed Tokens
-  const allTokens = [...MAINNET_TOKENS, ...POLYGON_TOKENS];
-  
-  for (const token of allTokens) {
-    const coingeckoId = COINGECKO_IDS[token.symbol.toLowerCase()];
-    const tradingViewSymbol = TOKEN_TO_TRADINGVIEW[token.symbol.toLowerCase()];
-    
-    await prisma.token.upsert({
-      where: {
-        token_chain_symbol_unique: {
-          chainId: token.chainId!,
-          symbol: token.symbol
-        }
-      },
-      update: {
-        name: token.name,
-        type: token.type as any, // Cast to enum type
-        exchange: token.exchange as any,
-        icon: token.icon,
-        address: token.address,
-        coingeckoId,
-        decimals: token.decimals,
-        logoURL: token.logoURL,
-        tradingViewSymbol,
-        isDefault: token.isDefault
-      },
-      create: {
-        symbol: token.symbol,
-        name: token.name,
-        type: token.type as any,
-        exchange: token.exchange as any,
-        icon: token.icon,
-        address: token.address,
-        coingeckoId,
-        chainId: token.chainId!,
-        decimals: token.decimals,
-        logoURL: token.logoURL,
-        tradingViewSymbol,
-        isDefault: token.isDefault
-      }
+  for (const chain of chains) {
+    await prisma.chain.upsert({
+      where: { chainId: chain.chainId },
+      update: chain,
+      create: chain,
     });
   }
 
-  // Token list operations removed - TokenList model doesn't exist in current schema
+  // Helper to get tradingViewSymbol
+  const getTradingViewSymbol = (symbol: string) => {
+    return TOKEN_TO_TRADINGVIEW[symbol.toLowerCase()] || symbol;
+  };
 
-  console.log('Database seeded successfully!');
+  // Seed Tokens (Ethereum Mainnet)
+  for (const token of MAINNET_TOKENS) {
+    await prisma.token.upsert({
+      where: {
+        chainId_address: {
+          chainId: 1,
+          address: token.address?.toLowerCase() || '',
+        },
+      },
+      update: {
+        ...token,
+        address: token.address?.toLowerCase() || '',
+        logoURL: token.logoURL,
+        coingeckoId: COINGECKO_IDS[token.symbol.toLowerCase()] || null,
+        tradingViewSymbol: getTradingViewSymbol(token.symbol),
+        type: getTokenType(token.type),
+        decimals: token.decimals ?? 18,
+        exchange: token.exchange || null,
+      },
+      create: {
+        ...token,
+        chainId: 1,
+        address: token.address?.toLowerCase() || '',
+        logoURL: token.logoURL,
+        coingeckoId: COINGECKO_IDS[token.symbol.toLowerCase()] || null,
+        tradingViewSymbol: getTradingViewSymbol(token.symbol),
+        type: getTokenType(token.type),
+        decimals: token.decimals ?? 18,
+        exchange: token.exchange || null,
+      },
+    });
+  }
+
+  // Seed Tokens (Polygon)
+  for (const token of POLYGON_TOKENS) {
+    await prisma.token.upsert({
+      where: {
+        chainId_address: {
+          chainId: 137,
+          address: token.address?.toLowerCase() || '',
+        },
+      },
+      update: {
+        ...token,
+        address: token.address?.toLowerCase() || '',
+        logoURL: token.logoURL,
+        coingeckoId: COINGECKO_IDS[token.symbol.toLowerCase()] || null,
+        tradingViewSymbol: getTradingViewSymbol(token.symbol),
+        type: getTokenType(token.type),
+        decimals: token.decimals ?? 18,
+        exchange: token.exchange || null,
+      },
+      create: {
+        ...token,
+        chainId: 137,
+        address: token.address?.toLowerCase() || '',
+        logoURL: token.logoURL,
+        coingeckoId: COINGECKO_IDS[token.symbol.toLowerCase()] || null,
+        tradingViewSymbol: getTradingViewSymbol(token.symbol),
+        type: getTokenType(token.type),
+        decimals: token.decimals ?? 18,
+        exchange: token.exchange || null,
+      },
+    });
+  }
+
+  // Seed Token Lists
+  for (const list of TRADINGVIEW_TOKEN_LISTS) {
+    const tokenList = await prisma.tokenList.upsert({
+      where: { listId: list.id },
+      update: {
+        name: list.name,
+        description: list.description,
+        isDefault: !!list.isDefault,
+      },
+      create: {
+        listId: list.id,
+        name: list.name,
+        description: list.description,
+        isDefault: !!list.isDefault,
+      },
+    });
+
+    // Link tokens to token list
+    for (const token of list.tokens) {
+      // Try to find the token in the DB (by symbol, on mainnet)
+      const dbToken = await prisma.token.findFirst({
+        where: {
+          symbol: token.symbol,
+          chainId: 1,
+        },
+      });
+      if (dbToken) {
+        await prisma.token.update({
+          where: { id: dbToken.id },
+          data: {
+            TokenList: {
+              connect: { id: tokenList.id },
+            },
+          },
+        });
+      }
+    }
+  }
+
+  console.log('Seed complete!');
 }
 
 main()
-  .catch(e => {
+  .catch((e) => {
     console.error(e);
     process.exit(1);
   })

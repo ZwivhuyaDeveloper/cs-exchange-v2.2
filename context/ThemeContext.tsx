@@ -9,12 +9,14 @@ interface ThemeContextType {
   theme: Theme;
   resolvedTheme: ResolvedTheme;
   setTheme: (theme: Theme) => void;
+  toggleTheme: () => void;
+
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const [theme, setTheme] = useState<Theme>('system');
+  const [theme, setTheme] = useState<Theme>('light');
   const [resolvedTheme, setResolvedTheme] = useState<ResolvedTheme>('dark');
   const [isInitialized, setIsInitialized] = useState(false); // Track initialization
 
@@ -72,8 +74,12 @@ export const ThemeProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     }
   }, []);
 
+  const toggleTheme = () => {
+    setTheme(prev => prev === "light" ? "dark" : "light");
+  };
+
   return (
-    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme, toggleTheme, }}>
       {children}
     </ThemeContext.Provider>
   );

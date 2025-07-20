@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Script from 'next/script';
 
 export const metadata: Metadata = {
   title: 'AlphaChain Signals | AI Crypto Trading, News & Research Platform',
@@ -56,8 +57,35 @@ export default function Home() {
         <TabsHome />
         <SocialProof />
         <PricingSection />
+        <Script id="ld-json-org" type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Organization',
+            name: 'AlphaChain',
+            url: 'https://alphachain.com/',
+            logo: 'https://alphachain.com/Cyclespace-logo/CS-logo-black-2.png',
+            sameAs: [
+              'https://twitter.com/AlphaChain',
+              'https://github.com/AlphaChain',
+              'https://linkedin.com/company/alphachain',
+            ],
+          })}
+        </Script>
+        <Script id="ld-json-website" type="application/ld+json">
+          {JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'WebSite',
+            name: 'AlphaChain',
+            url: 'https://alphachain.com/',
+            potentialAction: {
+              '@type': 'SearchAction',
+              target: 'https://alphachain.com/search?q={search_term_string}',
+              'query-input': 'required name=search_term_string',
+            },
+          })}
+        </Script>
       </main>
       <Footer />
     </div>
-  )
+  );
 }

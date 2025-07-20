@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://alphachain.com/sitemap.xml 
