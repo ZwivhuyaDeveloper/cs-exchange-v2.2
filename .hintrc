@@ -1,0 +1,17 @@
+{
+  "extends": [
+    "development"
+  ],
+  "hints": {
+    "typescript-config/consistent-casing": "off",
+    "axe/aria": [
+      "default",
+      {
+        "aria-valid-attr-value": "off"
+      }
+    ],
+    "no-inline-styles": "off",
+    "typescript-config/is-valid": "off",
+    "button-type": "off"
+  }
+}

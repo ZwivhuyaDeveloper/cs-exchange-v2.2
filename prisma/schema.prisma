@@ -1,0 +1,78 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Chain {
+  id          Int      @id @default(autoincrement())
+  chainId     Int      @unique
+  name        String
+  nativeToken String
+  rpcUrl      String
+  explorerUrl String
+  tokens      Token[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Token {
+  id                Int      @id @default(autoincrement())
+  chainId           Int
+  chain             Chain    @relation(fields: [chainId], references: [chainId])
+  address           String
+  symbol            String
+  name              String
+  decimals          Int
+  logoURI           String?
+  coingeckoId       String?
+  tradingViewSymbol String?
+  type              TokenType? @default(CRYPTO)
+  exchange          Exchange?
+  isDefault         Boolean  @default(false)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@unique([chainId, address])
+  @@unique([chainId, symbol])
+  @@index([symbol])
+  TokenList TokenList[]
+}
+
+model TokenList {
+  id          Int      @id @default(autoincrement())
+  listId      String   @unique
+  name        String
+  description String
+  isDefault   Boolean  @default(false)
+  tokens      Token[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+enum TokenType {
+  CRYPTO
+  STOCK
+  FOREX
+  INDEX
+  COMMODITY
+}
+
+enum Exchange {
+  NASDAQ
+  NYSE
+  COINBASE
+  BINANCE
+  FOREXCOM
+  TRADENATION
+}

@@ -1,0 +1,274 @@
+/* Custom Colors for Header and Landing Page Components */
+
+/* Color Variables */
+:root {
+  /* Primary Brand Colors */
+  --color-primary: #0A0E17;
+  --color-secondary: #3A86FF;
+  --color-accent: #00FFC2;
+  --color-accent-hover: #00E6B0;
+  --color-secondary-hover: #2E75E6;
+  
+  /* Gray Scale */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #3A3F4E;
+  --color-gray-700: #2A2F3E;
+  --color-gray-800: #1A1F2E;
+  --color-gray-900: #111827;
+  
+  /* Semantic Colors */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-transparent: transparent;
+  
+  /* Status Colors */
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-error: #EF4444;
+  --color-info: #3B82F6;
+}
+
+/* Text Color Utilities */
+.text-primary { color: var(--color-primary); }
+.text-secondary { color: var(--color-secondary); }
+.text-accent { color: var(--color-accent); }
+.text-accent-hover { color: var(--color-accent-hover); }
+.text-secondary-hover { color: var(--color-secondary-hover); }
+.text-white { color: var(--color-white); }
+.text-black { color: var(--color-black); }
+
+.text-gray-50 { color: var(--color-gray-50); }
+.text-gray-100 { color: var(--color-gray-100); }
+.text-gray-200 { color: var(--color-gray-200); }
+.text-gray-300 { color: var(--color-gray-300); }
+.text-gray-400 { color: var(--color-gray-400); }
+.text-gray-500 { color: var(--color-gray-500); }
+.text-gray-600 { color: var(--color-gray-600); }
+.text-gray-700 { color: var(--color-gray-700); }
+.text-gray-800 { color: var(--color-gray-800); }
+.text-gray-900 { color: var(--color-gray-900); }
+
+/* Background Color Utilities */
+.bg-primary { background-color: var(--color-primary); }
+.bg-secondary { background-color: var(--color-secondary); }
+.bg-accent { background-color: var(--color-accent); }
+.bg-accent-hover { background-color: var(--color-accent-hover); }
+.bg-secondary-hover { background-color: var(--color-secondary-hover); }
+.bg-white { background-color: var(--color-white); }
+.bg-black { background-color: var(--color-black); }
+.bg-transparent { background-color: var(--color-transparent); }
+
+.bg-gray-50 { background-color: var(--color-gray-50); }
+.bg-gray-100 { background-color: var(--color-gray-100); }
+.bg-gray-200 { background-color: var(--color-gray-200); }
+.bg-gray-300 { background-color: var(--color-gray-300); }
+.bg-gray-400 { background-color: var(--color-gray-400); }
+.bg-gray-500 { background-color: var(--color-gray-500); }
+.bg-gray-600 { background-color: var(--color-gray-600); }
+.bg-gray-700 { background-color: var(--color-gray-700); }
+.bg-gray-800 { background-color: var(--color-gray-800); }
+.bg-gray-900 { background-color: var(--color-gray-900); }
+
+/* Border Color Utilities */
+.border-primary { border-color: var(--color-primary); }
+.border-secondary { border-color: var(--color-secondary); }
+.border-accent { border-color: var(--color-accent); }
+.border-accent-hover { border-color: var(--color-accent-hover); }
+.border-secondary-hover { border-color: var(--color-secondary-hover); }
+.border-white { border-color: var(--color-white); }
+.border-black { border-color: var(--color-black); }
+.border-transparent { border-color: var(--color-transparent); }
+
+.border-gray-50 { border-color: var(--color-gray-50); }
+.border-gray-100 { border-color: var(--color-gray-100); }
+.border-gray-200 { border-color: var(--color-gray-200); }
+.border-gray-300 { border-color: var(--color-gray-300); }
+.border-gray-400 { border-color: var(--color-gray-400); }
+.border-gray-500 { border-color: var(--color-gray-500); }
+.border-gray-600 { border-color: var(--color-gray-600); }
+.border-gray-700 { border-color: var(--color-gray-700); }
+.border-gray-800 { border-color: var(--color-gray-800); }
+.border-gray-900 { border-color: var(--color-gray-900); }
+
+/* Hover State Utilities */
+.hover\:text-accent:hover { color: var(--color-accent); }
+.hover\:text-white:hover { color: var(--color-white); }
+.hover\:text-gray-300:hover { color: var(--color-gray-300); }
+.hover\:text-gray-400:hover { color: var(--color-gray-400); }
+
+.hover\:bg-accent:hover { background-color: var(--color-accent); }
+.hover\:bg-accent-hover:hover { background-color: var(--color-accent-hover); }
+.hover\:bg-secondary-hover:hover { background-color: var(--color-secondary-hover); }
+.hover\:bg-gray-700:hover { background-color: var(--color-gray-700); }
+.hover\:bg-gray-800:hover { background-color: var(--color-gray-800); }
+
+.hover\:border-accent:hover { border-color: var(--color-accent); }
+.hover\:border-accent-hover:hover { border-color: var(--color-accent-hover); }
+.hover\:border-gray-700:hover { border-color: var(--color-gray-700); }
+
+/* Focus State Utilities */
+.focus\:text-accent:focus { color: var(--color-accent); }
+.focus\:bg-accent:focus { background-color: var(--color-accent); }
+.focus\:border-accent:focus { border-color: var(--color-accent); }
+
+/* Active State Utilities */
+.active\:text-accent:active { color: var(--color-accent); }
+.active\:bg-accent:active { background-color: var(--color-accent); }
+.active\:border-accent:active { border-color: var(--color-accent); }
+
+/* Gradient Utilities */
+.bg-gradient-primary {
+  background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-gray-900) 100%);
+}
+
+.bg-gradient-accent {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-secondary) 100%);
+}
+
+.bg-gradient-secondary {
+  background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+}
+
+/* Shadow Utilities */
+.shadow-glow {
+  box-shadow: 0 0 20px rgba(0, 255, 194, 0.3);
+}
+
+.shadow-glow-hover:hover {
+  box-shadow: 0 0 30px rgba(0, 255, 194, 0.5);
+}
+
+.shadow-primary {
+  box-shadow: 0 4px 6px -1px rgba(10, 14, 23, 0.1), 0 2px 4px -1px rgba(10, 14, 23, 0.06);
+}
+
+.shadow-accent {
+  box-shadow: 0 4px 6px -1px rgba(0, 255, 194, 0.1), 0 2px 4px -1px rgba(0, 255, 194, 0.06);
+}
+
+/* Backdrop Blur Utilities */
+.backdrop-blur-header {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.backdrop-blur-light {
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+/* Opacity Utilities */
+.bg-primary-90 {
+  background-color: rgba(10, 14, 23, 0.9);
+}
+
+.bg-gray-800-50 {
+  background-color: rgba(26, 31, 46, 0.5);
+}
+
+.bg-gray-700-50 {
+  background-color: rgba(42, 47, 62, 0.5);
+}
+
+/* Special Header-specific Utilities */
+.header-bg {
+  background-color: rgba(10, 14, 23, 0.9);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--color-gray-700);
+}
+
+.logo-gradient {
+  background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-secondary) 100%);
+}
+
+.cta-button {
+  background-color: var(--color-accent);
+  color: var(--color-primary);
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 0 30px rgba(0, 255, 194, 0.5);
+}
+
+.nav-link {
+  color: var(--color-gray-300);
+  transition: color 0.3s ease;
+}
+
+.nav-link:hover {
+  color: var(--color-white);
+}
+
+.dropdown-bg {
+  background-color: var(--color-gray-800);
+  border: 1px solid var(--color-gray-700);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dropdown-item {
+  color: var(--color-gray-300);
+  transition: all 0.3s ease;
+}
+
+.dropdown-item:hover {
+  color: var(--color-white);
+  background-color: var(--color-gray-700);
+}
+
+/* Mobile Menu Utilities */
+.mobile-menu-bg {
+  background-color: var(--color-gray-800);
+  border-top: 1px solid var(--color-gray-700);
+}
+
+.mobile-menu-item {
+  color: var(--color-gray-300);
+  transition: color 0.3s ease;
+}
+
+.mobile-menu-item:hover {
+  color: var(--color-white);
+}
+
+/* Trust Badge Utilities */
+.trust-badge {
+  color: var(--color-gray-400);
+  font-size: 0.75rem;
+}
+
+.trust-badge-icon {
+  color: var(--color-accent);
+}
+
+/* Responsive Color Utilities */
+@media (max-width: 768px) {
+  .mobile-header-bg {
+    background-color: rgba(10, 14, 23, 0.95);
+  }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-gray-50: #111827;
+    --color-gray-100: #1F2937;
+    --color-gray-200: #374151;
+    --color-gray-300: #4B5563;
+    --color-gray-400: #6B7280;
+    --color-gray-500: #9CA3AF;
+    --color-gray-600: #D1D5DB;
+    --color-gray-700: #E5E7EB;
+    --color-gray-800: #F3F4F6;
+    --color-gray-900: #F9FAFB;
+  }
+} 
