@@ -16,21 +16,19 @@ export async function OPTIONS() {
 export async function GET(request: NextRequest) {
   const searchParams = request.nextUrl.searchParams;
   const chainId = searchParams.get("chainId");
-  const symbol = searchParams.get("symbol");
-  const address = searchParams.get("address");
+  const name = searchParams.get("name");
 
   try {
     const where: any = {};
     if (chainId) where.chainId = Number(chainId);
-    if (symbol) where.symbol = symbol;
-    if (address) where.address = address.toLowerCase();
-    const tokens = await prisma.token.findMany({ where });
-    return new Response(JSON.stringify(tokens), {
+    if (name) where.name = name;
+    const chains = await prisma.chain.findMany({ where });
+    return new Response(JSON.stringify(chains), {
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error) {
     return new Response(
-      JSON.stringify({ error: "Failed to fetch tokens" }),
+      JSON.stringify({ error: "Failed to fetch chains" }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
