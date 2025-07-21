@@ -48,7 +48,7 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
       .catch(() => setTokenError('Failed to load token info'));
   }, [tokenSymbol, chainId]);
 
-  // Fetch order data from Binance
+  // Fetch order data from CoinGecko or Binance
   useEffect(() => {
     if (!tokenInfo) return;
     const fetchOrderData = async () => {
@@ -56,39 +56,103 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
       setOrderError(null);
       setOrderData(null);
       try {
-        const symbol = `${tokenInfo.symbol.toUpperCase()}USDT`;
-        if (!VALID_TRADING_PAIRS.includes(symbol)) {
-          throw new Error(`${tokenInfo.symbol.toUpperCase()}/USDT trading pair not available on Binance`);
-        }
-        const response = await fetch(`https://api.binance.com/api/v3/trades?symbol=${symbol}&limit=1000`);
-        if (response.status === 400) {
-          throw new Error(`${tokenInfo.symbol.toUpperCase()}/USDT trading pair not found on Binance`);
-        }
-        if (!response.ok) {
-          throw new Error(`Failed to fetch trade history: ${response.status} ${response.statusText}`);
-        }
-        const trades = await response.json();
-        if (!Array.isArray(trades) || trades.length === 0) {
-          throw new Error('No trade data available for this pair');
-        }
-        let buys = 0, sells = 0, buyVolume = 0, sellVolume = 0;
-        trades.forEach((trade: { isBuyerMaker: boolean; qty: string }) => {
-          if (trade.isBuyerMaker) {
-            sells++;
-            sellVolume += parseFloat(trade.qty);
-          } else {
-            buys++;
-            buyVolume += parseFloat(trade.qty);
+        // Try CoinGecko first if coingeckoId is available
+        if (tokenInfo.coingeckoId) {
+          const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
+          const headers: HeadersInit = {};
+          if (apiKey) headers["x-cg-demo-api-key"] = apiKey;
+          // Fetch tickers for the token
+          const res = await fetch(`https://api.coingecko.com/api/v3/coins/${tokenInfo.coingeckoId}/tickers`, { headers });
+          if (!res.ok) throw new Error(`Failed to fetch trade data: ${res.status} ${res.statusText}`);
+          const data = await res.json();
+          const tickers = data.tickers || [];
+          // Aggregate buy/sell volume by order type if available
+          let buys = 0, sells = 0, buyVolume = 0, sellVolume = 0;
+          tickers.forEach((ticker: any) => {
+            // CoinGecko does not provide explicit buy/sell order counts, so we use volume as proxy
+            // If 'bid_ask_spread_percentage' is available, we can use it to estimate activity
+            // We'll treat all as 'buys' for simplicity, or split by base/target if possible
+            if (ticker.target && ticker.target.toUpperCase() === 'USDT') {
+              buyVolume += ticker.converted_volume?.usd || 0;
+              buys++;
+            } else {
+              sellVolume += ticker.converted_volume?.usd || 0;
+              sells++;
+            }
+          });
+          // If no tickers found, fallback to Binance if possible
+          if (buys + sells === 0 && tokenInfo.symbol) {
+            const symbol = `${tokenInfo.symbol.toUpperCase()}USDT`;
+            if (VALID_TRADING_PAIRS.includes(symbol)) {
+              const response = await fetch(`https://api.binance.com/api/v3/trades?symbol=${symbol}&limit=1000`);
+              if (response.status === 400) {
+                throw new Error(`${tokenInfo.symbol.toUpperCase()}/USDT trading pair not found on Binance`);
+              }
+              if (!response.ok) {
+                throw new Error(`Failed to fetch trade history: ${response.status} ${response.statusText}`);
+              }
+              const trades = await response.json();
+              if (!Array.isArray(trades) || trades.length === 0) {
+                throw new Error('No trade data available for this pair');
+              }
+              buys = 0; sells = 0; buyVolume = 0; sellVolume = 0;
+              trades.forEach((trade: { isBuyerMaker: boolean; qty: string }) => {
+                if (trade.isBuyerMaker) {
+                  sells++;
+                  sellVolume += parseFloat(trade.qty);
+                } else {
+                  buys++;
+                  buyVolume += parseFloat(trade.qty);
+                }
+              });
+            } else {
+              throw new Error('No trade/order data available for this token');
+            }
           }
-        });
-        setOrderData({
-          buys,
-          sells,
-          buyVolume,
-          sellVolume,
-          buyers: buys,
-          sellers: sells
-        });
+          setOrderData({
+            buys,
+            sells,
+            buyVolume,
+            sellVolume,
+            buyers: buys,
+            sellers: sells
+          });
+        } else {
+          // Fallback to Binance for legacy tokens
+          const symbol = `${tokenInfo.symbol.toUpperCase()}USDT`;
+          if (!VALID_TRADING_PAIRS.includes(symbol)) {
+            throw new Error(`${tokenInfo.symbol.toUpperCase()}/USDT trading pair not available on Binance`);
+          }
+          const response = await fetch(`https://api.binance.com/api/v3/trades?symbol=${symbol}&limit=1000`);
+          if (response.status === 400) {
+            throw new Error(`${tokenInfo.symbol.toUpperCase()}/USDT trading pair not found on Binance`);
+          }
+          if (!response.ok) {
+            throw new Error(`Failed to fetch trade history: ${response.status} ${response.statusText}`);
+          }
+          const trades = await response.json();
+          if (!Array.isArray(trades) || trades.length === 0) {
+            throw new Error('No trade data available for this pair');
+          }
+          let buys = 0, sells = 0, buyVolume = 0, sellVolume = 0;
+          trades.forEach((trade: { isBuyerMaker: boolean; qty: string }) => {
+            if (trade.isBuyerMaker) {
+              sells++;
+              sellVolume += parseFloat(trade.qty);
+            } else {
+              buys++;
+              buyVolume += parseFloat(trade.qty);
+            }
+          });
+          setOrderData({
+            buys,
+            sells,
+            buyVolume,
+            sellVolume,
+            buyers: buys,
+            sellers: sells
+          });
+        }
       } catch (err) {
         setOrderError((err as Error).message);
       } finally {
