@@ -45,7 +45,7 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setFeaturesOpen(!featuresOpen)}
-                className="flex items-center space-x-1 text-gray-300 hover:text-white transition-colors"
+                className="flex items-center space-x-1 text-gray-600 hover:text-white transition-colors"
               >
                 <span>Features</span>
                 <ChevronDown className="h-4 w-4" />
@@ -61,7 +61,7 @@ export default function Header() {
                   >
                     <Link
                       href="/news-details"
-                      className="block px-4 py-3 text-sm text-gray-500 hover:text-white hover:rounded-lg hover:bg-gray-200 transition-colors"
+                      className="block px-4 py-3 text-sm text-gray-600 hover:text-white hover:rounded-lg hover:bg-gray-200 transition-colors"
                     >
                       News Dashboard
                     </Link>
@@ -97,7 +97,7 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setResourcesOpen(!resourcesOpen)}
-                className="flex items-center space-x-1 text-gray-300 hover:text-white transition-colors"
+                className="flex items-center space-x-1 text-gray-600 hover:text-white transition-colors"
               >
                 <span>Resources</span>
                 <ChevronDown className="h-4 w-4" />
@@ -144,7 +144,7 @@ export default function Header() {
 
           {/* Trust Badges */}
           <div className="hidden lg:flex items-center space-x-4">
-            <div className="flex items-center space-x-2 text-xs text-gray-400">
+            <div className="flex items-center space-x-2 text-xs text-gray-500">
               <Shield className="h-4 w-4 text-[#00FFC2]" />
               <span>256-bit SSL</span>
             </div>

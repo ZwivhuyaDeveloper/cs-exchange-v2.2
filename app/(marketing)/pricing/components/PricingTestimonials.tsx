@@ -38,7 +38,7 @@ const testimonials = [
 
 export default function PricingTestimonials() {
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-900 to-primary">
+    <section className="py-20 bg-gradient-to-b from-gray-50 to-[#0A0E17]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -46,9 +46,9 @@ export default function PricingTestimonials() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            What Our <span className="text-accent">Customers Say</span>
+            What Our <span className="text-[#00ffc3]">Customers Say</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
             Real results from traders using AlphaChain across all plan tiers
           </p>
         </motion.div>
@@ -60,35 +60,35 @@ export default function PricingTestimonials() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
-              className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-accent/50 transition-all duration-300"
+              className="bg-gray-200/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-300 hover:border-[#00ffc3]/50 transition-all duration-300"
             >
               {/* Plan Badge */}
               <div className="flex justify-between items-start mb-6">
                 <div className={`px-3 py-1 rounded-full text-sm font-semibold ${
                   testimonial.plan === 'Institutional' 
-                    ? 'bg-secondary/20 text-secondary'
+                    ? 'bg-[#00ffc3]/20 text-[#00ffc3]'
                     : testimonial.plan === 'Pro'
-                    ? 'bg-accent/20 text-accent'
-                    : 'bg-gray-600/20 text-gray-400'
+                    ? 'bg-[#3a86ff]/20 text-[#3a86ff]'
+                    : 'bg-gray-200/20 text-gray-500'
                 }`}>
                   {testimonial.plan} Plan
                 </div>
                 <div className="flex items-center space-x-1">
                   {[...Array(testimonial.rating)].map((_, i) => (
-                    <Star key={i} className="h-4 w-4 text-accent fill-current" />
+                    <Star key={i} className="h-4 w-4 text-[#00ffc3] fill-current" />
                   ))}
                 </div>
               </div>
 
               {/* Content */}
-              <blockquote className="text-gray-300 mb-6 italic">
+              <blockquote className="text-gray-500 mb-6 italic">
                 "{testimonial.content}"
               </blockquote>
 
               {/* Results */}
-              <div className="bg-accent/10 border border-accent/20 rounded-lg p-3 mb-6">
-                <div className="text-sm text-gray-400">Result:</div>
-                <div className="text-accent font-semibold">{testimonial.results}</div>
+              <div className="bg-[#00ffc3]/10 border border-[#00ffc3]/20 rounded-lg p-3 mb-6">
+                <div className="text-sm text-gray-500">Result:</div>
+                <div className="text-[#00ffc3] font-semibold">{testimonial.results}</div>
               </div>
 
               {/* Author */}
@@ -103,8 +103,8 @@ export default function PricingTestimonials() {
                   <div className="text-sm text-gray-400">{testimonial.role}</div>
                   {testimonial.company !== 'Independent' && testimonial.company !== 'Retail Investor' && (
                     <div className="flex items-center space-x-1 mt-1">
-                      <Building2 className="h-3 w-3 text-accent" />
-                      <span className="text-xs text-accent">{testimonial.company}</span>
+                      <Building2 className="h-3 w-3 text-[#00ffc3]" />
+                      <span className="text-xs text-[#00ffc3]">{testimonial.company}</span>
                     </div>
                   )}
                 </div>
@@ -120,20 +120,20 @@ export default function PricingTestimonials() {
           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center"
         >
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">4.9/5</div>
-            <div className="text-gray-400">Average Rating</div>
+            <div className="text-3xl font-bold text-[#00ffc3] mb-2">4.9/5</div>
+            <div className="text-gray-500">Average Rating</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">50K+</div>
-            <div className="text-gray-400">Happy Customers</div>
+            <div className="text-3xl font-bold text-[#00ffc3] mb-2">50K+</div>
+            <div className="text-gray-500">Happy Customers</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">95%</div>
-            <div className="text-gray-400">Retention Rate</div>
+            <div className="text-3xl font-bold text-[#00ffc3] mb-2">95%</div>
+            <div className="text-gray-500">Retention Rate</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">24/7</div>
-            <div className="text-gray-400">Support</div>
+            <div className="text-3xl font-bold text-[#00ffc3] mb-2">24/7</div>
+            <div className="text-gray-500">Support</div>
           </div>
         </motion.div>
       </div>

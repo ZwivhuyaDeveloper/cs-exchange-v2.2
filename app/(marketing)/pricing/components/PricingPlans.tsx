@@ -88,7 +88,7 @@ const plans = [
 
 export default function PricingPlans() {
   return (
-    <section className="py-20 bg-gradient-to-b from-primary to-gray-900">
+    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Billing Toggle */}
         <motion.div
@@ -96,14 +96,14 @@ export default function PricingPlans() {
           whileInView={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center bg-gray-800/50 rounded-full p-1 border border-gray-700">
-            <button className="px-6 py-2 rounded-full bg-accent text-primary font-semibold">
+          <div className="inline-flex items-center bg-gray-300/50 rounded-full p-1 border border-gray-300">
+            <button className="px-6 py-2 rounded-full bg-[#00ffc3] text-primary font-semibold">
               Monthly
             </button>
-            <button className="px-6 py-2 rounded-full text-gray-400 hover:text-white transition-colors">
+            <button className="px-6 py-2 rounded-full text-gray-500 hover:text-white transition-colors">
               Annual
             </button>
-            <div className="ml-3 bg-accent/20 text-accent px-3 py-1 rounded-full text-sm font-semibold">
+            <div className="ml-3 bg-[#00ffc3]/20 text-accent px-3 py-1 rounded-full text-sm font-semibold">
               Save 40%
             </div>
           </div>
@@ -118,18 +118,18 @@ export default function PricingPlans() {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
-                className={`relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border transition-all duration-300 hover:scale-105 ${
+                className={`relative bg-gray-300/50 backdrop-blur-sm rounded-2xl p-8 border transition-all duration-300 hover:scale-105 ${
                   plan.popular 
-                    ? 'border-accent shadow-lg shadow-accent/20 ring-2 ring-accent/20' 
-                    : 'border-gray-700 hover:border-accent/50'
+                    ? 'border-[#00ffc3] shadow-lg shadow-[#00ffc3]/20 ring-2 ring-[#00ffc3]/20' 
+                    : 'border-gray-300 hover:border-[#00ffc3]/50'
                 }`}
               >
                 {plan.badge && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                     <div className={`px-4 py-1 rounded-full text-sm font-semibold ${
                       plan.popular 
-                        ? 'bg-accent text-primary' 
-                        : 'bg-secondary text-white'
+                        ? 'bg-[#00ffc3] text-primary' 
+                        : 'bg-[#3a86ff] text-white'
                     }`}>
                       {plan.badge}
                     </div>
@@ -139,8 +139,8 @@ export default function PricingPlans() {
                 <div className="text-center mb-8">
                   <div className={`inline-flex p-3 rounded-xl mb-4 ${
                     plan.popular 
-                      ? 'bg-accent text-primary' 
-                      : 'bg-gray-700 text-accent'
+                      ? 'bg-[#00ffc3] text-primary' 
+                      : 'bg-gray-300 text-[#3a86ff]'
                   }`}>
                     <Icon className="h-6 w-6" />
                   </div>
@@ -155,7 +155,7 @@ export default function PricingPlans() {
                   {plan.originalPrice && (
                     <div className="flex items-center justify-center space-x-2">
                       <span className="text-gray-500 line-through">${plan.originalPrice}/mo</span>
-                      <span className="bg-accent/20 text-accent px-2 py-1 rounded text-sm font-semibold">
+                      <span className="bg-[#00ffc3]/20 text-[#3a86ff] px-2 py-1 rounded text-sm font-semibold">
                         Save ${plan.originalPrice - plan.price}/mo
                       </span>
                     </div>
@@ -165,7 +165,7 @@ export default function PricingPlans() {
                 <div className="space-y-3 mb-8">
                   {plan.features.map((feature) => (
                     <div key={feature} className="flex items-start space-x-3">
-                      <Check className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
+                      <Check className="h-5 w-5 text-[#3a86ff] flex-shrink-0 mt-0.5" />
                       <span className="text-gray-300 text-sm">{feature}</span>
                     </div>
                   ))}
@@ -181,8 +181,8 @@ export default function PricingPlans() {
                   href={plan.ctaLink}
                   className={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-all duration-300 ${
                     plan.popular
-                      ? 'bg-accent hover:bg-accent-hover text-primary transform hover:scale-105'
-                      : 'bg-gray-700 hover:bg-accent text-white hover:text-primary'
+                      ? 'bg-[#00ffc3] hover:bg-[#00ffc3]/80 text-primary transform hover:scale-105'
+                      : 'bg-gray-300 hover:bg-[#3a86ff]/80 text-white hover:text-[#0A0E17]'
                   }`}
                 >
                   {plan.cta}
@@ -204,14 +204,14 @@ export default function PricingPlans() {
           whileInView={{ opacity: 1, y: 0 }}
           className="mt-16 text-center"
         >
-          <div className="bg-gradient-to-r from-accent/20 to-secondary/20 rounded-2xl p-8 border border-accent/30">
+          <div className="bg-gradient-to-r from-[#00ffc3]/20 to-[#3a86ff]/20 rounded-2xl p-8 border border-[#00ffc3]/30">
             <h3 className="text-2xl font-bold text-white mb-4">Need a Custom Solution?</h3>
             <p className="text-gray-300 mb-6 max-w-2xl mx-auto">
               For hedge funds, trading firms, and large institutions requiring custom integrations, dedicated infrastructure, or white-label solutions.
             </p>
             <Link
               href="/contact"
-              className="inline-block bg-accent hover:bg-accent-hover text-primary px-8 py-3 rounded-lg font-semibold transition-colors"
+              className="inline-block bg-[#00ffc3] hover:bg-[#00ffc3]/80 text-[#0A0E17] px-8 py-3 rounded-lg font-semibold transition-colors"
             >
               Contact Sales Team
             </Link>

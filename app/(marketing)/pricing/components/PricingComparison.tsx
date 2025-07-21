@@ -63,7 +63,7 @@ const features = [
 
 export default function PricingComparison() {
   return (
-    <section className="py-20 bg-gray-900">
+    <section className="py-20 bg-gray-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -71,16 +71,16 @@ export default function PricingComparison() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Feature <span className="text-accent">Comparison</span>
+            Feature <span className="text-[#00ffc3]">Comparison</span>
           </h2>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
             Compare all features across our plans to find the perfect fit for your trading needs
           </p>
         </motion.div>
 
-        <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 overflow-hidden">
+        <div className="bg-gray-300/50 backdrop-blur-sm rounded-2xl border border-gray-300 overflow-hidden">
           {/* Header */}
-          <div className="grid grid-cols-4 gap-4 p-6 border-b border-gray-700 bg-gray-800/30">
+          <div className="grid grid-cols-4 gap-4 p-6 border-b border-gray-300 bg-gray-300/30">
             <div className="text-lg font-semibold text-white">Features</div>
             <div className="text-center">
               <div className="text-lg font-semibold text-white">Free</div>
@@ -92,7 +92,7 @@ export default function PricingComparison() {
             </div>
             <div className="text-center">
               <div className="text-lg font-semibold text-white">Institutional</div>
-              <div className="text-sm text-gray-400">$99/month</div>
+              <div className="text-sm text-gray-500">$99/month</div>
             </div>
           </div>
 
@@ -105,8 +105,8 @@ export default function PricingComparison() {
               transition={{ delay: categoryIndex * 0.1 }}
             >
               {/* Category Header */}
-              <div className="px-6 py-4 bg-gray-700/30 border-b border-gray-700">
-                <h3 className="text-lg font-semibold text-accent">{category.category}</h3>
+              <div className="px-6 py-4 bg-gray-300/30 border-b border-gray-300">
+                <h3 className="text-lg font-semibold text-[#00ffc3]">{category.category}</h3>
               </div>
 
               {/* Feature Items */}
@@ -117,24 +117,24 @@ export default function PricingComparison() {
                     itemIndex % 2 === 0 ? 'bg-gray-800/20' : ''
                   }`}
                 >
-                  <div className="text-gray-300 text-sm">{item.name}</div>
+                  <div className="text-gray-00 text-sm">{item.name}</div>
                   <div className="text-center">
                     {item.free ? (
-                      <Check className="h-5 w-5 text-accent mx-auto" />
+                      <Check className="h-5 w-5 text-[#00ffc3] mx-auto" />
                     ) : (
                       <X className="h-5 w-5 text-gray-600 mx-auto" />
                     )}
                   </div>
                   <div className="text-center">
                     {item.pro ? (
-                      <Check className="h-5 w-5 text-accent mx-auto" />
+                      <Check className="h-5 w-5 text-[#00ffc3] mx-auto" />
                     ) : (
                       <X className="h-5 w-5 text-gray-600 mx-auto" />
                     )}
                   </div>
                   <div className="text-center">
                     {item.institutional ? (
-                      <Check className="h-5 w-5 text-accent mx-auto" />
+                      <Check className="h-5 w-5 text-[#00ffc3] mx-auto" />
                     ) : (
                       <X className="h-5 w-5 text-gray-600 mx-auto" />
                     )}

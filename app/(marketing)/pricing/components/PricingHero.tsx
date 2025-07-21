@@ -1,27 +1,32 @@
 'use client'
 
+import { AuroraBackground } from '@/components/ui/aurora-background'
 import { motion } from 'framer-motion'
 import { Check, Star } from 'lucide-react'
 
 export default function PricingHero() {
   return (
-    <section className="relative py-20 overflow-hidden blockchain-pattern">
-      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-primary/50 to-primary" />
+    <section className="relative py-20 overflow-hidden ">
+      {/* Background Elements */}
+      <div className="absolute inset-0 ">
+        <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#0A0E17]/50 to-[#0A0E17]/100" />
+        <AuroraBackground children={undefined} className="absolute inset-0  " />
+      </div>
       
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="text-center">
           {/* Trust Badge */}
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-700"
+            className="mb-8 inline-flex items-center space-x-2 bg-gray-300/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-300"
           >
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
-                <Star key={i} className="h-4 w-4 text-accent fill-current" />
+                <Star key={i} className="h-4 w-4 text-[#00FFC2] fill-current" />
               ))}
             </div>
-            <span className="text-sm text-gray-300">Trusted by 50,000+ traders</span>
+            <span className="text-sm text-gray-500">Trusted by 50,000+ traders</span>
           </motion.div>
 
           {/* Main Headline */}
@@ -33,7 +38,7 @@ export default function PricingHero() {
           >
             <span className="text-white">Choose Your</span>
             <br />
-            <span className="bg-gradient-to-r from-accent to-secondary bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-[#00ffc3] to-[#3a86ff] bg-clip-text text-transparent">
               Trading Edge
             </span>
           </motion.h1>
@@ -43,7 +48,7 @@ export default function PricingHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-300 mb-12 max-w-3xl mx-auto"
+            className="text-xl md:text-2xl text-gray-500 mb-12 max-w-3xl mx-auto"
           >
             Start free and scale as you grow. All plans include our 7-day money-back guarantee and 24/7 support.
           </motion.p>
@@ -53,7 +58,7 @@ export default function PricingHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-wrap justify-center items-center space-x-8 mb-12 text-sm text-gray-400"
+            className="flex flex-wrap justify-center items-center space-x-8 mb-12 text-sm text-gray-500"
           >
             <div className="flex items-center space-x-2">
               <Check className="h-4 w-4 text-accent" />
