@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
+import { ScrollArea, ScrollAreaViewport } from "@/components/ui/scroll-area";
 import { 
   Dialog,
   DialogTrigger,
@@ -8,7 +9,6 @@ import {
   DialogClose
 } from "@/components/ui/dialog";
 import { Command, CommandInput, CommandList, CommandItem, CommandEmpty } from "@/components/ui/command";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, X } from "lucide-react";
@@ -27,6 +27,9 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
   const [tokens, setTokens] = useState<any[]>([]);
   const [page, setPage] = useState(1);
   const pageSize = 20;
+
+  // Ref for the viewport inside ScrollArea
+  const viewportRef = useRef<HTMLDivElement>(null);
 
   // Always fetch all tokens from DB
   useEffect(() => {
@@ -58,10 +61,7 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
   const totalPages = Math.ceil(filteredTokens.length / pageSize) || 1;
   const paginatedTokens = filteredTokens.slice((page - 1) * pageSize, page * pageSize);
 
-  // Reset to first page on search
-  useEffect(() => {
-    setPage(1);
-  }, [searchQuery]);
+  // Remove the useEffect for scroll reset on page change
 
   // Build tokenMap for logo display
   const tokenMap = tokens.length > 0
@@ -111,7 +111,8 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
               </DialogHeader>
 
               <ScrollArea className="h-fit">
-                <CommandList className="max-h-[400px] ">
+                <ScrollAreaViewport ref={viewportRef} className="h-full w-full rounded-[inherit]">
+                  <CommandList className="max-h-[400px] ">
                   <CommandEmpty>No token found.</CommandEmpty>
                   {paginatedTokens.map((token) => (
                     <CommandItem
@@ -139,13 +140,23 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
                     </CommandItem>
                   ))}
                 </CommandList>
+                </ScrollAreaViewport>
               </ScrollArea>
               {/* Pagination controls always visible */}
               <Pagination className="mt-2">
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      onClick={() => {
+                        setPage((p) => {
+                          const newPage = Math.max(1, p - 1);
+                          // Scroll to top when paginating
+                          if (viewportRef.current) {
+                            viewportRef.current.scrollTo({ top: 0, behavior: "smooth" });
+                          }
+                          return newPage;
+                        });
+                      }}
                       aria-disabled={page === 1}
                       className={page === 1 ? 'opacity-50 pointer-events-none' : ''}
                     />
@@ -155,7 +166,16 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
                   </PaginationItem>
                   <PaginationItem>
                     <PaginationNext
-                      onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                      onClick={() => {
+                        setPage((p) => {
+                          const newPage = Math.min(totalPages, p + 1);
+                          // Scroll to top when paginating
+                          if (viewportRef.current) {
+                            viewportRef.current.scrollTo({ top: 0, behavior: "smooth" });
+                          }
+                          return newPage;
+                        });
+                      }}
                       aria-disabled={page === totalPages}
                       className={page === totalPages ? 'opacity-50 pointer-events-none' : ''}
                     />
