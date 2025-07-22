@@ -26,6 +26,7 @@ import { SwapButton } from "./ui/SwapButton";
 import { SendIcon, Settings } from "lucide-react";
 import { TokenPicker } from "./ui/tokenPicker";
 import { Card, CardContent } from "../../../../components/ui/card";
+import PriceViewUI from "./PriceViewUI";
 
 interface PriceViewProps {
   taker: Address | undefined;
@@ -240,292 +241,134 @@ export default function PriceView({
 
   const MAX_ALLOWANCE = BigInt(2 ** 256 - 1);
 
-  return (
-    <div className=" justify-center items-center gap-2 sm:w-fit md:w-fit w-fit h-fit max-h-fit px-1 pb-5"> 
-      {loading && <div className="text-center text-blue-500">Loading price...</div>}
-      {apiError && <div className="text-center text-red-500">{apiError}</div>}
-      {/* swap */}
-      <div className="w-[350px] h-fit  flex flex-col bg-transparent my-0 justify-start gap-2 px-3">
-
-        <div className="p-5 px-0 gap-3 flex flex-col pb-2">
-          <div className="justify-between items-center flex flex-row">
-            <div className="flex flex-row gap-2 items-center">
-              <div className="dark:bg-zinc-800 bg-zinc-100 py-1 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Swap</h1></div>
-              <div className="dark:bg-zinc-800 py-1 bg-zinc-100 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Limit</h1></div>
-              <div className="dark:bg-zinc-800 py-1 bg-zinc-100 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Spot</h1></div>
-            </div>
-            <Button variant="default" className=" h-8 w-8 bg-transparent rounded-full shadow shadow-zinc-950">
-              <Settings width={35} height={35} color="white"/>
-            </Button>
-          </div>
-        </div>
- 
-        <div className="h-full">
-
-          <section className="p-5 flex flex-col gap-2 rounded-2xl rounded-br-4xl dark:bg-zinc-900/80 bg-zinc-100 overflow-clip">
-            <label htmlFor="sell" className="text-black text-[16px] dark:text-white  font-medium items-start">
-               Sell
-            </label>
-            <div className="flex flex-row items-center justify-between gap-5">
-              <label htmlFor="sell-amount" className="sr-only"></label>
-              <TokenPicker 
-                value={fromToken}
-                onValueChange={setFromToken}
-                label="From"
-              />
-            <div className="flex gap-2">
-              <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md"/>
-              <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md"/>
-              <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md"/>
-              <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md"/>
-            </div>
-            </div>
-            <TokenInputSection
-              label="sell"
-              token={fromToken}
-              onTokenChange={setFromToken}
-              amount={sellAmount}
-              chainId={chainId}
-              onAmountChange={(value) => {
-                const sanitizedValue = sanitizeDecimalPlaces(value, sellTokenDecimals);
-                setTradeDirection("sell");
-                setSellAmount(sanitizedValue)
-              }}
-              tokens={tokenList}
-              tokenMap={tokenMap}
-            />
-          </section>
-
-        <div>
-          {/* Swap Button Container */}
-            <div className="relative ">
-              <SwapButton
-                sellToken={fromToken}
-                buyToken={toToken}
-                sellAmount={sellAmount}
-                buyAmount={buyAmount}
-                chainId={chainId}
-                setSellToken={setFromToken}
-                setBuyToken={setToToken}
-                setSellAmount={setSellAmount}
-                setBuyAmount={setBuyAmount}
-                tokenMap={tokenMap}        
-                />
-            </div>
-        </div>
-
-      <div>
-
-        <section className="p-5 flex flex-col gap-2 rounded-2xl rounded-tr-4xl dark:bg-zinc-900/80 bg-zinc-100 overflow-clip">
-
-          <label htmlFor="buy" className="text-black text-[16px] dark:text-white  font-medium items-start">
-            Buy
-          </label>
-          <div className="flex flex-row items-center justify-between gap-5">
-            <label htmlFor="buy-amount" className="sr-only"></label>
-            <TokenPicker 
-              value={toToken}
-              onValueChange={setToToken}
-              label="To"
-            />
-            <div className="flex gap-2">
-              <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md"/>
-              <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md"/>
-              <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md"/>
-              <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md"/>
-            </div>
-          </div>
-            <TokenInputSection
-              label="buy"
-              token={toToken}
-              onTokenChange={setToToken}
-              amount={buyAmount}
-              chainId={chainId}
-              onAmountChange={(value) => {
-                // Changed from sellTokenDecimals to buyTokenDecimals
-                const sanitizedValue = sanitizeDecimalPlaces(value, buyTokenDecimals);
-                setTradeDirection("buy");
-                setBuyAmount(sanitizedValue);
-              }}
-              disabled
-              tokens={tokenList}
-              tokenMap={tokenMap}
-            />
-          </section>
-          </div>
-
-          <Card className="w-full h-fit bg-transparent rounded-none py-0 border-none shadow-none pt-5">
-            <CardContent className="gap-2 flex flex-col">
-              {/* Add FinalSwapValue here */}
-              {price && (
-                <div className="flex flex-col">
-                  <div className="flex flex-row justify-between items-center ">
-                    <p className="text-sm font-medium "><span>You receive:</span></p>
-                  <div className="">
-                    <FinalSwapValue 
-                      buyAmount={buyAmount}
-                      buyTokenSymbol={toToken}
-                      chainId={chainId}
-                      tokenMap={tokenMap}
-                      feeAmount={price?.fees?.integratorFee?.amount || '0'}
-                    />
-                      </div>
-                    </div>
+  // ApproveOrReviewButton logic as a node
+  const ApproveOrReviewButtonNode = taker && sellTokenObject?.address ? (
+    <ApproveOrReviewButton
+      sellTokenAddress={sellTokenObject.address}
+      taker={taker}
+      onClick={() => {
+        setFinalize(true);
+      }}
+      disabled={inSufficientBalance || !sellAmount}
+      price={price}
+    />
+  ) : (
+    // ConnectButton logic as before
+    <ConnectButton.Custom>
+      {({
+        account,
+        chain,
+        openAccountModal,
+        openChainModal,
+        openConnectModal,
+        mounted,
+      }) => {
+        const ready = mounted;
+        const connected = ready && account && chain;
+        return (
+          <div
+            {...(!ready && {
+              "aria-hidden": true,
+              style: {
+                opacity: 0,
+                pointerEvents: "none",
+                userSelect: "none",
+              },
+            })}
+          >
+            {(() => {
+              if (!connected) {
+                return (
+                  <div className="w-full px-3 justify-start">
+                    <button
+                      className="w-full bg-blue-600 text-white rounded-3xl font-medium p-2 hover:bg-blue-700 justify-center items-center flex"
+                      onClick={openConnectModal}
+                      type="button"
+                    >
+                      Connect Wallet
+                    </button>
                   </div>
-                  )}
-
-
-              {/* Affiliate Fee Display */}
-              <div className="flex flex-row justify-between items-center w-full">
-                <div>
-                  <p className="text-sm font-medium ">Gas Fee:</p>
-                </div>
-                <div>
-                  <AffiliateFeeBadge price={price} buyToken={toToken} tokenMap={tokenMap} />
-                </div>
-              </div>
-
-
-
-              {/* Token Equivalent Value Display */}
-              <div className="w-full justify-between items-center h-fit flex flex-row">
-                <div className="text-sm font-medium ">
-                  Rate:
-                </div>
-                <div>
-                  <TokenEquivalentValue 
-                    sellToken={fromToken}
-                    buyToken={toToken}
-                    chainId={chainId}
-                    tokenMap={tokenMap}
-                  />
-                </div>
-              </div>
-
-
-              {/* Tax Information Display */}
-              <div>
-              <TaxInfo
-                buyTokenTax={buyTokenTax}
-                sellTokenTax={sellTokenTax}
-                buyToken={buyToken}
-                sellToken={sellToken}
-                tokenMap={tokenMap}
-              />
-              </div>
-
-            </CardContent>
-          </Card>
-        </div>
-
-
-
-        {taker && sellTokenObject?.address ? (
-          <ApproveOrReviewButton
-            sellTokenAddress={sellTokenObject.address}
-            taker={taker}
-            onClick={() => {
-              setFinalize(true);
-            }}
-            disabled={inSufficientBalance || !sellAmount}
-            price={price}
-          />
-        ) : (
-          <ConnectButton.Custom>
-            {({
-              account,
-              chain,
-              openAccountModal,
-              openChainModal,
-              openConnectModal,
-              mounted,
-            }) => {
-              const ready = mounted;
-              const connected = ready && account && chain;
-
+                );
+              }
+              if (chain.unsupported) {
+                return (
+                  <button onClick={openChainModal} type="button">
+                    Wrong network
+                  </button>
+                );
+              }
               return (
-                <div
-                  {...(!ready && {
-                    "aria-hidden": true,
-                    style: {
-                      opacity: 0,
-                      pointerEvents: "none",
-                      userSelect: "none",
-                    },
-                  })}
-                >
-                  {(() => {
-                    if (!connected) {
-                      return (
-                        <div className="w-full px-3 justify-start">
-                          <button
-                            className="w-full bg-blue-600 text-white rounded-3xl font-medium p-2 hover:bg-blue-700 justify-center items-center flex"
-                            onClick={openConnectModal}
-                            type="button"
-                          >
-                            Connect Wallet
-                          </button>
-                        </div>
-
-                      );
-                    }
-
-                    if (chain.unsupported) {
-                      return (
-                        <button onClick={openChainModal} type="button">
-                          Wrong network
-                        </button>
-                      );
-                    }
-
-                    return (
-                      <div style={{ display: "flex", gap: 12 }} className="w-full px-3 justify-start">
-                        <button
-                          onClick={openChainModal}
-                          style={{ display: "flex", alignItems: "center" }}
-                          type="button"
-                        >
-                          {chain.hasIcon && (
-                            <div
-                              style={{
-                                background: chain.iconBackground,
-                                width: 12,
-                                height: 12,
-                                borderRadius: 999,
-                                overflow: "hidden",
-                                marginRight: 4,
-                              }}
-                            >
-                              {chain.iconUrl && (
-                                <Image
-                                  src={chain.iconUrl}
-                                  alt={chain.name ?? "Chain icon"}
-                                  width={12}
-                                  height={12}
-                                  layout="fixed"
-                                />
-                              )}
-                            </div>
-                          )}
-                          {chain.name}
-                        </button>
-
-                        <button onClick={openAccountModal} type="button">
-                          {account.displayName}
-                          {account.displayBalance
-                            ? ` (${account.displayBalance})`
-                            : ""}
-                        </button>
+                <div style={{ display: "flex", gap: 12 }} className="w-full px-3 justify-start">
+                  <button
+                    onClick={openChainModal}
+                    style={{ display: "flex", alignItems: "center" }}
+                    type="button"
+                  >
+                    {chain.hasIcon && (
+                      <div
+                        style={{
+                          background: chain.iconBackground,
+                          width: 12,
+                          height: 12,
+                          borderRadius: 999,
+                          overflow: "hidden",
+                          marginRight: 4,
+                        }}
+                      >
+                        {chain.iconUrl && (
+                          <Image
+                            src={chain.iconUrl}
+                            alt={chain.name ?? "Chain icon"}
+                            width={12}
+                            height={12}
+                            layout="fixed"
+                          />
+                        )}
                       </div>
-                    );
-                  })()}
+                    )}
+                    {chain.name}
+                  </button>
+                  <button onClick={openAccountModal} type="button">
+                    {account.displayName}
+                    {account.displayBalance ? ` (${account.displayBalance})` : ""}
+                  </button>
                 </div>
               );
-            }}
-          </ConnectButton.Custom>
-        )}
-      </div>
-    </div>
+            })()}
+          </div>
+        );
+      }}
+    </ConnectButton.Custom>
+  );
+
+  return (
+    <PriceViewUI
+      loading={loading}
+      apiError={apiError}
+      fromToken={fromToken}
+      setFromToken={setFromToken}
+      toToken={toToken}
+      setToToken={setToToken}
+      sellAmount={sellAmount}
+      setSellAmount={setSellAmount}
+      buyAmount={buyAmount}
+      setBuyAmount={setBuyAmount}
+      sellTokenDecimals={sellTokenDecimals}
+      buyTokenDecimals={buyTokenDecimals}
+      chainId={chainId}
+      tokenList={tokenList}
+      tokenMap={tokenMap}
+      price={price}
+      setPrice={setPrice}
+      setFinalize={setFinalize}
+      taker={taker}
+      buyTokenTax={buyTokenTax}
+      sellTokenTax={sellTokenTax}
+      tradeDirection={tradeDirection}
+      setTradeDirection={setTradeDirection}
+      inSufficientBalance={inSufficientBalance}
+      ApproveOrReviewButton={ApproveOrReviewButtonNode}
+    />
   );
 
   function ApproveOrReviewButton({

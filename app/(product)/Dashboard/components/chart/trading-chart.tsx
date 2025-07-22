@@ -189,7 +189,7 @@ export function TradingChart({
           </button>
         )}
       </CardHeader>
-      <CardContent className="h-[550px] sm:h-[550px] w-full p-0 flex dark:bg-[#0F0F0F] bg-white">
+      <CardContent className="h-[650px] sm:h-[650px] w-full p-0 flex dark:bg-[#0F0F0F] bg-white">
         <LiveChart 
           tokenSymbol={currentTokenSymbol} 
           tradingViewSymbol={tradingViewSymbol}
