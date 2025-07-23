@@ -204,8 +204,8 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
   }
 
   return (
-    <div className="w-full h-full items-center justify-center">
-      <div className="w-full gap-2 h-full justify-between items-center flex container text-md font-semibold">
+    <div className="w-full h-fit items-center justify-center">
+      <div className="w-full gap-2 h-fit justify-between items-center flex container text-md font-semibold">
         <StatItem title="Volume (24h)" value={marketData.volume24h} isCurrency={true} />
         <StatItem title="Market Cap" value={marketData.marketCap} isCurrency={true} />
         <StatItem title="FDV" value={marketData.fdv} isCurrency={true} />

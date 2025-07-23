@@ -28,7 +28,7 @@ const TickerTape = () => {
         ],
         showSymbolLogo: true,
         isTransparent: true,
-        displayMode: "adaptive",
+        displayMode: "regular",
         colorTheme: resolvedTheme === 'dark' ? 'dark' : 'light',
         locale: "en"
       });
@@ -50,7 +50,7 @@ const TickerTape = () => {
       ref={containerRef}
       style={{ 
         width: '100%',
-        height: '46px',
+        height: '40px',
         backgroundColor: resolvedTheme === 'dark' ? '#0F0F0F' : '#FFFFFF'
       }}
     />

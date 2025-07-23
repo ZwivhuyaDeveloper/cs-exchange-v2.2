@@ -18,142 +18,104 @@ import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Char
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
 import { ChartAreaLinear} from "@/app/(product)/Dashboard/components/ui/Linear-Chart"
 
-
-
 export default function Page() {
-
-  // Use tokens that are seeded in the DB (e.g., 'link', 'comp')
   const [fromToken, setFromToken] = useState("link");
   const [toToken, setToToken] = useState("comp");
   const [currentChartToken, setCurrentChartToken] = useState(fromToken);
-
-    // Map ERC20 tokens to TradingView symbols
-  const getTradingViewSymbol = (symbol: string): string => {
-    return ERC20_TO_TRADINGVIEW[symbol] || symbol
-  }
-
-    const handleTokenSelect = (symbol: string) => {
-    setFromToken(symbol)
-    setCurrentChartToken(symbol)
-  }
-
-  const handleToTokenSelect = (symbol: string) => {
-    setToToken(symbol)
-  }
-
-    const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(true);
 
   if (showIntro) {
     return <LoadingIntro onComplete={() => setShowIntro(false)} />;
   }
-  // Use the correct chainId for mainnet (1) or polygon (137) as needed
   const chainId = 1;
   return (
-    <div className=" w-full h-full dark:bg-black bg-zinc-200">
-      <div className="backdrop-filter backdrop-blur-3xl  w-full gap-0 flex">
-        <div className=" w-full backdrop-filter backdrop-blur-3xl dark:bg-black bg-zinc-200 gap-0 flex flex-col h-full min-h-screen max-w-full mx-auto">
+    <div className="w-full min-h-screen h-screen dark:bg-black bg-zinc-200 flex flex-col">
+      {/* Header */}
+      <header className="sticky top-0 z-50 flex h-fit items-center rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 bg-zinc-200/80 ">
+        <NavMenu />
+      </header>
 
-        <header className="sticky top-0 z-50 flex h-fit items-center rounded-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 backdrop-brightness-200">
-          <NavMenu/>
-        </header>
-      
-        <div className="w-full gap-2 h-full flex flex-col items-center justify-start p-0 bg-transparent">
-          <div className="flex flex-row w-full h-full gap-1">
-              <div className="flex flex-1 flex-col gap-1 w-full h-fit">
-                <div className="h-fit w-full  justify-center dark:bg-[#0F0F0F] bg-zinc-100 items-center flex mt-1 ">
-                  <TickerTape/>
-                  {/* <Ticker/> */}
-                </div> 
-
-                  <div className="justify-start items-start flex lg:flex-row md:flex-col sm:flex-col gap-1 w-full h-full overflow-hidden">
-
-                    <div className="lg:max-w-[400px] md:w-[400px] bg-transparent overflow-clip h-full">
-                      <div className="h-full w-full bg-transparent">
-                        <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip" type="auto">
-                          <ScrollArea.Viewport className="w-full overflow-clip h-[1392px] flex lg:flex-col md:flex-row sm:flex-row px-1  ">
-                              <div className="h-fit w-full">
-                                <MarketStats tokenSymbol={currentChartToken} />
-                              </div>
-                              <div className="w-full h-fit mt-1">
-                                <OrderData tokenSymbol={currentChartToken} />
-                              </div>
-                              <div className="w-full h-fit mt-1">
-                                <LiquidityDistributionChart tokenSymbol={currentChartToken} />
-                              </div>
-                              <div className="w-full h-fit mt-1">
-                                <ChartRadarMultiple tokenSymbol={currentChartToken} />
-                              </div>
-                              <div className="h-fit w-full mt-1">
-                                <TechnicalSpecs tokenSymbol={currentChartToken} />
-                              </div>
-                          </ScrollArea.Viewport>
-                          <ScrollArea.Scrollbar
-                            className="flex w-0 bg-transparent  touch-none select-none transition-colors duration-150 ease-out  hover:bg-transparent"
-                            orientation="vertical"
-                          >
-                            <ScrollArea.Thumb className="flex-1 rounded-full bg-zinc-600" />
-                          </ScrollArea.Scrollbar>
-                          <ScrollArea.Corner />
-                        </ScrollArea.Root>
-                      </div>
-                    </div>
-                    
-                        {/* chart */}
-                      <div className="w-full h-full  border-none flex flex-col p-0 gap-1 ">
-
-                        <div className="">
-                          <TradingChart
-                            buyTokenSymbol={toToken}
-                            sellTokenSymbol={fromToken}
-                            setCurrentChartToken={setCurrentChartToken}
-                          />
-                        </div>
-
-                          {/*<Networks/>*/}
-
-                        <div className="flex flex-row gap-4 w-full h-full bg-transparent items-center p-0" >
-                          <NewList value={toToken} onValueChange={setToToken} label="To Token" />
-                        </div>
-                        
-                      </div>
-
-
-                        <div className="max-w-[400px] h-[715px] flex flex-col">
-                          <div className="h-full flex flex-col bg-transparent p-0 rounded-none">
-                            <div className=" h-full w-full flex flex-col gap-1 bg-transparent px-1 rounded-none">
-                              <Swap
-                                fromToken={fromToken}
-                                setFromToken={setFromToken}
-                                toToken={toToken}
-                                setToToken={setToToken}
-                                setCurrentChartToken={setCurrentChartToken} 
-                                price={undefined} 
-                                setPrice={function (price: any): void {
-                                  throw new Error("Function not implemented.")
-                                } } setFinalize={function (finalize: boolean): void {
-                                  throw new Error("Function not implemented.")
-                                } } chainId={chainId}                              
-                              />
-                              <div className="h-fit w-full mt-1">
-                                <ChartBarStacked/>
-                              </div>
-                              <div className="h-fit w-full mt-1">
-                                <ChartAreaLinear/>
-                              </div>
-
-                              {/*<TransactionList />*/}
-                            </div>
-                          </div>
-                        </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          <footer className="sticky bottom-0 z-50 flex h-fit items-center backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 backdrop-brightness-200">
-            <BottomPanel />
-          </footer>
-        </div>
+      {/* Ticker */}
+      <div className="w-full h-fit flex justify-center items-center py-1 md:py-1">
+        <TickerTape />
       </div>
+
+      {/* Main 3-column layout */}
+      <main className="flex-1 flex flex-col items-center w-full h-full px-1 md:px-1">
+        <div className="flex flex-col lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(100vh-100px)]">{/* 200px header+footer approx */}
+          {/* Indicators (Left) */}
+          <div className="lg:w-[340px] w-full flex flex-col gap-2 h-full">
+            <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip gap-y-2" type="auto">
+              <ScrollArea.Viewport className="w-full overflow-clip h-full flex flex-col gap-y-2">
+                <div className="">
+                  <MarketStats tokenSymbol={currentChartToken} />
+                </div>
+                <div className="mt-1">
+                  <OrderData tokenSymbol={currentChartToken} />
+                </div>
+                <div className="mt-1">
+                  <LiquidityDistributionChart tokenSymbol={currentChartToken} />
+                </div>
+                <div className="mt-1">
+                  <ChartRadarMultiple tokenSymbol={currentChartToken} />
+                </div>
+                <div className="mt-1">
+                  <TechnicalSpecs tokenSymbol={currentChartToken} />
+                </div>
+              </ScrollArea.Viewport>
+              <ScrollArea.Scrollbar className="flex w-0 bg-transparent touch-none select-none transition-colors duration-150 ease-out hover:bg-transparent" orientation="vertical">
+                <ScrollArea.Thumb className="flex-1 rounded-full bg-zinc-600" />
+              </ScrollArea.Scrollbar>
+              <ScrollArea.Corner />
+            </ScrollArea.Root>
+          </div>
+
+          {/* Chart (Middle) */}
+          <div className="flex-1 flex flex-col gap-1 w-full h-full">
+            <TradingChart
+              buyTokenSymbol={toToken}
+              sellTokenSymbol={fromToken}
+              setCurrentChartToken={setCurrentChartToken}
+            />
+            <div className="flex flex-col md:flex-row gap-1 w-full items-stretch">
+              <NewList value={toToken} onValueChange={setToToken} label="To Token" />
+            </div>
+            <div className="flex flex-col gap-2 w-full">
+              <ChartBarStacked />
+              <ChartAreaLinear />
+            </div>
+          </div>
+
+          {/* Swap (Right) */}
+          <div className="lg:w-[340px] w-full flex flex-col gap-1 h-full">
+            <Swap
+              fromToken={fromToken}
+              setFromToken={setFromToken}
+              toToken={toToken}
+              setToToken={setToToken}
+              setCurrentChartToken={setCurrentChartToken}
+              price={undefined}
+              setPrice={function (price: any): void {
+                throw new Error("Function not implemented.")
+              }}
+              setFinalize={function (finalize: boolean): void {
+                throw new Error("Function not implemented.")
+              }}
+              chainId={chainId}
+            />
+          </div>
+        </div>
+      </main>
+
+      {/* Footer */}
+      <footer
+        className="z-50 flex h-fit items-center backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 bg-zinc-200/80 px-2 md:px-6 py-2 md:py-4
+        sticky bottom-0 w-full
+        lg:fixed lg:left-0 lg:bottom-0 lg:w-full"
+        style={{ boxShadow: '0 -2px 16px 0 rgba(0,0,0,0.08)' }}
+      >
+        <BottomPanel />
+      </footer>
     </div>
   )
 }
