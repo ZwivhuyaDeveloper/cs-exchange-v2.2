@@ -1,6 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
 import { COINGECKO_IDS } from "@/src/constants";
-import { Card } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface TokenUSDValueProps {

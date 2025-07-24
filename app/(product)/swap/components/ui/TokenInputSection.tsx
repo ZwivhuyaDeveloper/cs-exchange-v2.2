@@ -1,5 +1,4 @@
 import { Input } from "@/components/ui/input";
-import { TokenPicker } from "./tokenPicker";
 import { TokenUSDValue } from "./TokenUSDValue";
 import { ChangeEvent, useState } from "react";
 
@@ -77,8 +76,7 @@ export const TokenInputSection = ({
         <TokenUSDValue 
           amount={amount}
           tokenSymbol={token}
-          chainId={chainId}
-        />
+          chainId={chainId} tokenMap={onAmountChange}        />
       </div>
     </section>
   );

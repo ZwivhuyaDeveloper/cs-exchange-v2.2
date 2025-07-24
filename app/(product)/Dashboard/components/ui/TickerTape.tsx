@@ -20,11 +20,16 @@ const TickerTape = () => {
       script.type = 'text/javascript';
       script.innerHTML = JSON.stringify({
         symbols: [
-          { proName: "FOREXCOM:SPXUSD", title: "S&P 500 Index" },
-          { proName: "FOREXCOM:NSXUSD", title: "US 100 Cash CFD" },
-          { proName: "FX_IDC:EURUSD", title: "EUR to USD" },
+          { proName: "COINBASE:LINKUSD", title: "Chainlink" },
+          { proName: "COINBASE:APEUSD", title: "Apecoin" },
+          { proName: "CRYPTO:BUSDUSD", title: "Binance USD" },
           { proName: "BITSTAMP:BTCUSD", title: "Bitcoin" },
-          { proName: "BITSTAMP:ETHUSD", title: "Ethereum" }
+          { proName: "BITSTAMP:ETHUSD", title: "Ethereum" },
+          { proName: "COINBASE:COMPUSD", title: "Compound Governance Token" },
+          { proName: "COINBASE:CRVUSD", title: "Curve Dao Token" },
+          { proName: "COINBASE:DAIUSD", title: "Dai" },
+          { proName: "COINBASE:SNXUSD", title: "Havven" },
+          { proName: "TRADENATION:TRONUSD", title: "Tron" },
         ],
         showSymbolLogo: true,
         isTransparent: true,

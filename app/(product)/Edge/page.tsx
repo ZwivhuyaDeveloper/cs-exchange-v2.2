@@ -57,7 +57,7 @@ export default async function DashboardPage() {
                   <CryptoSignalCard 
                     signal={{
                       ...signal,
-                      currentPrice: tokenPrices[signal.token?.coingeckoId ?? ''] || null
+                      currentPrice: tokenPrices[signal.token?.coingeckoId ?? '']
                     } as CryptoSignalWithPrice}
                   />
                 </CardContent>

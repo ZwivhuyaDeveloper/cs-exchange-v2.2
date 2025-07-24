@@ -160,13 +160,6 @@ export default {
       hidden: ({ document }: { document: any }) => !['completed', 'target_hit', 'stop_loss'].includes(document?.status)
     },
     {
-      name: 'profitLoss',
-      title: 'Profit/Loss (%)',
-      type: 'number',
-      description: 'Percentage profit or loss on the trade',
-      hidden: ({ document }: { document: any }) => !['completed', 'target_hit', 'stop_loss'].includes(document?.status)
-    },
-    {
       name: 'notes',
       title: 'Analysis & Notes',
       type: 'text',
