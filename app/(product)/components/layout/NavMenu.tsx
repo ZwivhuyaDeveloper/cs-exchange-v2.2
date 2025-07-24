@@ -18,7 +18,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit"
 import { ThemeToggle } from "../../../../components/ui/ThemeToggle"
 import { Tourney } from "next/font/google"
 import Image from "next/image"
-import Light from "@/public/Cyclespace-logo/CSblue.png"
+import Light from "@/public/Cyclespace-logo/CS logo color.png"
 import {
   ClerkProvider,
   SignInButton,

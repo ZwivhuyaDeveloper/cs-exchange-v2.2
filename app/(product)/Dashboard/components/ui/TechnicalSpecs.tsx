@@ -118,8 +118,8 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
       <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <div className="h-6 w-6 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#0E76FD] text-[8px] font-bold"><List width={17} height={17}/></span>
+            <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
+              <span className="text-[#00FFC2] text-[8px] font-bold"><List width={17} height={17}/></span>
             </div>
             <h1 className="dark:text-white text-back font-semibold text-md sm:text-md">Technical Specifications</h1>
           </div>
@@ -166,8 +166,8 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
       <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <div className="h-6 w-6 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#0E76FD] text-[8px] font-bold"><List width={17} height={17}/></span>
+            <div className="h-6 w-6 [#00FFC2]/20 rounded-full flex items-center justify-center">
+              <span className="text-[#00FFC2] text-[8px] font-bold"><List width={17} height={17}/></span>
             </div>
             <h1 className="dark:text-white text-back font-semibold text-md sm:text-md">Technical Specifications</h1>
           </div>
@@ -195,8 +195,8 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
       <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <div className="h-6 w-6 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#0E76FD] text-[8px] font-bold"><List width={17} height={17}/></span>
+            <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
+              <span className="text-[#00FFC2] text-[8px] font-bold"><List width={17} height={17}/></span>
             </div>
             <h1 className="dark:text-white text-back font-semibold text-md sm:text-md">Technical Specifications</h1>
           </div>
@@ -213,12 +213,12 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <div className='w-full flex flex-row gap-3'>
-            <div className="h-6 w-6 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#0E76FD] text-[8px] font-bold"><List width={17} height={17}/></span>
+            <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
+              <span className="text-[#00FFC2] text-[8px] font-bold"><List width={17} height={17}/></span>
             </div>
             <h1 className="dark:text-white text-back font-semibold text-md sm:text-md"> Technical Specifications </h1>
           </div>
-          <Badge variant="secondary" className='text-[#0E76FD] bg-[#0E76FD]/20 items-center justify-center'>
+          <Badge variant="secondary" className='text-[#00FFC2] bg-[#00FFC2]/20 items-center justify-center'>
             Rank #{specsData.marketCapRank}
           </Badge>
         </CardTitle>
@@ -247,7 +247,7 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
           <span className="text-sm text-muted-foreground">Categories</span>
           <div className="flex flex-wrap gap-2">
             {specsData.categories?.map((category) => (
-              <Badge key={category} variant="outline" className='font-semibold border-none border-[#0E76FD]/0 bg-[#0E76FD]/10 dark:bg-zinc-400/10'>
+              <Badge key={category} variant="outline" className='font-semibold text-black border-none border-[#0E76FD]/0 bg-[#00FFC2]/10 dark:bg-[#00FFC2]'>
                 {category}
               </Badge>
             ))}
@@ -258,16 +258,6 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
         </div>
 
         {/* Technical Specs */}
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">Algorithm</span>
-          <Badge variant="outline">{specsData.hashingAlgorithm}</Badge>
-        </div>
-        <div className="flex justify-between items-center">
-          <span className="text-sm text-muted-foreground">Block Time</span>
-          <span className="text-sm font-medium">
-            {specsData.blockTime} minutes
-          </span>
-        </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">Genesis Date</span>
           <span className="text-sm font-medium">

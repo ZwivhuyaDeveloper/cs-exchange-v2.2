@@ -168,7 +168,7 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
           <div className="flex flex-row items-center gap-2">
-            <div className="rounded-full p-1 bg-[#0E76FD]/30 text-[#0E76FD]">
+            <div className="rounded-full p-1 bg-[#00FFC2]/30 text-[#00FFC2]">
               <Activity strokeWidth={3} width={18} height={18}/>
             </div>
             <CardTitle>24h Volume Distribution</CardTitle>
@@ -214,7 +214,7 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
     <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
       <CardHeader className="items-center">
         <div className="flex flex-row items-center gap-2">
-          <div className="rounded-full p-1 bg-[#0E76FD]/30 text-[#0E76FD]">
+          <div className="rounded-full p-1 bg-[#00FFC2]/30 text-[#00FFC2]">
             <Activity strokeWidth={3} width={18} height={18}/>
           </div>
           <CardTitle>24h Volume - {tokenSymbol.toUpperCase()}</CardTitle>
@@ -264,7 +264,7 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
             <ChartLegend content={<ChartLegendContent />} />
             <Radar
               dataKey="volume24h"
-              fill="var(--color-volume24h)"
+              fill="#00FFC2"
               fillOpacity={0.6}
             />
             <Radar 

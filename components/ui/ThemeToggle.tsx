@@ -29,7 +29,7 @@ export function ThemeToggle() {
         <svg
           className={`absolute inset-0 w-5 h-5 transition-all duration-300 ${
             theme === "dark" 
-              ? "rotate-0 scale-100 text-blue-400" 
+              ? "rotate-0 scale-100 text-[#00FFC2]" 
               : "-rotate-90 scale-0 text-gray-400"
           }`}
           fill="currentColor"

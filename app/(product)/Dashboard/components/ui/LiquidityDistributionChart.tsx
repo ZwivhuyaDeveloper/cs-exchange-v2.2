@@ -186,7 +186,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
       <Card className="rounded-none border-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="flex flex-row items-center px-3 gap-2 justify-between">
           <div className="flex flex-row items-center gap-2">
-            <div className="rounded-full p-1 bg-[#0E76FD]/30 text-[#0E76FD]">
+            <div className="rounded-full p-1 bg-[#0E76FD]/30 text-[#00FFC2]">
               <BarChart3 strokeWidth={3} width={18} height={18}/>
             </div>
             <CardTitle>Liquidity Distribution</CardTitle>
@@ -215,7 +215,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
       <Card className="rounded-none border-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="flex flex-row items-center px-3 gap-2 justify-between">
           <div className="flex flex-row items-center gap-2">
-            <div className="rounded-full p-1 bg-[#0E76FD]/30 text-[#0E76FD]">
+            <div className="rounded-full p-1 bg-[#00FFC2]/30 text-[#00FFC2]">
               <BarChart3 strokeWidth={3} width={18} height={18}/>
             </div>
             <CardTitle>Liquidity Distribution</CardTitle>
@@ -232,7 +232,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
     <Card className="rounded-none border-none bg-white dark:bg-[#0F0F0F]">
       <CardHeader className="flex flex-row items-center px-3 gap-2 justify-between">
         <div className="flex flex-row items-center gap-2">
-          <div className="rounded-full p-1 bg-[#0E76FD]/30 text-[#0E76FD]">
+          <div className="rounded-full p-1 bg-[#00FFC2]/30 text-[#00FFC2]">
             <BarChart3 strokeWidth={3} width={18} height={18}/>
           </div>
           <CardTitle>Liquidity Distribution - {tokenSymbol.toUpperCase()}</CardTitle>
@@ -294,7 +294,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
             />
             <Bar 
               dataKey="liquidity" 
-              fill="var(--color-liquidity)" 
+              fill="#00FFC2" 
               radius={[0, 4, 4, 0]}
             />
           </BarChart>

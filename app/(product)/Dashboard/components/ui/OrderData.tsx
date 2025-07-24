@@ -178,7 +178,7 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
         </CardDescription>
         <CardContent className="flex flex-row gap-1 p-0">
           <div className="flex w-full h-2 gap-1 px-5">
-            <div className="bg-emerald-600  rounded-3xl" style={{ width: `${width1}%` }} />
+            <div className="bg-[#00FFC2]  rounded-3xl" style={{ width: `${width1}%` }} />
             <div className="bg-rose-600 dark:bg-blue-600 rounded-3xl" style={{ width: `${width2}%` }} />
           </div>
         </CardContent>
@@ -222,8 +222,8 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
       <Card className="h-full w-full rounded-none bg-transparent flex flex-col gap-3">
         <CardTitle className="px-5">
           <div className="flex flex-row gap-3 items-center mb-3">
-            <div className="h-6 w-6 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#0E76FD] text-[8px] font-bold">
+            <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
+              <span className="text-[#00FFC2] text-[8px] font-bold">
                 <Scale width={17} height={17} />
               </span>
             </div>
@@ -245,8 +245,8 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
       <Card className="h-full w-full rounded-none bg-transparent flex flex-col gap-3">
         <CardTitle className="px-5">
           <div className="flex flex-row gap-3 items-center mb-3">
-            <div className="h-6 w-6 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#0E76FD] text-[8px] font-bold">
+            <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
+              <span className="text-[#00FFC2] text-[8px] font-bold">
                 <Scale width={17} height={17} />
               </span>
             </div>
@@ -273,8 +273,8 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
     <Card className="h-full w-full rounded-none border-none dark:bg-[#0F0F0F] bg-white flex flex-col gap-2 ">
       <CardTitle className="px-5 gap-3 flex">
         <div className="flex flex-row gap-3 items-center mb-3">
-          <div className="h-6 w-6 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-            <span className="text-[#0E76FD] text-[8px] font-bold">
+          <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
+            <span className="text-[#00FFC2] text-[8px] font-bold">
               <Scale width={17} height={17} />
             </span>
           </div>
