@@ -15,12 +15,18 @@ import {
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { TokenPicker } from '../../../swap/components/ui/tokenPicker';
-import { useState } from "react"
-import { ThemeToggle } from "../../../../../components/ui/ThemeToggle"
+import { ThemeToggle } from "../../../../components/ui/ThemeToggle"
 import { Tourney } from "next/font/google"
 import Image from "next/image"
 import Light from "@/public/Cyclespace-logo/CSblue.png"
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 
 
@@ -74,7 +80,26 @@ export function NavMenu() {
           </NavigationMenuItem>
       </NavigationMenuList>
       <NavigationMenuList className="w-full gap-3">
+        <div className="flex flex-row items-center gap-2">
+          <SignedOut>
+            <SignInButton>
+              <button className="bg-[#6c47ff] text-white rounded-full font-medium text-xs sm:text-xs h-9 sm:h-9 px-4 sm:px-5 cursor-pointer">
+                Sign In
+              </button>
+            </SignInButton>
+            <SignUpButton>
+              <button className="bg-[#6c47ff] text-white rounded-full font-medium text-xs sm:text-xs h-9 sm:h-9 px-4 sm:px-5 cursor-pointer">
+                Sign Up
+              </button>
+            </SignUpButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+        </div>
+        <div>
           <ThemeToggle/>
+        </div>
         <div className="text-xs h-fit py-1" >
           <ConnectButton/>
         </div>

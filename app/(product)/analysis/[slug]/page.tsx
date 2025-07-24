@@ -1,6 +1,6 @@
 import { fullNews } from "@/app/lib/interface";
 import { client, urlFor } from "@/app/lib/sanity";
-import { NavMenu } from "@/app/(product)/Dashboard/components/layout/NavMenu";
+import { NavMenu } from "@/app/(product)/components/layout/NavMenu";
 import RelatedNews from "@/components/News/related-news";
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape";
 import { PortableText } from "@portabletext/react";

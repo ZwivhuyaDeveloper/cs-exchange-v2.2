@@ -4,7 +4,7 @@ import { client } from "@/app/lib/sanity";
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape";
 
 import React from "react";
-import { NavMenu } from "../Dashboard/components/layout/NavMenu";
+import { NavMenu } from "../components/layout/NavMenu";
 
 import NewsSection from "./components/news-section";
 import ResearchDisplay from "./components/research-display";

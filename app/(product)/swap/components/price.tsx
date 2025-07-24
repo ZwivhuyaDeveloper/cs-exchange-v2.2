@@ -16,16 +16,6 @@ import {
 } from "@/src/constants";
 import Image from "next/image";
 import qs from "qs";
-import { TokenInputSection } from "./ui/TokenInputSection";
-import { Button } from "@/components/ui/button";
-import { TokenEquivalentValue } from "./ui/TokenEquivalentValue";
-import { FinalSwapValue } from "./ui/FinalSwapValue";
-import { AffiliateFeeBadge } from "./ui/SwapFee";
-import { TaxInfo } from "./ui/TaxInfo";
-import { SwapButton } from "./ui/SwapButton";
-import { SendIcon, Settings } from "lucide-react";
-import { TokenPicker } from "./ui/tokenPicker";
-import { Card, CardContent } from "../../../../components/ui/card";
 import PriceViewUI from "./PriceViewUI";
 
 interface PriceViewProps {
@@ -60,8 +50,7 @@ export default function PriceView({
   setToToken,
   setCurrentChartToken,
 }: PriceViewProps) {
-  const [sellToken, setSellToken] = useState(fromToken);
-  const [buyToken, setBuyToken] = useState(toToken);
+
   const [sellAmount, setSellAmount] = useState("");
   const [buyAmount, setBuyAmount] = useState("");
   const [tradeDirection, setTradeDirection] = useState("sell");

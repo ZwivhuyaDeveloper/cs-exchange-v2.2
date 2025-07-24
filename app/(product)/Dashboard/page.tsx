@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { NavMenu } from "@/app/(product)/Dashboard/components/layout/NavMenu"
+import { NavMenu } from "@/app/(product)/components/layout/NavMenu"
 import MarketStats from "@/app/(product)/Dashboard/components/ui/MarketStats"
 import TechnicalSpecs from "@/app/(product)/Dashboard/components/ui/TechnicalSpecs"
 import { TradingChart } from "@/app/(product)/Dashboard/components/chart/trading-chart"
@@ -9,8 +9,7 @@ import Swap from "../swap/swap"
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape"
 import OrderData from "@/app/(product)/Dashboard/components/ui/OrderData"
 import * as ScrollArea from '@radix-ui/react-scroll-area';
-import BottomPanel from "@/app/(product)/Dashboard/components/layout/BottomPanel"
-import { ERC20_TO_TRADINGVIEW } from "@/src/constants"
+import BottomPanel from "@/app/(product)/components/layout/BottomPanel"
 import NewList from "@/app/(product)/Dashboard/components/tokenList/new-list"
 import LoadingIntro from "@/src/components/ui/loading-intro"
 import { ChartBarStacked } from "@/app/(product)/Dashboard/components/ui/bar-chart-stack"

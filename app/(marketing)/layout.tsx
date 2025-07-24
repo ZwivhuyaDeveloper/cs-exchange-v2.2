@@ -1,6 +1,10 @@
 import type { Metadata } from 'next'
 import { Inter, Manrope, Space_Mono } from 'next/font/google'
 import '@/app/colors.css';
+import {
+  ClerkProvider
+} from '@clerk/nextjs'
+
 
 const inter = Inter({ 
   subsets: ['latin'],
@@ -31,8 +35,10 @@ export default function MarketingLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="antialiased">
-      {children}
-    </div>
+    <ClerkProvider>
+      <div className="antialiased">
+        {children}
+      </div>
+    </ClerkProvider>
   )
 }

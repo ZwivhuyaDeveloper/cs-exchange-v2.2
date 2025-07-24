@@ -1,13 +1,12 @@
 import { fullNews } from "@/app/lib/interface";
 import { client, urlFor } from "@/app/lib/sanity";
-import { NavMenu } from "@/app/(product)/Dashboard/components/layout/NavMenu";
+import { NavMenu } from "@/app/(product)/components/layout/NavMenu";
 import RelatedNews from "@/components/News/related-news";
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import React from "react";
 import { Badge } from '@/components/ui/badge';
-import Research from "@/components/News/research-display";
 import ResearchDisplay from "@/components/News/research-display";
 
 export const revalidate = 30; // revalidate at most 30 seconds

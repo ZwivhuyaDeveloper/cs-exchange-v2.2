@@ -1,22 +1,27 @@
 // app/components/News/news-section.tsx
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { simpleNewsCard } from "@/app/lib/interface";
 import { urlFor } from "@/app/lib/sanity";
 import Image from "next/image";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
-
 import BannerArticle from "./banner-article";
 import { cn } from "@/lib/utils";
 import { formatDate, isRecent } from "@/app/lib/dateUtils";
-
-import impact from "@/sanity/schemaTypes/impact";
 import { Globe, Tag } from "lucide-react";
 import SearchBar from "./search-bar";
 import NewsFilter from "./news-filter";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationPrevious,
+  PaginationNext,
+} from "@/components/ui/pagination"; 
 
 
 interface NewsSectionProps {
@@ -26,6 +31,13 @@ interface NewsSectionProps {
 export default function NewsSection({ data }: NewsSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 6; // Articles per page
+
+    // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, searchQuery]);
   
   // Memoize categories to prevent unnecessary recalculations
   const categories = useMemo(() => {
@@ -61,6 +73,22 @@ export default function NewsSection({ data }: NewsSectionProps) {
   const latestArticle = useMemo(() => {
     return data.length > 0 ? data[0] : null;
   }, [data]);
+
+    // Create data for pagination (excludes banner article when shown)
+  const paginationData = useMemo(() => {
+    const shouldSkipLatest = !selectedCategory && !searchQuery;
+    return shouldSkipLatest && latestArticle
+      ? filteredData.filter(post => post !== latestArticle)
+      : filteredData;
+  }, [filteredData, selectedCategory, searchQuery, latestArticle]);
+
+  
+  // Calculate pagination
+  const totalPages = Math.ceil(paginationData.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentArticles = paginationData.slice(startIndex, endIndex);
+
 
   const handleFilterChange = (category: string | null) => {
     setSelectedCategory(category);
@@ -109,11 +137,9 @@ export default function NewsSection({ data }: NewsSectionProps) {
           </p>
         </div>
       ) : (
+        <>
         <div className="grid grid-cols-3 gap-2 justify-center py-2 px-5">
-          {filteredData
-            // Skip the first item if we are showing the banner
-            .filter(post => !skipLatestArticle || post !== latestArticle)
-            .map((post, idx) => (
+          {currentArticles.map((post, idx) => (
             <Card key={idx} className="w-fit p-3 m-0 shadow-none border-none h-full gap-2 bg-zinc-100 dark:bg-zinc-800 ">
               <div>
                 <div className="absolute p-3">
@@ -198,6 +224,7 @@ export default function NewsSection({ data }: NewsSectionProps) {
                         {tag.name}
                       </Badge>
                     ))}
+                    
                   </div>
                 )}
                 </div>
@@ -206,6 +233,45 @@ export default function NewsSection({ data }: NewsSectionProps) {
             </Card>
           ))}
         </div>
+          {/* Pagination controls */}
+          {totalPages > 1 && (
+            <div className="py-6 flex justify-center">
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious
+                      onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
+                      disabled={currentPage === 1}
+                      className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                    <PaginationItem key={page}>
+                      <PaginationLink
+                        isActive={currentPage === page}
+                        onClick={() => setCurrentPage(page)}
+                        className="cursor-pointer"
+                      >
+                        {page}
+                      </PaginationLink>
+                    </PaginationItem>
+                  ))}
+                  
+                  <PaginationItem>
+                    <PaginationNext
+                      onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
+                      disabled={currentPage === totalPages}
+                      className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          )}
+
+        </>
+
       )}
     </div>
   );

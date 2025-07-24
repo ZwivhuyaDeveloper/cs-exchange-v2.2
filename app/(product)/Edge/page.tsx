@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { SIGNAL_QUERY } from "../lib/queries"; // Use SIGNAL_QUERY instead
 import { fetchTokenPrices } from "../lib/coingecko";
 import Link from "next/link";
-import { NavMenu } from "@/app/(product)/Dashboard/components/layout/NavMenu";
+import { NavMenu } from "@/app/(product)/components/layout/NavMenu";
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape";
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
 

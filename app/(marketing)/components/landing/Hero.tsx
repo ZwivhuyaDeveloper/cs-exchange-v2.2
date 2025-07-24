@@ -10,6 +10,14 @@ import { FlipWords } from "../ui/flip-words";
 import Image from 'next/image'
 import Bitcoin from '@/public/Token-Logos/BTC.png'
 import Ethereum from '@/public/Token-Logos/ethereum-eth-logo.png'
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 
 const tourney = Tourney({

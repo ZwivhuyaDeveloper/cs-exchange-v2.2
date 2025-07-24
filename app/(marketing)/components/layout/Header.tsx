@@ -8,6 +8,14 @@ import { Space_Mono, Tourney } from 'next/font/google'
 import Image from 'next/image'
 import Main from "@/public/Cyclespace-logo/CS logo color.png"
 import { Button } from '@/components/ui/button'
+import {
+  ClerkProvider,
+  SignInButton,
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+  UserButton,
+} from '@clerk/nextjs'
 
 const tourney = Tourney({
   subsets: ['latin'],
@@ -153,15 +161,17 @@ export default function Header() {
 
           {/* CTA Button */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/login" className="text-gray-500 hover:text-white font-semibold transition-colors">
-              Login
-            </Link>
-            <Link
-              href="/trial"
-              className="bg-[#00FFC2] hover:bg-[#00E6B0] text-[#0A0E17] px-4 py-2 rounded-lg font-semibold transition-colors glow-effect"
-            >
-              Start Free Trial
-            </Link>
+            <SignedOut>
+              <SignInButton />
+              <SignUpButton>
+                <button className="bg-[#00FFC2] hover:bg-[#00E6B0] text-[#0A0E17] px-4 py-2 rounded-lg font-semibold transition-colors glow-effect">
+                  Sign Up
+                </button>
+              </SignUpButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
 
           {/* Mobile menu button */}
