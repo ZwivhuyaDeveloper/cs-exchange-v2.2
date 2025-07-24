@@ -12,10 +12,10 @@ import * as ScrollArea from '@radix-ui/react-scroll-area';
 import BottomPanel from "@/app/(product)/components/layout/BottomPanel"
 import NewList from "@/app/(product)/Dashboard/components/tokenList/new-list"
 import LoadingIntro from "@/src/components/ui/loading-intro"
-import { ChartBarStacked } from "@/app/(product)/Dashboard/components/ui/bar-chart-stack"
 import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Chart-radar"
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
 import { ChartAreaLinear} from "@/app/(product)/Dashboard/components/ui/Linear-Chart"
+import VolumeChart from './components/ui/VolumeChart';
 
 export default function Page() {
   const [fromToken, setFromToken] = useState("link");
@@ -28,20 +28,23 @@ export default function Page() {
   }
   const chainId = 1;
   return (
-    <div className="w-full min-h-full h-full dark:bg-black bg-zinc-200 flex flex-col">
+    <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 flex h-fit items-center rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 bg-zinc-200/80 ">
+      <header className="sticky top-0 z-50 flex h-fit items-center border-none rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 ">
+
         <NavMenu />
       </header>
 
       {/* Ticker */}
-      <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1">
-        <TickerTape />
+      <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
+        <div className="border border-px border-zinc-700 w-full">
+          <TickerTape />
+        </div>
       </div>
 
       {/* Main 3-column layout */}
       <main className="flex-1 flex flex-col items-center w-full h-full px-1 md:px-1">
-        <div className="flex flex-col lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(152vh-100px)]">{/* 200px header+footer approx */}
+        <div className="flex flex-col lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
           {/* Indicators (Left) */}
           <div className="lg:w-[340px] w-full flex flex-col gap-2 h-full">
             <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip gap-y-2" type="auto">
@@ -70,45 +73,45 @@ export default function Page() {
           </div>
 
           {/* Chart (Middle) */}
-          <div className="flex-1 flex flex-col gap-1 w-full h-full">
-            <TradingChart
-              buyTokenSymbol={toToken}
-              sellTokenSymbol={fromToken}
-              setCurrentChartToken={setCurrentChartToken}
-            />
-            <div className="flex flex-col md:flex-row gap-1 w-full items-stretch border border-px border-zinc-700 ">
-              <NewList value={toToken} onValueChange={setToToken} label="To Token" />
-            </div>
+          <div className="flex flex-row gap-1 w-full">
 
-          </div>
 
-          {/* Swap (Right) */}
-          <div className="lg:w-fit w-full flex flex-col gap-1 h-full">
-            <div className="border border-px border-zinc-700">
-              <Swap
-                fromToken={fromToken}
-                setFromToken={setFromToken}
-                toToken={toToken}
-                setToToken={setToToken}
-                setCurrentChartToken={setCurrentChartToken}
-                price={undefined}
-                setPrice={function (price: any): void {
-                  throw new Error("Function not implemented.")
-                }}
-                setFinalize={function (finalize: boolean): void {
-                  throw new Error("Function not implemented.")
-                }}
-                chainId={chainId}
-              />
-            </div>
-            <div className="flex flex-col gap-2 w-full border border-px border-zinc-700 ">
-              <ChartBarStacked />
+              <div className="flex-1 flex flex-col gap-1 w-full h-full">
+                <TradingChart
+                  buyTokenSymbol={toToken}
+                  sellTokenSymbol={fromToken}
+                  setCurrentChartToken={setCurrentChartToken}
+                />
+                <div className="flex flex-col mb-5 md:flex-row gap-1 w-full h-fit items-stretch ">
+                  <NewList value={toToken} onValueChange={setToToken} label="To Token" />
+                </div>
+              </div>
+
+              {/* Swap (Right) */}
+              <div className="lg:w-fit w-full flex flex-col gap-1 h-full">
+                <div className="border border-px border-zinc-700">
+                  <Swap
+                    fromToken={fromToken}
+                    setFromToken={setFromToken}
+                    toToken={toToken}
+                    setToToken={setToToken}
+                    setCurrentChartToken={setCurrentChartToken}
+                    price={undefined}
+                    setPrice={function (price: any): void {
+                      throw new Error("Function not implemented.")
+                    }}
+                    setFinalize={function (finalize: boolean): void {
+                      throw new Error("Function not implemented.")
+                    }}
+                    chainId={chainId}
+                  />
+                </div>
+              </div>
             </div>
           </div>
-        </div>
       </main>
 
-      {/* Footer */}
+            {/* Footer */}
       <footer
         className="z-50 flex h-fit items-center backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 bg-zinc-200/80 px-2 md:px-6 py-2 md:py-4
         sticky bottom-0 w-full

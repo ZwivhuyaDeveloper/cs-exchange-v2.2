@@ -3,7 +3,7 @@ import React from 'react'
 
 export default function BottomPanel() {
   return (
-    <div className='w-full h-7 border-t dark:border-zinc-700 py-5'>
+    <div className='w-full h-7 0'>
         <div className='flex justify-between items-center h-full px-4'>
             <div className='flex flex-row items-center  space-x-3'>
                 <div className='text-xs text-zinc-400'>© 2023 Cyclespace Exchange LLC</div>
