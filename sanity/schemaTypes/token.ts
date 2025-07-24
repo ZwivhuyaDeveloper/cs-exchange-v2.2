@@ -1,4 +1,4 @@
-// Token schema: minimal, robust, URL-safe
+// Enhanced Token schema for comprehensive trading dashboard
 import { Rule } from 'sanity';
 
 export default {
@@ -66,12 +66,172 @@ export default {
           { title: 'Ethereum', value: 'ethereum' },
           { title: 'Polygon', value: 'polygon' },
           { title: 'Binance Smart Chain', value: 'bsc' },
+          { title: 'Arbitrum', value: 'arbitrum' },
+          { title: 'Optimism', value: 'optimism' },
           { title: 'Solana', value: 'solana' },
+          { title: 'Avalanche', value: 'avalanche' },
+          { title: 'Fantom', value: 'fantom' },
+          { title: 'Base', value: 'base' },
+          { title: 'Linea', value: 'linea' },
+          { title: 'Scroll', value: 'scroll' },
           { title: 'Other', value: 'other' }
         ]
       },
       description: 'Blockchain network'
     },
+    {
+      name: 'marketCap',
+      title: 'Market Cap (USD)',
+      type: 'number',
+      description: 'Current market capitalization in USD'
+    },
+    {
+      name: 'volume24h',
+      title: '24h Volume (USD)',
+      type: 'number',
+      description: '24-hour trading volume in USD'
+    },
+    {
+      name: 'price',
+      title: 'Current Price (USD)',
+      type: 'number',
+      description: 'Current token price in USD'
+    },
+    {
+      name: 'priceChange24h',
+      title: '24h Price Change (%)',
+      type: 'number',
+      description: '24-hour price change percentage'
+    },
+    {
+      name: 'circulatingSupply',
+      title: 'Circulating Supply',
+      type: 'number',
+      description: 'Current circulating supply'
+    },
+    {
+      name: 'totalSupply',
+      title: 'Total Supply',
+      type: 'number',
+      description: 'Total token supply'
+    },
+    {
+      name: 'maxSupply',
+      title: 'Max Supply',
+      type: 'number',
+      description: 'Maximum token supply (if applicable)'
+    },
+    {
+      name: 'ath',
+      title: 'All-Time High (USD)',
+      type: 'number',
+      description: 'All-time high price in USD'
+    },
+    {
+      name: 'athDate',
+      title: 'ATH Date',
+      type: 'datetime',
+      description: 'Date when all-time high was reached'
+    },
+    {
+      name: 'atl',
+      title: 'All-Time Low (USD)',
+      type: 'number',
+      description: 'All-time low price in USD'
+    },
+    {
+      name: 'atlDate',
+      title: 'ATL Date',
+      type: 'datetime',
+      description: 'Date when all-time low was reached'
+    },
+    {
+      name: 'category',
+      title: 'Category',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'DeFi', value: 'defi' },
+          { title: 'Gaming', value: 'gaming' },
+          { title: 'Infrastructure', value: 'infrastructure' },
+          { title: 'Layer 1', value: 'layer1' },
+          { title: 'Layer 2', value: 'layer2' },
+          { title: 'Meme', value: 'meme' },
+          { title: 'NFT', value: 'nft' },
+          { title: 'Privacy', value: 'privacy' },
+          { title: 'Stablecoin', value: 'stablecoin' },
+          { title: 'Yield Farming', value: 'yield' },
+          { title: 'Other', value: 'other' }
+        ]
+      },
+      description: 'Token category/use case'
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Additional tags for categorization'
+    },
+    {
+      name: 'description',
+      title: 'Description',
+      type: 'text',
+      rows: 3,
+      description: 'Brief description of the token and its purpose'
+    },
+    {
+      name: 'website',
+      title: 'Website',
+      type: 'url',
+      description: 'Official project website'
+    },
+    {
+      name: 'whitepaper',
+      title: 'Whitepaper',
+      type: 'url',
+      description: 'Link to project whitepaper'
+    },
+    {
+      name: 'socialLinks',
+      title: 'Social Links',
+      type: 'object',
+      fields: [
+        { name: 'twitter', title: 'Twitter', type: 'url' },
+        { name: 'telegram', title: 'Telegram', type: 'url' },
+        { name: 'discord', title: 'Discord', type: 'url' },
+        { name: 'reddit', title: 'Reddit', type: 'url' },
+        { name: 'github', title: 'GitHub', type: 'url' }
+      ]
+    },
+    {
+      name: 'isActive',
+      title: 'Active',
+      type: 'boolean',
+      initialValue: true,
+      description: 'Whether this token is actively traded'
+    },
+    {
+      name: 'lastUpdated',
+      title: 'Last Updated',
+      type: 'datetime',
+      initialValue: (new Date()).toISOString(),
+      description: 'Last time token data was updated'
+    }
   ],
-
+  preview: {
+    select: {
+      title: 'symbol',
+      subtitle: 'name',
+      media: 'logo'
+    },
+    prepare(selection: any) {
+      const { title, subtitle, media } = selection;
+      return {
+        title: title || 'Unknown Token',
+        subtitle: subtitle || '',
+        media: media ? { asset: { _ref: media } } : undefined
+      };
+    }
+  }
 }

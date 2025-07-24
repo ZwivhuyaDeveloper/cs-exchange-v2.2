@@ -42,7 +42,6 @@ export default async function News() {
 
   console.log(data);
 
-
   return (
     <div className="bg-zinc-100 dark:bg-black">
       {/* Navigation */}

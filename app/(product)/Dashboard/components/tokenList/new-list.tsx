@@ -60,7 +60,7 @@ export default function NewList({ value, onValueChange, label, chainId = 1 }: To
   const paginatedTokens = filteredTokens.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <div className="w-full  dark:bg-[#0F0F0F] bg-white rounded-none shadow-sm p-4 h-fit flex flex-col border border-px border-zinc-700">
+    <div className="w-full  dark:bg-[#0F0F0F] bg-white rounded-none shadow-sm p-4 h-fit flex flex-col border border-px dark:border-zinc-700 border-zinc-200">
       <div className="flex items-center h-fit justify-between py-0  border-none rounded-none bg-transparent p-0 w-full gap-4">
         <div className="relative w-full h-fit">
           <Command 

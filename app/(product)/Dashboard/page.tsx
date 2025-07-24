@@ -16,6 +16,7 @@ import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Char
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
 import { ChartAreaLinear} from "@/app/(product)/Dashboard/components/ui/Linear-Chart"
 import VolumeChart from './components/ui/VolumeChart';
+import TrendingNews from "../News/components/related-news"
 
 export default function Page() {
   const [fromToken, setFromToken] = useState("link");
@@ -30,14 +31,13 @@ export default function Page() {
   return (
     <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
       {/* Header */}
-      <header className="sticky top-0 z-50 flex h-fit items-center border-none rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 ">
-
+      <header className="sticky top-0 z-50 flex h-fit bg-white items-center border-none rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 ">
         <NavMenu />
       </header>
 
       {/* Ticker */}
       <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
-        <div className="border border-px border-zinc-700 w-full">
+        <div className="border border-px dark:border-zinc-700 border-zinc-200 w-full">
           <TickerTape />
         </div>
       </div>
@@ -46,22 +46,22 @@ export default function Page() {
       <main className="flex-1 flex flex-col items-center w-full h-full px-1 md:px-1">
         <div className="flex flex-col lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
           {/* Indicators (Left) */}
-          <div className="lg:w-[340px] w-full flex flex-col gap-2 h-full">
+          <div className="lg:w-[400px] w-full flex flex-col gap-2 h-full">
             <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip gap-y-2" type="auto">
               <ScrollArea.Viewport className="w-full overflow-clip h-full flex flex-col gap-y-2">
-                <div className="border border-px border-zinc-700">
+                <div className="border border-px dark:border-zinc-700 border-zinc-2000">
                   <MarketStats tokenSymbol={currentChartToken} />
                 </div>
-                <div className="mt-1 border border-px border-zinc-700">
+                <div className="mt-1 border border-px dark:border-zinc-700 border-zinc-200">
                   <OrderData tokenSymbol={currentChartToken} />
                 </div>
-                <div className="mt-1 border border-px border-zinc-700">
+                <div className="mt-1 border border-px dark:border-zinc-700 border-zinc-200">
                   <LiquidityDistributionChart tokenSymbol={currentChartToken} />
                 </div>
-                <div className="mt-1 border border-px border-zinc-700">
+                <div className="mt-1 border border-px dark:border-zinc-700 border-zinc-200">
                   <ChartRadarMultiple tokenSymbol={currentChartToken} />
                 </div>
-                <div className="mt-1 border border-px border-zinc-700">
+                <div className="mt-1 border border-px dark:border-zinc-700 border-zinc-200">
                   <TechnicalSpecs tokenSymbol={currentChartToken} />
                 </div>
               </ScrollArea.Viewport>
@@ -89,7 +89,7 @@ export default function Page() {
 
               {/* Swap (Right) */}
               <div className="lg:w-fit w-full flex flex-col gap-1 h-full">
-                <div className="border border-px border-zinc-700">
+                <div className="border border-px dark:border-zinc-700 border-zinc-200">
                   <Swap
                     fromToken={fromToken}
                     setFromToken={setFromToken}

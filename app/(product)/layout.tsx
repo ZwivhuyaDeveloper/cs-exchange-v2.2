@@ -1,10 +1,9 @@
 import { ThemeProvider } from '@/context/ThemeContext'
 import type { Metadata } from 'next'
-import { Inter, Manrope, Space_Mono } from 'next/font/google'
 import '@/app/globals.css'
 import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from '../providers';
-import BottomPanel from './components/layout/BottomPanel';
+;
 
 export const metadata: Metadata = {
   title: 'Cyclespace Exchange - Trade Smarter, Not Harder',

@@ -6,6 +6,7 @@ interface Selection {
   direction: string;
   entry: number;
   status: string;
+  signalType?: string;
 }
 
 export default {
@@ -51,12 +52,34 @@ export default {
       options: {
         list: [
           { title: 'Buy', value: 'buy' },
-          { title: 'Sell', value: 'sell' }
+          { title: 'Sell', value: 'sell' },
+          { title: 'Long', value: 'long' },
+          { title: 'Short', value: 'short' }
         ],
         layout: 'radio'
       },
       validation: (Rule: Rule) => Rule.required().error('Direction is required'),
       initialValue: 'buy'
+    },
+    {
+      name: 'signalType',
+      title: 'Signal Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Breakout', value: 'breakout' },
+          { title: 'Breakdown', value: 'breakdown' },
+          { title: 'Support Bounce', value: 'support' },
+          { title: 'Resistance Rejection', value: 'resistance' },
+          { title: 'Trend Continuation', value: 'continuation' },
+          { title: 'Trend Reversal', value: 'reversal' },
+          { title: 'Divergence', value: 'divergence' },
+          { title: 'News Catalyst', value: 'news' },
+          { title: 'Fundamental', value: 'fundamental' },
+          { title: 'Other', value: 'other' }
+        ]
+      },
+      description: 'Type of trading signal'
     },
     {
       name: 'entryPrice',
@@ -80,6 +103,19 @@ export default {
       description: 'Price at which to exit the position to limit losses'
     },
     {
+      name: 'riskRewardRatio',
+      title: 'Risk/Reward Ratio',
+      type: 'number',
+      description: 'Risk to reward ratio for this trade'
+    },
+    {
+      name: 'positionSize',
+      title: 'Recommended Position Size (%)',
+      type: 'number',
+      validation: (Rule: Rule) => Rule.min(0).max(100),
+      description: 'Recommended position size as percentage of portfolio'
+    },
+    {
       name: 'publishedAt',
       title: 'Published At',
       type: 'datetime',
@@ -98,8 +134,12 @@ export default {
       options: {
         list: [
           { title: 'Active', value: 'active' },
+          { title: 'Filled', value: 'filled' },
+          { title: 'Target Hit', value: 'target_hit' },
+          { title: 'Stop Loss Hit', value: 'stop_loss' },
           { title: 'Completed', value: 'completed' },
-          { title: 'Canceled', value: 'canceled' }
+          { title: 'Canceled', value: 'canceled' },
+          { title: 'Expired', value: 'expired' }
         ]
       },
       initialValue: 'active',
@@ -110,7 +150,21 @@ export default {
       title: 'Exit Price (USD)',
       type: 'number',
       description: 'Price at which the position was closed',
-      hidden: ({ document }: { document: any }) => document?.status !== 'completed'
+      hidden: ({ document }: { document: any }) => !['completed', 'target_hit', 'stop_loss'].includes(document?.status)
+    },
+    {
+      name: 'exitDate',
+      title: 'Exit Date',
+      type: 'datetime',
+      description: 'Date when position was closed',
+      hidden: ({ document }: { document: any }) => !['completed', 'target_hit', 'stop_loss'].includes(document?.status)
+    },
+    {
+      name: 'profitLoss',
+      title: 'Profit/Loss (%)',
+      type: 'number',
+      description: 'Percentage profit or loss on the trade',
+      hidden: ({ document }: { document: any }) => !['completed', 'target_hit', 'stop_loss'].includes(document?.status)
     },
     {
       name: 'notes',
@@ -120,14 +174,61 @@ export default {
       description: 'Technical/fundamental analysis for this signal'
     },
     {
+      name: 'technicalAnalysis',
+      title: 'Technical Analysis',
+      type: 'object',
+      fields: [
+        {
+          name: 'indicators',
+          title: 'Technical Indicators',
+          type: 'array',
+          of: [{ type: 'string' }],
+          options: {
+            list: [
+              'RSI', 'MACD', 'Bollinger Bands', 'Moving Averages', 'Volume', 'Stochastic',
+              'Fibonacci', 'Ichimoku', 'Williams %R', 'CCI', 'ADX', 'ATR'
+            ]
+          }
+        },
+        {
+          name: 'supportLevels',
+          title: 'Support Levels',
+          type: 'array',
+          of: [{ type: 'number' }],
+          description: 'Key support price levels'
+        },
+        {
+          name: 'resistanceLevels',
+          title: 'Resistance Levels',
+          type: 'array',
+          of: [{ type: 'number' }],
+          description: 'Key resistance price levels'
+        },
+        {
+          name: 'chartPattern',
+          title: 'Chart Pattern',
+          type: 'string',
+          options: {
+            list: [
+              'Head and Shoulders', 'Double Top', 'Double Bottom', 'Triangle', 'Wedge',
+              'Flag', 'Pennant', 'Cup and Handle', 'Rounding Bottom', 'Rounding Top',
+              'Channel', 'Other'
+            ]
+          }
+        }
+      ]
+    },
+    {
       name: 'timeframe',
       title: 'Timeframe',
       type: 'string',
       options: {
         list: [
-          { title: 'Short-term (0-1 week)', value: 'short' },
-          { title: 'Medium-term (1-4 weeks)', value: 'medium' },
-          { title: 'Long-term (1+ months)', value: 'long' }
+          { title: 'Scalping (minutes)', value: 'scalping' },
+          { title: 'Short-term (hours)', value: 'short' },
+          { title: 'Medium-term (days)', value: 'medium' },
+          { title: 'Long-term (weeks)', value: 'long' },
+          { title: 'Swing (weeks-months)', value: 'swing' }
         ]
       },
       initialValue: 'medium'
@@ -138,12 +239,28 @@ export default {
       type: 'string',
       options: {
         list: [
+          { title: 'Very Low', value: 'very_low' },
           { title: 'Low', value: 'low' },
           { title: 'Medium', value: 'medium' },
-          { title: 'High', value: 'high' }
+          { title: 'High', value: 'high' },
+          { title: 'Very High', value: 'very_high' }
         ]
       },
       initialValue: 'medium'
+    },
+    {
+      name: 'confidence',
+      title: 'Confidence Level',
+      type: 'number',
+      validation: (Rule: Rule) => Rule.min(1).max(10),
+      description: 'Signal confidence level (1-10)'
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [{ type: 'string' }],
+      description: 'Tags for categorization and filtering'
     },
     {
       name: 'associatedContent',
@@ -154,6 +271,66 @@ export default {
         { type: 'research' }
       ],
       description: 'Link to related news or research content'
+    },
+    {
+      name: 'marketConditions',
+      title: 'Market Conditions',
+      type: 'object',
+      fields: [
+        {
+          name: 'trend',
+          title: 'Overall Market Trend',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Bullish', value: 'bullish' },
+              { title: 'Bearish', value: 'bearish' },
+              { title: 'Sideways', value: 'sideways' },
+              { title: 'Mixed', value: 'mixed' }
+            ]
+          }
+        },
+        {
+          name: 'volatility',
+          title: 'Volatility Level',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Low', value: 'low' },
+              { title: 'Medium', value: 'medium' },
+              { title: 'High', value: 'high' },
+              { title: 'Extreme', value: 'extreme' }
+            ]
+          }
+        },
+        {
+          name: 'volume',
+          title: 'Volume Level',
+          type: 'string',
+          options: {
+            list: [
+              { title: 'Low', value: 'low' },
+              { title: 'Normal', value: 'normal' },
+              { title: 'High', value: 'high' },
+              { title: 'Extreme', value: 'extreme' }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      name: 'isPremium',
+      title: 'Premium Signal',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Whether this is a premium signal for paid subscribers'
+    },
+    {
+      name: 'lastUpdated',
+      title: 'Last Updated',
+      type: 'datetime',
+      initialValue: (new Date()).toISOString(),
+      description: 'Last time signal was updated'
     }
   ],
   preview: {
@@ -162,28 +339,32 @@ export default {
       tokenName: 'token.name',
       direction: 'direction',
       entry: 'entryPrice',
-      status: 'status'
+      status: 'status',
+      signalType: 'signalType'
     },
     prepare(selection: Selection) {
-      const { tokenSymbol, tokenName, direction, entry, status } = selection;
+      const { tokenSymbol, tokenName, direction, entry, status, signalType } = selection;
       
       // Safeguard all values
       const safeTokenSymbol = tokenSymbol || '';
       const safeDirection = direction || 'buy';
       const safeEntry = entry || 0;
       const safeStatus = status || 'draft';
+      const safeSignalType = signalType || '';
       
       const titleText = safeTokenSymbol 
-        ? `${safeTokenSymbol} ${safeDirection.toUpperCase()} Signal`
+        ? `${safeTokenSymbol} ${safeDirection.toUpperCase()}`
         : `New ${safeDirection.toUpperCase()} Signal`;
       
       const subtitleText = tokenName 
         ? `${tokenName} | Entry: $${safeEntry.toFixed(2)}`
         : `Entry: $${safeEntry.toFixed(2)}`;
       
+      const signalTypeText = safeSignalType ? ` | ${safeSignalType}` : '';
+      
       return {
         title: titleText,
-        subtitle: `${subtitleText} | Status: ${safeStatus}`
+        subtitle: `${subtitleText}${signalTypeText} | Status: ${safeStatus}`
       }
     }
   }

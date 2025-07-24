@@ -1,5 +1,4 @@
-
-import { simpleNewsCard } from '@/app/lib/interface';
+import {simpleResearchCard } from '@/app/lib/interface';
 import React from 'react'
 import { client, urlFor } from "@/app/lib/sanity";
 import Image from 'next/image';
@@ -15,7 +14,7 @@ export const revalidate = 30; // revalidate at most 30 seconds
 
 async function getData() {
   const query = `
-  *[_type == 'news' && category->name == "Trending"] | order(_createdAt desc) {
+  *[_type == 'research' && category->name == "Trending"] | order(_createdAt desc) {
     title,
       smallDescription,
       "currentSlug": slug.current,
@@ -40,8 +39,8 @@ async function getData() {
 }
 
 
-export default async function TrendingNews() {
-  const data: simpleNewsCard[] = await getData()
+export default async function RelatedResearch() {
+  const data: simpleResearchCard[] = await getData()
   console.log(data);
 
   return (
@@ -51,7 +50,7 @@ export default async function TrendingNews() {
             <div className="h-6 w-6 bg-orange-500/20 rounded-full flex items-center justify-center">
               <PercentDiamond className="text-orange-500" size={16} />
             </div>
-            <span>Trending News</span>
+            <span>Perfoming Research</span>
           </h1>
           <span className='text-zinc-500 text-md px-2'>See All</span>
         </header>

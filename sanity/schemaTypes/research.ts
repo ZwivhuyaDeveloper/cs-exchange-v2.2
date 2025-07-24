@@ -32,14 +32,14 @@ export default {
       title: 'Content Image',
     },
     {
-      name: 'date',
-      type: 'array',
-      title: 'Date Published',
-      of: [
-        {
-          type: 'block',
-        },
-      ],
+      name: 'publishedAt',
+      type: 'datetime',
+      title: 'Published Date',
+      options: {
+        dateFormat: 'YYYY-MM-DD',
+        timeFormat: 'HH:mm',
+        timeStep: 15,
+      }
     },
     {
       name: 'smallDescription',
@@ -68,7 +68,7 @@ export default {
     },
     {
       name: 'category',
-      title: 'Research Category',
+      title: 'News Category',
       type: 'reference',
       to: [
         {
@@ -76,6 +76,34 @@ export default {
         }
       ]
 
+    },
+    {
+      name: 'tags',
+      title: 'Tags',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'tag' }]
+        }
+      ],
+      options: {
+        layout: 'tags'
+      }
+    },
+        {
+      name: 'impacts',
+      title: 'Impacts',
+      type: 'array',
+      of: [
+        {
+          type: 'reference',
+          to: [{ type: 'impact' }]
+        }
+      ],
+      options: {
+        layout: 'impacts'
+      }
     },
   ],
 }

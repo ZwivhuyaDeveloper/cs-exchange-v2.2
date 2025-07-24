@@ -1,9 +1,14 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { simpleNewsCard, simpleResearchCard } from "@/app/lib/interface";
+import { simpleResearchCard } from "@/app/lib/interface";
 import { client, urlFor } from "@/app/lib/sanity";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { NavMenu } from "../components/layout/NavMenu";
+import TickerTape from "../Dashboard/components/ui/TickerTape";
+import RelatedResearch from "./components/related-research";
+import ResearchSection from "./components/research-section";
+import ResearchDisplay from "../News/components/research-display";
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
@@ -13,11 +18,21 @@ async function getData() {
     title,
       smallDescription,
       "currentSlug": slug.current,
-      titleImage
+      titleImage,
+      publishedAt,
+      "categoryName": category->name,
+      category,
+      "tags": tags[]->{
+        name,
+        color
+      },
+      "impacts": impacts[]->{
+        name,
+        color
+      }
   }`;
 
   const data = await client.fetch(query);
-
   return data;
 }
 
@@ -27,28 +42,43 @@ export default async function Research() {
   console.log(data);
 
   return (
-    <div className="grid grid-cols-1  md:grid-cols-2 mt-5 gap-5 w-full">
-      {data.map((post, idx) => (
-        <Card key={idx} className="p-3 w-full">
-          <Image
-            src={urlFor(post.titleImage).url()}
-            alt="image"
-            width={500}
-            height={500}
-            className="rounded-t-lg h-[200px] object-cover"
-          />
+    <div className="bg-zinc-100 dark:bg-black">
+      {/* Navigation */}
+      <div>
+        <NavMenu/>
+      </div>
 
-          <CardContent className="mt-5">
-            <h3 className="text-lg  font-bold">{post.title}</h3>
-            <p className="line-clamp-3 text-sm mt-2 text-gray-600 dark:text-gray-300">
-              {post.smallDescription}
-            </p>
-            <Button asChild className="w-full mt-7">
-              <Link href={`/analysis/${post.currentSlug}`}>Read More</Link>
-            </Button>
-          </CardContent>
-        </Card>
-      ))}
+      {/* <Ticker/> */}
+      <div className="h-fit w-full  justify-center dark:bg-[#0F0F0F] bg-zinc-100 items-center flex mt-1 ">
+        <TickerTape/>
+      </div> 
+
+      <div className="grid grid-flow-col justify-center mt-1 gap-2 w-full">
+
+        {/*Left-Section*/}
+        <div className=" w-[350px] gap-2 flex flex-col h-full">
+          <div>
+            {/*<GlobalIndicator/>*/}
+          </div>
+          <div>
+            <RelatedResearch/>
+          </div>
+        </div>
+
+        {/*middle-Section*/}
+        <div className="bg-white">
+          <div>
+            <ResearchSection data={data} />
+          </div>
+        </div>
+
+        {/*Right-Section*/}
+        <div className="bg-white w-[350px]">
+          <div>
+            <ResearchDisplay/>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
