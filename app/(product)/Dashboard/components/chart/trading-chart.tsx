@@ -135,7 +135,7 @@ export function TradingChart({
           <div className="flex flex-col justify-between h-full gap-1">
             <div className="flex flex-row items-center gap-3 w-full justify-between">
               <div className="text-zinc-700 dark:text-zinc-100 font-semibold text-sm h-full">
-                {tokenInfo.name} <span className="text-[#0E76FD] font-bold">({tokenInfo.symbol})</span>
+                {tokenInfo.name} <span className="text-[#00FFC2] font-bold">({tokenInfo.symbol})</span>
               </div>
             </div>
             {/* Price & percentage change */}

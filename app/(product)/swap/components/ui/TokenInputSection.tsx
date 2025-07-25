@@ -76,7 +76,8 @@ export const TokenInputSection = ({
         <TokenUSDValue 
           amount={amount}
           tokenSymbol={token}
-          chainId={chainId} tokenMap={onAmountChange}        />
+          chainId={chainId}
+        />
       </div>
     </section>
   );
