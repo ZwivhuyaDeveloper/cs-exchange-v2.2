@@ -95,6 +95,8 @@ export default function PriceViewUI({
                 value={fromToken}
                 onValueChange={setFromToken}
                 label="From"
+                chainId={chainId}
+                excludedToken={toToken}
               />
               <div className="flex gap-2">
                 <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md" />
@@ -146,11 +148,14 @@ export default function PriceViewUI({
                   value={toToken}
                   onValueChange={setToToken}
                   label="To"
+                  chainId={chainId}
+                  excludedToken={fromToken}
                 />
                 <TokenSelectorIconList
                   tokens={tokenList}
                   selectedToken={toToken}
                   onSelect={setToToken}
+                  excludedToken={fromToken}
                 />
               </div>
               <TokenInputSection
