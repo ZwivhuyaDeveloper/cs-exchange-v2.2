@@ -41,9 +41,11 @@ export interface simpleResearchCard {
   smallDescription: string;
   currentSlug: string;
   titleImage: any;
+  publishedAt: string;
   categoryName: any;
   category: any;
-  impact: any;
+  impacts: Impact[];
+  tags: Tag[];
 }
 
 export interface fullResearch {
@@ -54,10 +56,11 @@ export interface fullResearch {
   headImage: any;
   contentImage: any;
   research: any;
-  date: any;
+  publishedAt: string;
   categoryName: any;
   category: any;
-  impact: any;
+  impacts: Impact[];
+  tags: Tag[];
 
 }
 

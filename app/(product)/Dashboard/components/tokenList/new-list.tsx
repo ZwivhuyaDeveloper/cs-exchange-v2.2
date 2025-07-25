@@ -2,8 +2,16 @@ import { Avatar, AvatarImage } from '@/components/ui/avatar';
 import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from 'cmdk';
 import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationPrevious,
+  PaginationNext,
+  PaginationEllipsis,
+} from '@/components/ui/pagination';
 
 interface TokenListProps {
   value: string;
@@ -17,6 +25,8 @@ export default function NewList({ value, onValueChange, label, chainId = 1 }: To
   const [tokens, setTokens] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const pageSize = 20; // Items per page
 
   useEffect(() => {
     setIsLoading(true);
@@ -28,22 +38,41 @@ export default function NewList({ value, onValueChange, label, chainId = 1 }: To
       .finally(() => setIsLoading(false));
   }, [chainId]);
 
-  const filteredTokens = tokens.filter(token =>
-    token.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    token.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Reset page when search changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery]);
+
+  // Filter tokens based on search query
+  const filteredTokens = tokens.filter(token => {
+    const query = searchQuery.toLowerCase().trim();
+    if (!query) return true;
+    
+    return (
+      token.symbol.toLowerCase().includes(query) ||
+      token.name.toLowerCase().includes(query) ||
+      (token.address && token.address.toLowerCase().includes(query))
+    );
+  });
+
+  // Pagination logic
+  const totalPages = Math.ceil(filteredTokens.length / pageSize);
+  const paginatedTokens = filteredTokens.slice((page - 1) * pageSize, page * pageSize);
 
   return (
-    <div className="w-full border dark:bg-[#0F0F0F] bg-white rounded-none border-none shadow-sm p-4 h-full ">
-      <div className="flex items-center h-full justify-between py-0 border-none rounded-none bg-transparent p-0 w-full gap-4">
-        <div className="relative w-full h-full">
-          <Command className="border-none h-full flex flex-col gap-2">
-            <div className="flex items-center px-5 py-2 dark:bg-zinc-900/80 bg-zinc-100 rounded-2xl ">
+    <div className="w-full  dark:bg-[#0F0F0F] bg-white rounded-none shadow-sm p-4 h-fit flex flex-col border border-px dark:border-zinc-700 border-zinc-200">
+      <div className="flex items-center h-fit justify-between py-0  border-none rounded-none bg-transparent p-0 w-full gap-4">
+        <div className="relative w-full h-fit">
+          <Command 
+            className="border-none h-fit flex flex-col gap-2"
+            shouldFilter={false} // Disable internal filtering
+          >
+            <div className="flex items-center px-5 py-4 dark:bg-zinc-900/80 bg-zinc-100 rounded-2xl ">
               <CommandInput
-                placeholder="Search token by name or symbol..."
+                placeholder="Search token by name, symbol, or address..."
                 value={searchQuery}
                 onValueChange={setSearchQuery}
-                className="border-none focus:ring-0 focus-visible:ring-0 w-full text-sm h-6"
+                className="border-none focus:ring-0 focus-visible:ring-0 w-full text-sm h-6 select-none focus-none focus:outline-0"
               />
             </div>
             {error && (
@@ -74,11 +103,11 @@ export default function NewList({ value, onValueChange, label, chainId = 1 }: To
                     <Skeleton className="h-4 w-32" />
                   </div>
                 ) : (
-                  "No tokens found. Try a different search term."
+                  `No tokens found for "${searchQuery}". Try a different search term.`
                 )}
               </CommandEmpty>
               {isLoading ? (
-                Array(5).fill(0).map((_, i) => (
+                Array(pageSize).fill(0).map((_, i) => (
                   <CommandItem 
                     key={`skeleton-${i}`} 
                     className="py-3 px-4 border-b"
@@ -97,7 +126,7 @@ export default function NewList({ value, onValueChange, label, chainId = 1 }: To
                   </CommandItem>
                 ))
               ) : (
-                filteredTokens.map((token) => (
+                paginatedTokens.map((token) => (
                   <CommandItem
                     key={token.address || token.symbol}
                     value={token.address || token.symbol}
@@ -130,11 +159,47 @@ export default function NewList({ value, onValueChange, label, chainId = 1 }: To
           </Command>
         </div>
       </div>
-      <div className="flex items-center justify-between py-4 px-4 border-t mt-2 border-b-gray-700">
-        <div className="text-sm text-muted-foreground">
-          Showing {filteredTokens.length} of {tokens.length} tokens
+      
+      {/* Pagination controls */}
+      {totalPages > 1 && (
+        <div className="mb-10 h-full">
+          <Pagination className='justify-between'>
+            <div className="flex items-center justify-between py-4 px-4 border-t mt-2 border-b-gray-700">
+              <div className="text-sm text-muted-foreground">
+                Showing {paginatedTokens.length} of {filteredTokens.length} tokens
+                {searchQuery && ` matching "${searchQuery}"`}
+              </div>
+              <div className="text-sm text-muted-foreground">
+                Page {page} of {totalPages}
+              </div>
+            </div>
+            <PaginationContent>
+              <PaginationItem className='bg-[#00ffc2] text-black rounded-2xl' >
+                <PaginationPrevious
+                  onClick={() => setPage(p => Math.max(1, p - 1))}
+                  aria-disabled={page === 1}
+                  className={page === 1 ? 'opacity-50 pointer-events-none font-semibold' : ''}
+                />
+              </PaginationItem>
+              
+              <PaginationItem>
+                <span className="px-2 text-xs">
+                  Page {page} of {totalPages}
+                </span>
+              </PaginationItem>
+              
+              <PaginationItem className='bg-[#00ffc2] text-black rounded-2xl'>
+                <PaginationNext
+                  onClick={() => setPage(p => Math.min(totalPages, p + 1))}
+                  aria-disabled={page === totalPages}
+                  className={page === totalPages ? 'opacity-50 pointer-events-none font-semibold' : ''}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
         </div>
-      </div>
+      )}
+      
     </div>
   );
 }

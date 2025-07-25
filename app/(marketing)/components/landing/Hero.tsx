@@ -139,10 +139,10 @@ export default function Hero() {
             className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6"
           >
             <Link
-              href="/trial"
+              href="/Dashboard"
               className="bg-accent hover:bg-accent-hover text-primary px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
             >
-              Start Free Trial
+              Dashboard
             </Link>
             <button className="flex items-center space-x-2 text-white hover:text-accent transition-colors group">
               <div className="p-3 bg-gray-300/50 rounded-full group-hover:bg-[#00FFC2]/20 transition-colors">

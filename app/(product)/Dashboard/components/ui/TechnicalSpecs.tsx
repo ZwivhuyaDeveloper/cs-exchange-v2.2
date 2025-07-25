@@ -247,7 +247,7 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
           <span className="text-sm text-muted-foreground">Categories</span>
           <div className="flex flex-wrap gap-2">
             {specsData.categories?.map((category) => (
-              <Badge key={category} variant="outline" className='font-semibold text-black border-none border-[#0E76FD]/0 bg-[#00FFC2]/10 dark:bg-[#00FFC2]'>
+              <Badge key={category} variant="outline" className='font-semibold  text-black border-none border-[#0E76FD]/0 bg-[#00FFC2]/10 dark:bg-[#00FFC2]'>
                 {category}
               </Badge>
             ))}
@@ -259,26 +259,30 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
 
         {/* Technical Specs */}
         <div className="flex justify-between items-center">
+          <span className="text-sm text-muted-foreground">Algorithm</span>
+          <Badge variant="outline">{specsData.hashingAlgorithm}</Badge>
+        </div>
+        <div className="flex justify-between items-center">
+          <span className="text-sm text-muted-foreground">Block Time</span>
+          <span className="text-sm font-medium">
+            {specsData.blockTime} minutes
+          </span>
+        </div>
+        <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">Genesis Date</span>
           <span className="text-sm font-medium">
             {specsData.genesisDate}
           </span>
         </div>
 
-        {/* Expandable Description */}
-        <Collapsible open={isOpen} onOpenChange={setIsOpen} className='w-full'>
-          <CollapsibleTrigger className="w-full">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Description</span>
-              <ChevronDownIcon className={`h-4 w-4 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
-            </div>
-          </CollapsibleTrigger>
-          <CollapsibleContent className='w-full'>
+        {/* Expandable Description */}  
+        <div className='w-full'>
+          <h3 className='w-full'>
             <p className="text-sm text-muted-foreground mt-2 whitespace-pre-line w-ful">
               {specsData.description}
             </p>
-          </CollapsibleContent>
-        </Collapsible>
+          </h3>
+        </div>
       </CardContent>
     </Card>
   );

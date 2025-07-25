@@ -6,7 +6,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogClose
 } from "@/components/ui/dialog";
 import { Command, CommandInput, CommandList, CommandItem, CommandEmpty } from "@/components/ui/command";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -18,10 +17,11 @@ interface TokenPickerProps {
   value: string;
   onValueChange: (value: string) => void;
   label?: string;
-  chainId?: number; // Accept chainId for fetching tokens
+  chainId?: number;
+  excludedToken?: string; // Add excludedToken prop
 }
 
-export function TokenPicker({ value, onValueChange, label, chainId }: TokenPickerProps) {
+export function TokenPicker({ value, onValueChange, label, chainId, excludedToken  }: TokenPickerProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [tokens, setTokens] = useState<any[]>([]);
@@ -31,7 +31,7 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
   // Ref for the viewport inside ScrollArea
   const viewportRef = useRef<HTMLDivElement>(null);
 
-  // Always fetch all tokens from DB
+  // Fetch tokens from DB
   useEffect(() => {
     const fetchTokens = async () => {
       try {
@@ -46,27 +46,41 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
     fetchTokens();
   }, [chainId]);
 
+  // Reset page when search changes
+  useEffect(() => {
+    setPage(1);
+  }, [searchQuery]);
+
   // Sort tokens alphabetically by symbol
   const sortedTokens = [...tokens].sort((a, b) => a.symbol.localeCompare(b.symbol));
 
-  // Show all tokens by default, filter only if searchQuery is not empty
-  const filteredTokens = searchQuery.trim() === ''
-    ? sortedTokens
-    : sortedTokens.filter(token =>
-        token.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        token.name.toLowerCase().includes(searchQuery.toLowerCase())
-      );
+  // Filter tokens based on search query and exclude excludedToken
+  const filteredTokens = sortedTokens.filter(token => {
+    const query = searchQuery.toLowerCase().trim();
+    
+    // Exclude the token if it matches the excludedToken
+    if (excludedToken && token.symbol.toLowerCase() === excludedToken.toLowerCase()) {
+      return false;
+    }
+    
+    if (!query) return true;
+    
+    return (
+      token.symbol.toLowerCase().includes(query) ||
+      token.name.toLowerCase().includes(query) ||
+      (token.address && token.address.toLowerCase().includes(query))
+    );
+  });
 
   // Pagination logic
   const totalPages = Math.ceil(filteredTokens.length / pageSize) || 1;
   const paginatedTokens = filteredTokens.slice((page - 1) * pageSize, page * pageSize);
 
-  // Remove the useEffect for scroll reset on page change
-
   // Build tokenMap for logo display
-  const tokenMap = tokens.length > 0
-    ? Object.fromEntries(tokens.map(t => [t.symbol.toLowerCase(), t]))
-    : {};
+  const tokenMap = tokens.reduce((map, token) => {
+    map[token.symbol.toLowerCase()] = token;
+    return map;
+  }, {} as Record<string, any>);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -86,7 +100,7 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
           ) : (
             "Select Token"
           )}
-          <ChevronDown size={25} color="grey" strokeWidth={2}  className="" />
+          <ChevronDown size={25} color="grey" strokeWidth={2} className="" />
         </Button>
       </DialogTrigger>
 
@@ -100,10 +114,14 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
             className="relative max-w-full w-full justify-center items-center place-content-center p-0"
             onClick={(e) => e.stopPropagation()}
           >
-            <Command className="border bg-transparent w-full border-none dark:bg-transparent shadow-lg flex-col flex h-full max-h-[800px] p-0">
+            <Command 
+              className="border bg-transparent w-full border-none dark:bg-transparent shadow-lg flex-col flex h-full max-h-[800px] p-0"
+              // Disable internal filtering since we're doing it manually
+              shouldFilter={false}
+            >
               <DialogHeader className="w-full flex-row h-fit my-2 relative items-start justify-between flex">
                 <CommandInput
-                  placeholder="Search token..."
+                  placeholder="Search token by symbol, name, or address..."
                   value={searchQuery}
                   onValueChange={setSearchQuery}
                   className="border-none focus:outline-none active:outline-none w-full h-fit"
@@ -112,37 +130,43 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
 
               <ScrollArea className="h-fit">
                 <ScrollAreaViewport ref={viewportRef} className="h-full w-full rounded-[inherit]">
-                  <CommandList className="max-h-[400px] ">
-                  <CommandEmpty>No token found.</CommandEmpty>
-                  {paginatedTokens.map((token) => (
-                    <CommandItem
-                      key={token.address}
-                      value={token.address}
-                      onSelect={() => {
-                        onValueChange(token.symbol.toLowerCase());
-                        setOpen(false);
-                        setSearchQuery("");
-                      }}
-                      className="flex items-center gap-4 p-3 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-3xl"
-                    >
-                      <Avatar className="h-6 w-6">
-                        <AvatarImage src={token.logoURL || token.logoURI} />
-                      </Avatar>
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 justify-between">
-                          <span className="font-semibold">{token.symbol}</span>
-                          <span className="text-xs text-slate-500">
-                            {token.address?.slice(0, 6)}...{token.address?.slice(-4)}
-                          </span>
-                        </div>
-                        <div className="text-xs text-muted-foreground">{token.name}</div>
-                      </div>
-                    </CommandItem>
-                  ))}
-                </CommandList>
+                  <CommandList className="max-h-[400px]">
+                    {paginatedTokens.length === 0 ? (
+                      <CommandEmpty className="py-4 text-center">
+                        No tokens found for "{searchQuery}"
+                      </CommandEmpty>
+                    ) : (
+                      paginatedTokens.map((token) => (
+                        <CommandItem
+                          key={token.address}
+                          value={token.address}
+                          onSelect={() => {
+                            onValueChange(token.symbol.toLowerCase());
+                            setOpen(false);
+                            setSearchQuery("");
+                          }}
+                          className="flex items-center gap-4 p-3 cursor-pointer hover:bg-slate-200 dark:hover:bg-gray-800 rounded-3xl"
+                        >
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage src={token.logoURL || token.logoURI} />
+                          </Avatar>
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 justify-between">
+                              <span className="font-semibold">{token.symbol}</span>
+                              <span className="text-xs text-slate-500">
+                                {token.address?.slice(0, 6)}...{token.address?.slice(-4)}
+                              </span>
+                            </div>
+                            <div className="text-xs text-muted-foreground">{token.name}</div>
+                          </div>
+                        </CommandItem>
+                      ))
+                    )}
+                  </CommandList>
                 </ScrollAreaViewport>
               </ScrollArea>
-              {/* Pagination controls always visible */}
+              
+              {/* Pagination controls */}
               <Pagination className="mt-2">
                 <PaginationContent>
                   <PaginationItem>
@@ -150,7 +174,6 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
                       onClick={() => {
                         setPage((p) => {
                           const newPage = Math.max(1, p - 1);
-                          // Scroll to top when paginating
                           if (viewportRef.current) {
                             viewportRef.current.scrollTo({ top: 0, behavior: "smooth" });
                           }
@@ -169,7 +192,6 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
                       onClick={() => {
                         setPage((p) => {
                           const newPage = Math.min(totalPages, p + 1);
-                          // Scroll to top when paginating
                           if (viewportRef.current) {
                             viewportRef.current.scrollTo({ top: 0, behavior: "smooth" });
                           }

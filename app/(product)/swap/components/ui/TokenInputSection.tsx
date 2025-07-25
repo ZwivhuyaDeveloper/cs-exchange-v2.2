@@ -1,8 +1,6 @@
 import { Input } from "@/components/ui/input";
-import { TokenPicker } from "./tokenPicker";
 import { TokenUSDValue } from "./TokenUSDValue";
-import { ChangeEvent, useState } from "react";
-
+import { ChangeEvent} from "react";
 
 interface TokenInputSectionProps {
   label: "sell" | "buy"
@@ -16,27 +14,17 @@ interface TokenInputSectionProps {
   tokenMap?: Record<string, any>; // Accept dynamic token map
 }
 
-
-
 export const TokenInputSection = ({
   label,
   token,
   amount,
   chainId,
-  onTokenChange,
   onAmountChange,
   disabled = false,
   tokens,
   tokenMap
 }: TokenInputSectionProps) => {
 
-  const [fromToken, setFromToken] = useState("")
-  const [toToken, setToToken] = useState("")
-  const [tradeDirection, setTradeDirection] = useState("sell");
-  const [sellAmount, setSellAmount] = useState("");
-
-
-  
   const tokenInfo = tokenMap && token ? tokenMap[token.toLowerCase()] : null;
   const handleAmountChange = (e: ChangeEvent<HTMLInputElement>) => {
     const sanitizeDecimalPlaces = (value: string, decimals: number): string => {
@@ -62,7 +50,7 @@ export const TokenInputSection = ({
         <Input
           id={`${label}-amount`}
           value={amount}
-          className="h-11 sm:h-11 md:h-11 lg-h-11 sm:text-xl md:text-2xl lg:text-3xl bg-transparent shadow-none  border-transparent text-4xl font-semibold focus:outline-none active:outline-none active:bg-transparent focus:bg-transparent"
+          className="h-11 sm:h-11 md:h-11 lg-h-11 w-full sm:text-xl md:text-2xl lg:text-3xl bg-transparent shadow-none  border-transparent text-4xl font-semibold focus:outline-none active:outline-none active:bg-transparent focus:bg-transparent"
           type="string"
           placeholder="0.0"
           onChange={handleAmountChange}

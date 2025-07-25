@@ -10,12 +10,18 @@ const nextConfig = {
     domains: [
       'assets.coingecko.com',
       'raw.githubusercontent.com',
+      'cdn.sanity.io',
+      'sanity-cdn.com'
       // add more domains here if needed
     ],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'cdn.sanity.io',
+      },
+            {
+        protocol: 'https',
+        hostname: 'sanity-cdn.com',
       },
       {
         protocol: 'https',

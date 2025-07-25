@@ -2,14 +2,17 @@
 import { client } from "@/app/lib/sanity";
 import CryptoSignalCard from "@/app/(product)/Edge/components/SignalCard";
 
-import { CryptoSignal } from "../lib/interface";
+
 import { Button } from "@/components/ui/button";
-import { SIGNAL_QUERY } from "../lib/queries"; // Use SIGNAL_QUERY instead
-import { fetchTokenPrices } from "../lib/coingecko";
+ // Use SIGNAL_QUERY instead
+
 import Link from "next/link";
 import { NavMenu } from "@/app/(product)/components/layout/NavMenu";
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape";
 import { Card, CardHeader, CardContent } from '@/components/ui/card';
+import { SIGNAL_QUERY } from "@/app/lib/queries";
+import { CryptoSignal } from "@/app/lib/interface";
+import { fetchTokenPrices } from "@/app/lib/coingecko";
 
 type CryptoSignalWithPrice = CryptoSignal & { currentPrice: number | null };
 
@@ -54,7 +57,7 @@ export default async function DashboardPage() {
                   <CryptoSignalCard 
                     signal={{
                       ...signal,
-                      currentPrice: tokenPrices[signal.token?.coingeckoId ?? ''] || null
+                      currentPrice: tokenPrices[signal.token?.coingeckoId ?? '']
                     } as CryptoSignalWithPrice}
                   />
                 </CardContent>

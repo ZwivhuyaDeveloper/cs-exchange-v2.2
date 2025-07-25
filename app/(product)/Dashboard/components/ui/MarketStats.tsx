@@ -20,6 +20,8 @@ interface MarketData {
   fdvChange: number;
   circulatingSupply: number;
   circulatingSupplyChange: number;
+  price: number;
+  priceChange: number;
 }
 
 export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsProps) {
@@ -50,6 +52,8 @@ export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsPro
     const data = await res.json();
     return {
       volume24h: data.market_data.total_volume.usd,
+      price: data.market_data.current_price.usd,
+      priceChange: data.market_data.current_price_change_percentage_24h,
       volume24hChange: data.market_data.price_change_percentage_24h,
       marketCap: data.market_data.market_cap.usd,
       marketCapChange: data.market_data.market_cap_change_percentage_24h,

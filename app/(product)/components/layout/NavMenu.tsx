@@ -39,7 +39,7 @@ export function NavMenu() {
 
 
   return (
-    <NavigationMenu className="w-full flex justify-between items-center gap-8 h-14 px-4 backdrop-filter backdrop-blur-2xl dark:bg-[#0F0F0F]  backdrop-brightness-200 ">
+    <NavigationMenu className="w-full flex justify-between items-center gap-8 h-14 px-4 backdrop-filter backdrop-blur-2xl dark:bg-[#0F0F0F] bg-white border-b border-px dark:border-zinc-700 border-zinc-200   backdrop-brightness-200 ">
 
       <NavigationMenuList className="w-full justify-between h-full items-center font-normal text-foreground">
           <NavigationMenuItem className="flex flex-row items-center gap-2">

@@ -3,7 +3,6 @@ import { polygon, arbitrum, avalanche, base, berachain, blast, bsc, linea, mantl
 import { getChainId } from "viem/actions";
 
 
-
 export const PERMIT2_ADDRESS = "0x000000000022D473030F116dDEE9F6B43aC78BA3";
 export const MAGIC_CALLDATA_STRING = "f".repeat(130); // used when signing the eip712 message
 export const AFFILIATE_FEE = 100; // 1% affiliate fee. Denoted in Bps.
