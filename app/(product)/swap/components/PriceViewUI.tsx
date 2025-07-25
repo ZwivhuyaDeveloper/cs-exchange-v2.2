@@ -62,7 +62,7 @@ export default function PriceViewUI({
   sellTokenTax,
   tradeDirection,
   setTradeDirection,
-  inSufficientBalance,
+
   ApproveOrReviewButton,
 }: PriceViewUIProps) {
   return (
@@ -115,6 +115,7 @@ export default function PriceViewUI({
               }}
               tokens={tokenList}
               tokenMap={tokenMap}
+              excludedToken={toToken}
             />
           </section>
           <div>
@@ -165,6 +166,7 @@ export default function PriceViewUI({
                 disabled
                 tokens={tokenList}
                 tokenMap={tokenMap}
+                excludedToken={fromToken}
               />
             </section>
           </div>

@@ -106,11 +106,11 @@ export const TokenUSDValue = ({ amount, tokenSymbol, chainId }: TokenUSDValuePro
       {loading ? (
         <Skeleton className="h-4 w-24" />
       ) : error ? (
-        <span className="text-xs text-gray-400">Price Error</span>
+        <span className="text-sm text-gray-400">Price Error</span>
       ) : tokenError ? (
-        <span className="text-xs text-gray-400">Token Unsupported</span>
+        <span className="text-sm text-gray-400">Token Unsupported</span>
       ) : usdPrice ? (
-        <span className="text-xs text-gray-400">
+        <span className="text-sm text-gray-400">
           ${(parseFloat(amount) * usdPrice).toLocaleString(undefined, {
             maximumFractionDigits: 2,
             minimumFractionDigits: 2

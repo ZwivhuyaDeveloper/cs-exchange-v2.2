@@ -2,7 +2,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
-import { Dispatch, SetStateAction, useState } from "react";
+import { useState } from "react";
 import { motion } from "framer-motion"; // Import Framer Motion
 
 type SwapButtonProps = {
@@ -67,11 +67,11 @@ export const SwapButton = ({
       <Button
         variant="outline"
         size="icon"
-        className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 rounded-full  w-14 h-14 shadow-lg bg-[#0E76FD] dark:bg-[#0E76FD] dark:hover:bg-[#0E76FD]/80 hover:bg-[#0E76FD]/90 items-center justify-center flex hover:border-[#0E76FD]/80 hover:shadow-[#0E76FD]"
+        className="absolute left-1/2 -translate-x-1/2 -translate-y-1/2 top-1/2 rounded-full  w-15 h-15 shadow-lg bg-[#00FFC2] dark:bg-[#00FFC2] dark:hover:bg-[#00FFC2]/80 hover:bg-[#00FFC2]/90 items-center justify-center flex hover:border-[#00FFC2]/80 hover:shadow-[#00FFC2]"
         onClick={handleSwapTokens}
       >
         <MotionArrow
-          className="h-8 w-6 text-white font-bold hover:text-blue-500"
+          className="h-10 w-10 text-black font-bold hover:text-[#00FFC2]"
           animate={{ rotate: isRotated ? 180 : 0 }}
           transition={{ type: "spring", stiffness: 300, damping: 15 }}
         />

@@ -18,9 +18,10 @@ interface TokenPickerProps {
   onValueChange: (value: string) => void;
   label?: string;
   chainId?: number;
+  excludedToken?: string; // Add excludedToken prop
 }
 
-export function TokenPicker({ value, onValueChange, label, chainId }: TokenPickerProps) {
+export function TokenPicker({ value, onValueChange, label, chainId, excludedToken  }: TokenPickerProps) {
   const [open, setOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [tokens, setTokens] = useState<any[]>([]);
@@ -53,9 +54,15 @@ export function TokenPicker({ value, onValueChange, label, chainId }: TokenPicke
   // Sort tokens alphabetically by symbol
   const sortedTokens = [...tokens].sort((a, b) => a.symbol.localeCompare(b.symbol));
 
-  // Filter tokens based on search query
+  // Filter tokens based on search query and exclude excludedToken
   const filteredTokens = sortedTokens.filter(token => {
     const query = searchQuery.toLowerCase().trim();
+    
+    // Exclude the token if it matches the excludedToken
+    if (excludedToken && token.symbol.toLowerCase() === excludedToken.toLowerCase()) {
+      return false;
+    }
+    
     if (!query) return true;
     
     return (
