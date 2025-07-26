@@ -1,10 +1,13 @@
-import category from "./category";
-import impact from "./impact";
-import news from "./news";
-import network from "./network";
-import research from "./research";
-import signal from "./signal";
-import tag from "./tag";
-import token from "./token";
+import alerts from './alerts'
+import analystProfile from './analystProfile'
+import category from './category'
+import impact from './impact'
+import network from './network'
+import news from './news'
+import research from './research'
+import signal from './signal'
+import signalCategory from './signalCategory'
+import tag from './tag'
+import token from './token'
 
-export const schemaTypes = [news, category, research, impact, tag, signal, token, network]
+export const schemaTypes = [alerts, analystProfile, category, impact, network, news, research, signal, signalCategory, tag, token]

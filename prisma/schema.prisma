@@ -83,3 +83,179 @@ enum Exchange {
   FOREXCOM
   TRADENATION
 }
+
+// Token Signals Product Models
+
+model UserRole {
+  id        Int      @id @default(autoincrement())
+  userId    String   @unique
+  role      String   @default("user")
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId])
+}
+
+model SubscriptionTier {
+  id               Int      @id @default(autoincrement())
+  name             String   @unique
+  description      String?
+  price            Decimal  @db.Decimal(10, 2)
+  features         String[]
+  maxSignalsPerDay Int?
+  premiumAccess    Boolean  @default(false)
+  isActive         Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  subscriptions UserSubscription[]
+}
+
+model UserSubscription {
+  id        Int              @id @default(autoincrement())
+  userId    String
+  tierId    Int
+  tier      SubscriptionTier @relation(fields: [tierId], references: [id])
+  status    String           @default("active")
+  startDate DateTime         @default(now())
+  endDate   DateTime?
+  autoRenew Boolean          @default(true)
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  @@index([userId])
+  @@index([status])
+}
+
+model SignalPerformance {
+  id            Int       @id @default(autoincrement())
+  signalId      String    // References Sanity signal document ID
+  tokenSymbol   String
+  direction     String
+  entryPrice    Decimal   @db.Decimal(18, 8)
+  currentPrice  Decimal?  @db.Decimal(18, 8)
+  exitPrice     Decimal?  @db.Decimal(18, 8)
+  targetPrices  Decimal[] @db.Decimal(18, 8)
+  stopLoss      Decimal?  @db.Decimal(18, 8)
+  status        String    @default("active")
+  pnlPercentage Decimal?  @db.Decimal(10, 4)
+  pnlUsd        Decimal?  @db.Decimal(18, 8)
+  daysActive    Int       @default(0)
+  hitTargets    Int       @default(0)
+  totalTargets  Int       @default(0)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@index([signalId])
+  @@index([tokenSymbol])
+  @@index([status])
+}
+
+model SignalAnalytics {
+  id        Int      @id @default(autoincrement())
+  signalId  String
+  views     Int      @default(0)
+  likes     Int      @default(0)
+  shares    Int      @default(0)
+  comments  Int      @default(0)
+  followers Int      @default(0)
+  date      DateTime @default(now()) @db.Date
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([signalId, date])
+  @@index([signalId])
+  @@index([date])
+}
+
+model UserSignalInteraction {
+  id              Int      @id @default(autoincrement())
+  userId          String
+  signalId        String
+  interactionType String   // 'view', 'like', 'share', 'follow', 'bookmark'
+  metadata        Json?
+  createdAt       DateTime @default(now())
+
+  @@unique([userId, signalId, interactionType])
+  @@index([userId])
+  @@index([signalId])
+}
+
+model SignalAlert {
+  id           Int       @id @default(autoincrement())
+  userId       String
+  signalId     String
+  alertType    String    // 'price_target', 'stop_loss', 'status_change', 'new_signal'
+  triggerPrice Decimal?  @db.Decimal(18, 8)
+  isTriggered  Boolean   @default(false)
+  triggeredAt  DateTime?
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@index([userId])
+  @@index([signalId])
+  @@index([isActive])
+}
+
+model AnalystProfile {
+  id              Int      @id @default(autoincrement())
+  userId          String   @unique
+  displayName     String
+  bio             String?
+  avatar          String?
+  specializations String[]
+  totalSignals    Int      @default(0)
+  successRate     Decimal  @default(0) @db.Decimal(5, 2)
+  avgReturn       Decimal  @default(0) @db.Decimal(10, 4)
+  followers       Int      @default(0)
+  isVerified      Boolean  @default(false)
+  isActive        Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId])
+}
+
+enum UserRoleType {
+  USER
+  PREMIUM
+  ANALYST
+  ADMIN
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+  EXPIRED
+  TRIAL
+}
+
+enum SignalStatus {
+  ACTIVE
+  FILLED
+  TARGET_HIT
+  STOP_LOSS
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+enum InteractionType {
+  VIEW
+  LIKE
+  SHARE
+  FOLLOW
+  BOOKMARK
+  COMMENT
+}
+
+enum AlertType {
+  PRICE_TARGET
+  STOP_LOSS
+  STATUS_CHANGE
+  NEW_SIGNAL
+  ANALYST_UPDATE
+}
