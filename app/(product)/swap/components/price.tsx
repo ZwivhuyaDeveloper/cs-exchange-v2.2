@@ -233,12 +233,20 @@ export default function PriceView({
           fetch(`/api/tokens?chainId=${chainId}`),
           fetch(`/api/chains`),
         ]);
-        const tokens = await tokensRes.json();
+        const tokensData = await tokensRes.json();
         const chains = await chainsRes.json();
-        setDbTokens(tokens);
+        
+        // Extract tokens array from the response object
+        if (tokensData && Array.isArray(tokensData.tokens)) {
+          setDbTokens(tokensData.tokens);
+        } else {
+          setDbTokens([]);
+        }
         setDbChains(chains);
       } catch (err) {
         // fallback: do nothing, keep using constants
+        setDbTokens([]);
+        setDbChains([]);
       }
     }
     fetchTokensAndChains();

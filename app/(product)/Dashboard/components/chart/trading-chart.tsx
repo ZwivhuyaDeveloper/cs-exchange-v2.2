@@ -39,16 +39,28 @@ export function TradingChart({
 
   // Fetch tokens from the API
   useEffect(() => {
-    fetch(`/api/tokens?chainId=1`)
+    fetch(`/api/tokens?chainId=1&limit=10000`)
       .then(res => res.json())
-      .then(setTokens)
+      .then(data => {
+        // Extract tokens array from the response object
+        if (data && Array.isArray(data.tokens)) {
+          setTokens(data.tokens);
+        } else {
+          setTokenError("Invalid tokens data format");
+        }
+      })
       .catch(() => setTokenError("Failed to load tokens"));
   }, []);
 
   // Helper to get token info by symbol
   const getTokenInfo = (symbol?: string) => {
     if (!symbol) return undefined;
-    return tokens.find(t => t.symbol.toLowerCase() === symbol.toLowerCase());
+    const token = tokens.find(t => t.symbol.toLowerCase() === symbol.toLowerCase());
+    // If token not found, log available tokens for debugging
+    if (!token && tokens.length > 0) {
+      console.warn(`Token '${symbol}' not found. Available tokens:`, tokens.map(t => t.symbol).slice(0, 10));
+    }
+    return token;
   };
 
   // Determine which token to display in the chart

@@ -31,9 +31,16 @@ export default function NewList({ value, onValueChange, label, chainId = 1 }: To
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    fetch(`/api/tokens?chainId=${chainId}`)
+    fetch(`/api/tokens?chainId=${chainId}&limit=10000`)
       .then(res => res.json())
-      .then(setTokens)
+      .then(data => {
+        // Extract tokens array from the response object
+        if (data && Array.isArray(data.tokens)) {
+          setTokens(data.tokens);
+        } else {
+          setError("Invalid tokens data format");
+        }
+      })
       .catch(() => setError("Failed to load tokens."))
       .finally(() => setIsLoading(false));
   }, [chainId]);
@@ -84,9 +91,16 @@ export default function NewList({ value, onValueChange, label, chainId = 1 }: To
                   onClick={() => {
                     setIsLoading(true);
                     setError(null);
-                    fetch(`/api/tokens?chainId=${chainId}`)
+                    fetch(`/api/tokens?chainId=${chainId}&limit=10000`)
                       .then(res => res.json())
-                      .then(setTokens)
+                      .then(data => {
+                        // Extract tokens array from the response object
+                        if (data && Array.isArray(data.tokens)) {
+                          setTokens(data.tokens);
+                        } else {
+                          setError("Invalid tokens data format");
+                        }
+                      })
                       .catch(() => setError("Failed to load tokens."))
                       .finally(() => setIsLoading(false));
                   }}

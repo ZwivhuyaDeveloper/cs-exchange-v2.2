@@ -35,10 +35,15 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
   useEffect(() => {
     const fetchTokens = async () => {
       try {
-        const url = chainId ? `/api/tokens?chainId=${chainId}` : "/api/tokens";
+        const url = chainId ? `/api/tokens?chainId=${chainId}&limit=10000` : "/api/tokens?limit=10000";
         const res = await fetch(url);
         const data = await res.json();
-        setTokens(data);
+        // Extract tokens array from the response object
+        if (data && Array.isArray(data.tokens)) {
+          setTokens(data.tokens);
+        } else {
+          setTokens([]);
+        }
       } catch {
         setTokens([]);
       }
