@@ -16,6 +16,8 @@ interface TokenInputSectionProps {
   excludedToken?: string; // Add excludedToken prop
   maxAmount?: string; // Maximum allowed amount
   balance?: string; // User's token balance
+  validationError?: string | null;
+  isValidAmount?: boolean;
 }
 
 export const TokenInputSection = ({
@@ -29,17 +31,38 @@ export const TokenInputSection = ({
   tokenMap,
   excludedToken,
   maxAmount,
-  balance
+  balance,
+  validationError: externalValidationError,
+  isValidAmount: externalIsValidAmount,
 }: TokenInputSectionProps) => {
-  const [validationError, setValidationError] = useState<string | null>(null);
-  const [isValid, setIsValid] = useState<boolean>(true);
+  const [validationError, setValidationError] = useState<string | null>(externalValidationError || null);
+  const [isValid, setIsValid] = useState<boolean>(externalIsValidAmount ?? true);
   const [formattedAmount, setFormattedAmount] = useState<string>(amount);
+
+  // Sync external validation state with internal state
+  useEffect(() => {
+    if (externalValidationError !== undefined) {
+      setValidationError(externalValidationError);
+    }
+    if (externalIsValidAmount !== undefined) {
+      setIsValid(externalIsValidAmount);
+    }
+  }, [externalValidationError, externalIsValidAmount]);
 
   const tokenInfo = tokenMap && token ? tokenMap[token.toLowerCase()] : null;
   const tokenDecimals = tokenInfo?.decimals || 18;
 
   // Enhanced validation function
   const validateAmount = (value: string): { isValid: boolean; error: string | null } => {
+    // If external validation is provided, use it instead of internal validation
+    if (externalValidationError !== undefined || externalIsValidAmount !== undefined) {
+      return {
+        isValid: externalIsValidAmount ?? true,
+        error: externalValidationError || null
+      };
+    }
+
+    // Fall back to internal validation when external validation is not provided
     if (!value || value === "0" || value === "0.") {
       return { isValid: true, error: null };
     }

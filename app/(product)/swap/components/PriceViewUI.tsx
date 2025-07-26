@@ -9,6 +9,8 @@ import { AffiliateFeeBadge } from "./ui/SwapFee";
 import { TokenEquivalentValue } from "./ui/TokenEquivalentValue";
 import { TaxInfo } from "./ui/TaxInfo";
 import { TokenSelectorIconList } from "./ui/TokenSelectorIconList";
+import { SlippageTolerance } from "./ui/SlippageTolerance";
+import { useState } from "react";
 
 export interface PriceViewUIProps {
   loading: boolean;
@@ -36,6 +38,11 @@ export interface PriceViewUIProps {
   setTradeDirection: (dir: string) => void;
   inSufficientBalance: boolean;
   ApproveOrReviewButton: React.ReactNode;
+  validationError?: string | null;
+  isValidAmount?: boolean;
+  balanceData?: { value: bigint; decimals: number; formatted: string; symbol: string } | undefined;
+  slippageTolerance?: number;
+  setSlippageTolerance?: (slippage: number) => void;
 }
 
 export default function PriceViewUI({
@@ -62,9 +69,16 @@ export default function PriceViewUI({
   sellTokenTax,
   tradeDirection,
   setTradeDirection,
-
+  inSufficientBalance,
   ApproveOrReviewButton,
+  validationError,
+  isValidAmount,
+  balanceData,
+  slippageTolerance,
+  setSlippageTolerance,
 }: PriceViewUIProps) {
+  const [showSlippageSettings, setShowSlippageSettings] = useState(false);
+  
   return (
     <div className="justify-center items-center gap-2 sm:w-fit md:w-fit w-fit h-fit max-h-fit px-1 pb-5">
       {loading && <div className="text-center text-blue-500">Loading price...</div>}
@@ -78,11 +92,38 @@ export default function PriceViewUI({
               <div className="dark:bg-zinc-800 py-1 bg-zinc-100 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Limit</h1></div>
               <div className="dark:bg-zinc-800 py-1 bg-zinc-100 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Spot</h1></div>
             </div>
-            <Button variant="default" className="h-8 w-8 bg-transparent rounded-full shadow shadow-zinc-950">
-              {/* Settings icon should be passed as a prop or imported here if needed */}
-              <span>⚙️</span>
-            </Button>
+            <div className="flex items-center gap-2">
+              {/* Slippage Tolerance Control */}
+              {slippageTolerance !== undefined && setSlippageTolerance && (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-xs px-2 py-1 h-8"
+                  onClick={() => setShowSlippageSettings(!showSlippageSettings)}
+                >
+                  {slippageTolerance}% slippage
+                </Button>
+              )}
+              <Button 
+                variant="default" 
+                className="h-8 w-8 bg-transparent rounded-full shadow shadow-zinc-950"
+                onClick={() => setShowSlippageSettings(!showSlippageSettings)}
+              >
+                {/* Settings icon should be passed as a prop or imported here if needed */}
+                <span>⚙️</span>
+              </Button>
+            </div>
           </div>
+          {/* Slippage Settings Panel */}
+          {showSlippageSettings && slippageTolerance !== undefined && setSlippageTolerance && (
+            <div className="px-5 pb-3">
+              <SlippageTolerance
+                value={slippageTolerance}
+                onChange={setSlippageTolerance}
+                className="w-full"
+              />
+            </div>
+          )}
         </div>
         <div className="h-full">
           <section className="p-5 flex flex-col gap-2 rounded-2xl rounded-br-4xl dark:bg-zinc-900/80 bg-zinc-100 overflow-clip">
@@ -118,6 +159,9 @@ export default function PriceViewUI({
               tokens={tokenList}
               tokenMap={tokenMap}
               excludedToken={toToken}
+              balance={balanceData?.formatted}
+              validationError={tradeDirection === "sell" ? validationError : null}
+              isValidAmount={tradeDirection === "sell" ? isValidAmount : true}
             />
           </section>
           <div>
@@ -172,6 +216,9 @@ export default function PriceViewUI({
                 tokens={tokenList}
                 tokenMap={tokenMap}
                 excludedToken={fromToken}
+                balance={undefined}
+                validationError={tradeDirection === "buy" ? validationError : null}
+                isValidAmount={tradeDirection === "buy" ? isValidAmount : true}
               />
             </section>
           </div>
