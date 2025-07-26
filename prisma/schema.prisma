@@ -48,6 +48,7 @@ model Token {
   @@index([address])
   @@index([coingeckoId])
   TokenList TokenList[]
+  SignalPerformance SignalPerformance[]
 }
 
 model TokenList {
@@ -129,26 +130,34 @@ model UserSubscription {
 }
 
 model SignalPerformance {
-  id            Int       @id @default(autoincrement())
-  signalId      String    // References Sanity signal document ID
+  id            Int            @id @default(autoincrement())
+  signalId      String         // References Sanity signal document ID
+  analystId     Int
+  analyst       AnalystProfile @relation(fields: [analystId], references: [id])
   tokenSymbol   String
+  tokenId       Int?           // Reference to Token model
+  token         Token?         @relation(fields: [tokenId], references: [id])
   direction     String
-  entryPrice    Decimal   @db.Decimal(18, 8)
-  currentPrice  Decimal?  @db.Decimal(18, 8)
-  exitPrice     Decimal?  @db.Decimal(18, 8)
-  targetPrices  Decimal[] @db.Decimal(18, 8)
-  stopLoss      Decimal?  @db.Decimal(18, 8)
-  status        String    @default("active")
-  pnlPercentage Decimal?  @db.Decimal(10, 4)
-  pnlUsd        Decimal?  @db.Decimal(18, 8)
-  daysActive    Int       @default(0)
-  hitTargets    Int       @default(0)
-  totalTargets  Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  entryPrice    Decimal        @db.Decimal(18, 8)
+  currentPrice  Decimal?       @db.Decimal(18, 8)
+  exitPrice     Decimal?       @db.Decimal(18, 8)
+  targetPrices  Decimal[]      @db.Decimal(18, 8)
+  stopLoss      Decimal?       @db.Decimal(18, 8)
+  status        String         @default("active")
+  pnlPercentage Decimal?       @db.Decimal(10, 4)
+  pnlUsd        Decimal?       @db.Decimal(18, 8)
+  unrealizedPnl Decimal        @default(0) @db.Decimal(18, 8)
+  realizedPnl   Decimal        @default(0) @db.Decimal(18, 8)
+  daysActive    Int            @default(0)
+  hitTargets    Int            @default(0)
+  totalTargets  Int            @default(0)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   @@index([signalId])
+  @@index([analystId])
   @@index([tokenSymbol])
+  @@index([tokenId])
   @@index([status])
 }
 
@@ -200,22 +209,27 @@ model SignalAlert {
 }
 
 model AnalystProfile {
-  id              Int      @id @default(autoincrement())
-  userId          String   @unique
+  id              Int                 @id @default(autoincrement())
+  userId          String              @unique
   displayName     String
+  slug            String              @unique
   bio             String?
   avatar          String?
   specializations String[]
-  totalSignals    Int      @default(0)
-  successRate     Decimal  @default(0) @db.Decimal(5, 2)
-  avgReturn       Decimal  @default(0) @db.Decimal(10, 4)
-  followers       Int      @default(0)
-  isVerified      Boolean  @default(false)
-  isActive        Boolean  @default(true)
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  tier            String              @default("basic")
+  totalSignals    Int                 @default(0)
+  successRate     Decimal             @default(0) @db.Decimal(5, 2)
+  avgReturn       Decimal             @default(0) @db.Decimal(10, 4)
+  followers       Int                 @default(0)
+  isVerified      Boolean             @default(false)
+  isActive        Boolean             @default(true)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  
+  signalPerformances SignalPerformance[]
 
   @@index([userId])
+  @@index([slug])
 }
 
 enum UserRoleType {

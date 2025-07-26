@@ -84,68 +84,109 @@ export async function GET(request: NextRequest) {
       userRole = role?.role || 'user';
     }
     
-    // Build GROQ query with filters
-    let query = SIGNALS_QUERY;
-    const filters = [];
+    // Build Sanity query with enhanced token data
+    let query = `*[_type == "signal"`;
     
+    // Add filters
+    const filters = [];
+    if (tokenSymbol) {
+      filters.push(`token->symbol match "${tokenSymbol}*"`);
+    }
+    if (direction && direction !== 'all') {
+      filters.push(`direction == "${direction}"`);
+    }
+    if (status && status !== 'all') {
+      filters.push(`status == "${status}"`);
+    }
     if (category) {
       filters.push(`category->slug.current == "${category}"`);
     }
-    
-    if (tokenSymbol) {
-      filters.push(`token->symbol == "${tokenSymbol.toUpperCase()}"`);
-    }
-    
-    if (direction) {
-      filters.push(`direction == "${direction}"`);
-    }
-    
-    if (status) {
-      filters.push(`status == "${status}"`);
-    }
-    
     if (analyst) {
       filters.push(`analyst->slug.current == "${analyst}"`);
     }
-    
     if (featured) {
       filters.push(`featured == true`);
     }
     
-    // Access level filtering based on user subscription
-    const accessFilters = ['accessLevel == "public"'];
-    
-    if (userSubscription?.tier.premiumAccess) {
-      accessFilters.push('accessLevel == "premium"');
-      
-      if (userSubscription.tier.name === 'Pro' || userSubscription.tier.name === 'Analyst') {
-        accessFilters.push('accessLevel == "pro"');
-      }
-      
-      if (userSubscription.tier.name === 'Analyst') {
-        accessFilters.push('accessLevel == "analyst"');
-      }
-    }
-    
-    if (userRole === 'admin') {
-      accessFilters.push('accessLevel == "admin"');
-    }
-    
-    filters.push(`(${accessFilters.join(' || ')})`);
-    
-    // Combine all filters
     if (filters.length > 0) {
-      query = query.replace(
-        '*[_type == "signal" && !(_id in path("drafts.**"))]',
-        `*[_type == "signal" && !(_id in path("drafts.**")) && ${filters.join(' && ')}]`
-      );
+      query += ` && (${filters.join(' && ')})`;
     }
     
-    // Add pagination
-    const offset = (page - 1) * limit;
-    query += `[${offset}...${offset + limit}]`;
+    // Apply access control based on user role and subscription
+    if (userRole === 'admin') {
+      // Admin can see all signals
+    } else if (userRole === 'analyst') {
+      // Analysts can see public, premium, and their own signals
+      query += ` && (accessLevel in ["public", "premium"] || analyst->userId == "${userId}")`;
+    } else if (userSubscription?.tier.premiumAccess) {
+      // Premium users can see public and premium signals
+      query += ` && accessLevel in ["public", "premium"]`;
+    } else {
+      // Free users can only see public signals
+      query += ` && accessLevel == "public"`;
+    }
     
-    // Fetch signals from Sanity
+    // Add sorting and pagination
+    const offset = (page - 1) * limit;
+    query += `] | order(_createdAt desc)[${offset}...${offset + limit}]`;
+    
+    // Enhanced field selection with token data
+    query += `{
+      _id,
+      _createdAt,
+      _updatedAt,
+      name,
+      slug,
+      token->{
+        _id,
+        symbol,
+        name,
+        logoURL,
+        address,
+        chainId,
+        coingeckoId,
+        tradingViewSymbol,
+        type,
+        decimals
+      },
+      category->{
+        _id,
+        name,
+        slug,
+        color,
+        icon
+      },
+      analyst->{
+        _id,
+        displayName,
+        slug,
+        avatar,
+        tier,
+        isVerified,
+        specializations,
+        successRate,
+        avgReturn,
+        totalSignals
+      },
+      direction,
+      signalType,
+      entryPrice,
+      targetPrices,
+      stopLoss,
+      riskRewardRatio,
+      positionSize,
+      timeframe,
+      riskLevel,
+      confidence,
+      accessLevel,
+      priority,
+      featured,
+      status,
+      notes,
+      technicalAnalysis,
+      marketConditions
+    }`;
+
     const signals = await client.fetch(query);
     
     // Fetch performance data from Prisma for each signal

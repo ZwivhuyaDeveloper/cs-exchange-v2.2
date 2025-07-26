@@ -1,19 +1,24 @@
 import { Suspense } from 'react';
 import { auth } from '@clerk/nextjs/server';
-import SignalsGrid from './components/SignalsGrid';
-import SignalsFilters from './components/SignalsFilters';
 import SignalsHeader from './components/SignalsHeader';
-import { Card } from '@/components/ui/card';
+import SignalsFilters from './components/SignalsFilters';
+import SignalsGrid from './components/SignalsGrid';
+import { Card, CardContent } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
+import { getUserAccess } from '@/app/lib/access-control';
+import SubscriptionBanner from '@/app/components/access-control/SubscriptionBanner';
+import ContentWrapper from '@/app/components/access-control/ContentWrapper';
 
 interface SignalsPageProps {
   searchParams: {
     page?: string;
+    limit?: string;
     category?: string;
     token?: string;
     direction?: string;
     status?: string;
     analyst?: string;
+    accessLevel?: string;
     featured?: string;
   };
 }
@@ -53,23 +58,48 @@ function SignalsLoadingSkeleton() {
 }
 
 export default async function SignalsPage({ searchParams }: SignalsPageProps) {
-  const { userId } = auth();
+  const { userId } = await auth();
+  const userAccess = await getUserAccess(userId);
 
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       {/* Header Section */}
-      <SignalsHeader />
+      <ContentWrapper
+        userAccess={userAccess}
+        content={{ accessLevel: 'public' }}
+        title="Trading Signals"
+      >
+        <SignalsHeader userAccess={userAccess} />
+      </ContentWrapper>
+
+      {/* Subscription Banner */}
+      <SubscriptionBanner userAccess={userAccess} section="signals" />
 
       {/* Filters Section */}
-      <SignalsFilters searchParams={searchParams} />
+      <ContentWrapper
+        userAccess={userAccess}
+        content={{ accessLevel: 'public' }}
+        title="Signal Filters"
+      >
+        <SignalsFilters searchParams={searchParams} />
+      </ContentWrapper>
 
       {/* Signals Grid */}
-      <Suspense fallback={<SignalsLoadingSkeleton />}>
-        <SignalsGrid 
-          searchParams={searchParams}
-          userId={userId}
-        />
-      </Suspense>
+      <ContentWrapper
+        userAccess={userAccess}
+        content={{ accessLevel: userAccess.canAccess.premiumContent ? 'public' : 'premium' }}
+        title="Premium Trading Signals"
+        description="Access exclusive trading signals from expert analysts"
+        showPreview={true}
+      >
+        <Suspense fallback={<SignalsLoadingSkeleton />}>
+          <SignalsGrid 
+            searchParams={searchParams}
+            userId={userId}
+            userAccess={userAccess}
+          />
+        </Suspense>
+      </ContentWrapper>
     </div>
   );
 }

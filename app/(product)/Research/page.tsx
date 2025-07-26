@@ -9,6 +9,10 @@ import TickerTape from "../Dashboard/components/ui/TickerTape";
 import RelatedResearch from "./components/related-research";
 import ResearchSection from "./components/research-section";
 import ResearchDisplay from "../News/components/research-display";
+import { getUserAccess } from "@/app/lib/access-control";
+import SubscriptionBanner from "@/app/components/access-control/SubscriptionBanner";
+import ContentWrapper from "@/app/components/access-control/ContentWrapper";
+import { auth } from '@clerk/nextjs/server';
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
@@ -38,6 +42,8 @@ async function getData() {
 
 export default async function Research() {
   const data: simpleResearchCard[] = await getData();
+  const { userId } = await auth();
+  const userAccess = await getUserAccess(userId);
 
   console.log(data);
 
@@ -53,6 +59,11 @@ export default async function Research() {
         <TickerTape/>
       </div> 
 
+      {/* Subscription Banner */}
+      <div className="max-w-7xl mx-auto px-4 mt-4">
+        <SubscriptionBanner userAccess={userAccess} section="research" />
+      </div>
+
       <div className="grid grid-flow-col justify-center mt-1 gap-2 w-full">
 
         {/*Left-Section*/}
@@ -61,7 +72,14 @@ export default async function Research() {
             {/*<GlobalIndicator/>*/}
           </div>
           <div>
-            <RelatedResearch/>
+            <ContentWrapper
+              userAccess={userAccess}
+              content={{ accessLevel: 'public' }}
+              title="Related Research"
+              showPreview={true}
+            >
+              <RelatedResearch/>
+            </ContentWrapper>
           </div>
         </div>
 
@@ -75,7 +93,15 @@ export default async function Research() {
         {/*Right-Section*/}
         <div className="bg-white w-[350px]">
           <div>
-            <ResearchDisplay/>
+            <ContentWrapper
+              userAccess={userAccess}
+              content={{ accessLevel: 'premium' }}
+              title="Premium Research Display"
+              description="Access exclusive research insights and market data"
+              showPreview={true}
+            >
+              <ResearchDisplay/>
+            </ContentWrapper>
           </div>
         </div>
       </div>

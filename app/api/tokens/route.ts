@@ -25,19 +25,67 @@ export async function GET(request: NextRequest) {
   const chainId = searchParams.get("chainId");
   const symbol = searchParams.get("symbol");
   const address = searchParams.get("address");
+  const search = searchParams.get("search");
+  const limit = parseInt(searchParams.get("limit") || "50");
+  const page = parseInt(searchParams.get("page") || "1");
 
   try {
     const where: any = {};
     if (chainId) where.chainId = Number(chainId);
     if (symbol) where.symbol = symbol;
     if (address) where.address = address.toLowerCase();
-    let tokens = await prisma.token.findMany({ where });
+    
+    // Add search functionality
+    if (search) {
+      where.OR = [
+        { symbol: { contains: search, mode: 'insensitive' } },
+        { name: { contains: search, mode: 'insensitive' } }
+      ];
+    }
+
+    // Calculate pagination
+    const skip = (page - 1) * limit;
+    
+    let tokens = await prisma.token.findMany({ 
+      where,
+      take: limit,
+      skip: skip,
+      orderBy: [
+        { isDefault: 'desc' }, // Default tokens first
+        { symbol: 'asc' }
+      ],
+      include: {
+        chain: {
+          select: {
+            chainId: true,
+            name: true
+          }
+        }
+      }
+    });
+    
+    // Get total count for pagination
+    const total = await prisma.token.count({ where });
+    
     // Add tradingViewSymbol to each token
-    tokens = tokens.map(token => ({ ...token, tradingViewSymbol: getTradingViewSymbol(token) }));
-    return new Response(JSON.stringify(tokens), {
+    const enrichedTokens = tokens.map(token => ({ 
+      ...token, 
+      tradingViewSymbol: getTradingViewSymbol(token) 
+    }));
+    
+    return new Response(JSON.stringify({
+      tokens: enrichedTokens,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    }), {
       headers: { "Content-Type": "application/json", ...corsHeaders },
     });
   } catch (error) {
+    console.error('Error fetching tokens:', error);
     return new Response(
       JSON.stringify({ error: "Failed to fetch tokens" }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
