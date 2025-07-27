@@ -1,4 +1,4 @@
-import alerts from './alerts'
+
 import analystProfile from './analystProfile'
 import category from './category'
 import impact from './impact'
@@ -9,7 +9,7 @@ import signal from './signal'
 import signalCategory from './signalCategory'
 import tag from './tag'
 import token from './token'
-import user from './user'
+
 
 export const schemaTypes = [
   analystProfile, 
@@ -22,6 +22,4 @@ export const schemaTypes = [
   signalCategory, 
   tag, 
   token, 
-  alerts,
-  user
 ]
