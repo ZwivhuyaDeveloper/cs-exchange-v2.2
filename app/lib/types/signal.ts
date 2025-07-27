@@ -33,11 +33,18 @@ export interface Token {
     description?: string;
     count?: number;
   }
+
+  export interface MarketConditions {
+    trend?: 'bullish' | 'bearish' | 'sideways' | 'mixed';
+    volatility?: 'low' | 'medium' | 'high' | 'extreme';
+    volume?: 'low' | 'medium' | 'high';
+    marketSentiment?: 'fearful' | 'neutral' | 'greedy' | 'extreme_greed' | 'extreme_fear';
+  }
   
   export interface Signal {
     _id: string;
     name: string;
-    slug: string;
+    slug: string | { current: string };
     token: Token;
     analyst: Analyst;
     category?: Category;
@@ -64,6 +71,10 @@ export interface Token {
       chartPatterns?: string[];
     };
     timeframes?: string[];
-    confidenceLevel?: number;
+    timeframe?: 'scalping' | 'short' | 'medium' | 'long' | 'swing';
+    riskLevel?: 'very_low' | 'low' | 'medium' | 'high' | 'very_high';
+    confidence?: number;
+    marketConditions?: MarketConditions;
+    volumeLevel?: 'low' | 'medium' | 'high';
     tags?: string[];
   }

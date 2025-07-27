@@ -63,7 +63,7 @@ export async function fetchSignals({
       _id,
       _createdAt,
       _updatedAt,
-      title,
+      name,
       slug,
       status,
       direction,
@@ -73,7 +73,18 @@ export async function fetchSignals({
       riskRewardRatio,
       analysis,
       publishedAt,
+      updatedAt,
       validUntil,
+      timeframe,
+      riskLevel,
+      confidence,
+      marketConditions {
+        trend,
+        volatility,
+        volume,
+        marketSentiment
+      },
+      volumeLevel,
       "token": token->{
         _id,
         name,

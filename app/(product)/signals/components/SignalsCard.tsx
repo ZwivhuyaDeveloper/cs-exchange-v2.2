@@ -4,6 +4,48 @@ import { Signal } from '@/app/lib/types/signal';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
+import { FaChartLine, FaChartBar, FaChartPie, FaClock, FaExclamationTriangle, FaThumbsUp } from 'react-icons/fa';
+
+// Helper function to get trend color
+const getTrendColor = (trend: string) => {
+  switch (trend?.toLowerCase()) {
+    case 'bullish':
+      return 'text-green-500';
+    case 'bearish':
+      return 'text-red-500';
+    case 'sideways':
+      return 'text-yellow-500';
+    default:
+      return 'text-gray-500';
+  }
+};
+
+// Helper function to get risk level color
+const getRiskColor = (level: string) => {
+  switch (level?.toLowerCase()) {
+    case 'very_low':
+      return 'text-green-500';
+    case 'low':
+      return 'text-blue-500';
+    case 'medium':
+      return 'text-yellow-500';
+    case 'high':
+      return 'text-orange-500';
+    case 'very_high':
+      return 'text-red-500';
+    default:
+      return 'text-gray-500';
+  }
+};
+
+// Helper to format risk level text
+const formatRiskLevel = (level: string) => {
+  if (!level) return 'N/A';
+  return level
+    .split('_')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ');
+};
 
 interface SignalCardProps {
   signal: Signal;
@@ -39,7 +81,7 @@ export function SignalCard({ signal }: SignalCardProps) {
   };
 
   return (
-    <Link href={`/signals/${signal.slug}`}>
+    <Link href={`/signals/${typeof signal.slug === 'object' ? signal.slug.current : signal.slug}`}>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700">
         {/* Header with token info */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
@@ -94,6 +136,61 @@ export function SignalCard({ signal }: SignalCardProps) {
 
         {/* Signal details */}
         <div className="p-4">
+          {/* Market Data Row */}
+          <div className="grid grid-cols-2 gap-2 mb-3 text-xs">
+            {/* Market Trend */}
+            {signal.marketConditions?.trend && (
+              <div className="flex items-center space-x-1">
+                <FaChartLine className={`${getTrendColor(signal.marketConditions.trend)}`} />
+                <span className="text-gray-500 dark:text-gray-400">Trend:</span>
+                <span className={`font-medium ${getTrendColor(signal.marketConditions.trend)}`}>
+                  {signal.marketConditions.trend?.charAt(0).toUpperCase() + signal.marketConditions.trend?.slice(1)}
+                </span>
+              </div>
+            )}
+
+            {/* Timeframe */}
+            {signal.timeframe && (
+              <div className="flex items-center space-x-1">
+                <FaClock className="text-gray-500" />
+                <span className="text-gray-500 dark:text-gray-400">Timeframe:</span>
+                <span className="font-medium">
+                  {signal.timeframe?.split('_').map(word => 
+                    word.charAt(0).toUpperCase() + word.slice(1)
+                  ).join(' ')}
+                </span>
+              </div>
+            )}
+
+            {/* Risk Level */}
+            {signal.riskLevel && (
+              <div className="flex items-center space-x-1">
+                <FaExclamationTriangle className={getRiskColor(signal.riskLevel)} />
+                <span className="text-gray-500 dark:text-gray-400">Risk:</span>
+                <span className={`font-medium ${getRiskColor(signal.riskLevel)}`}>
+                  {formatRiskLevel(signal.riskLevel)}
+                </span>
+              </div>
+            )}
+
+            {/* Confidence Level */}
+            {signal.confidence && (
+              <div className="flex items-center space-x-1">
+                <FaThumbsUp className="text-blue-500" />
+                <span className="text-gray-500 dark:text-gray-400">Confidence:</span>
+                <div className="flex items-center">
+                  <span className="font-medium">{signal.confidence}/10</span>
+                  <div className="ml-1 w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                    <div 
+                      className={`h-full ${signal.confidence >= 7 ? 'bg-green-500' : signal.confidence >= 4 ? 'bg-yellow-500' : 'bg-red-500'}`}
+                      style={{ width: `${signal.confidence * 10}%` }}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+
           <div className="flex justify-between mb-3">
             <div>
               <p className="text-sm text-gray-500 dark:text-gray-400">Entry</p>
