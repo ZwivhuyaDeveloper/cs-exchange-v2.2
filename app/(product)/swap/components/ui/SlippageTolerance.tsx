@@ -96,7 +96,7 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
   const impact = getSlippageImpact(value);
 
   return (
-    <Card className={`w-full ${className}`}>
+    <Card className={`w-full bg-zinc-900 border-none ${className}`}>
       <CardHeader className="pb-3">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           <Info className="h-4 w-4" />
@@ -118,10 +118,10 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
             </Button>
           ))}
           <Button
-            variant={isCustom ? "default" : "outline"}
+            variant={"default"}
             size="sm"
             onClick={handleCustomToggle}
-            className="flex-1"
+            className="flex-1 bg-[#00FFC2]"
           >
             Custom
           </Button>
@@ -161,7 +161,7 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
 
         {/* Slippage Impact Display */}
         <div className="flex justify-between items-center text-xs">
-          <span className="text-gray-600">Impact Level:</span>
+          <span className="text-gray-400">Impact Level:</span>
           <span className={`font-medium ${impact.color} capitalize`}>
             {impact.level.replace("-", " ")}
           </span>

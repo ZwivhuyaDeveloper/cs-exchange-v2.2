@@ -14,9 +14,7 @@ import NewList from "@/app/(product)/Dashboard/components/tokenList/new-list"
 import LoadingIntro from "@/src/components/ui/loading-intro"
 import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Chart-radar"
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
-import { ChartAreaLinear} from "@/app/(product)/Dashboard/components/ui/Linear-Chart"
-import VolumeChart from './components/ui/VolumeChart';
-import TrendingNews from "../News/components/related-news"
+
 
 export default function Page() {
   const [fromToken, setFromToken] = useState("link");

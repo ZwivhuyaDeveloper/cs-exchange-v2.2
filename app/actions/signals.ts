@@ -1,89 +1,191 @@
-'use server';
+import { client } from '@/sanity/lib/client';
+import { groq } from 'next-sanity';
 
-import { Signal } from '@/app/lib/types/signal';
-
-interface FetchSignalsParams {
+export interface FetchSignalsParams {
   page?: number;
-  limit?: number;
+  pageSize?: number;
   status?: string;
   category?: string;
   direction?: string;
+  search?: string;
+}
+
+export interface FetchSignalsResponse {
+  data: any[];
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
 }
 
 export async function fetchSignals({
   page = 1,
-  limit = 12,
+  pageSize = 12,
   status,
   category,
   direction,
-}: FetchSignalsParams = {}) {
-  try {
-    // Build query parameters
-    const params = new URLSearchParams({
-      page: page.toString(),
-      limit: limit.toString(),
-      ...(status && { status }),
-      ...(category && { category }),
-      ...(direction && { direction }),
-    });
+  search,
+}: FetchSignalsParams = {}): Promise<FetchSignalsResponse> {
+  const start = (page - 1) * pageSize;
+  const end = start + pageSize;
 
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/signals?${params.toString()}`,
-      {
-        next: { revalidate: 60 }, // Revalidate every 60 seconds
+  // Build the filter conditions
+  const filterConditions = ['_type == "signal"'];
+  
+  if (status) {
+    filterConditions.push(`status == "${status}"`);
+  }
+  
+  if (direction) {
+    filterConditions.push(`direction == "${direction}"`);
+  }
+  
+  if (category) {
+    filterConditions.push(`category->slug.current == "${category}"`);
+  }
+  
+  if (search) {
+    const searchQuery = search.toLowerCase();
+    filterConditions.push(`
+      (
+        token->name match "${searchQuery}*" ||
+        token->symbol match "${searchQuery}*" ||
+        analyst->name match "${searchQuery}*" ||
+        analysis match "*${searchQuery}*"
+      )
+    `);
+  }
+
+  const filter = filterConditions.join(' && ');
+
+  const query = groq`{
+    "data": *[${filter}] | order(publishedAt desc) [${start}...${end}] {
+      _id,
+      _createdAt,
+      _updatedAt,
+      title,
+      slug,
+      status,
+      direction,
+      entryPrice,
+      targetPrices,
+      stopLoss,
+      riskRewardRatio,
+      analysis,
+      publishedAt,
+      validUntil,
+      "token": token->{
+        _id,
+        name,
+        symbol,
+        logo,
+        "category": category->{ name, slug },
+        "chain": chain->{ name, symbol, logo },
+        coingeckoId,
+        contractAddress
+      },
+      "analyst": analyst->{
+        _id,
+        name,
+        title,
+        avatar,
+        bio
+      },
+      "category": category->{
+        _id,
+        name,
+        slug,
+        color,
+        description
       }
-    );
+    },
+    "total": count(*[${filter}])
+  }`;
 
-    if (!response.ok) {
-      throw new Error('Failed to fetch signals');
-    }
-
-    const data = await response.json();
-    return data as { data: Signal[]; pagination: any };
+  try {
+    const { data, total } = await client.fetch<{ data: any[]; total: number }>(query);
+    
+    return {
+      data,
+      total,
+      page,
+      pageSize,
+      totalPages: Math.ceil(total / pageSize)
+    };
   } catch (error) {
     console.error('Error fetching signals:', error);
-    return { data: [], pagination: null };
+    return {
+      data: [],
+      total: 0,
+      page,
+      pageSize,
+      totalPages: 0
+    };
   }
 }
 
-// Fetch a single signal by slug
 export async function fetchSignalBySlug(slug: string) {
-  try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/signals/${slug}`,
-      {
-        next: { revalidate: 60 }, // Revalidate every 60 seconds
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Signal not found');
+  const query = groq`*[_type == "signal" && slug.current == $slug][0] {
+    _id,
+    _createdAt,
+    _updatedAt,
+    title,
+    slug,
+    status,
+    direction,
+    entryPrice,
+    targetPrices,
+    stopLoss,
+    riskRewardRatio,
+    analysis,
+    publishedAt,
+    validUntil,
+    "token": token->{
+      _id,
+      name,
+      symbol,
+      logo,
+      "category": category->{ name, slug },
+      "chain": chain->{ name, symbol, logo },
+      coingeckoId,
+      contractAddress
+    },
+    "analyst": analyst->{
+      _id,
+      name,
+      title,
+      avatar,
+      bio
+    },
+    "category": category->{
+      _id,
+      name,
+      slug,
+      color,
+      description
     }
+  }`;
 
-    const data = await response.json();
-    return data as Signal;
+  try {
+    const signal = await client.fetch(query, { slug });
+    return signal || null;
   } catch (error) {
-    console.error(`Error fetching signal with slug ${slug}:`, error);
+    console.error('Error fetching signal by slug:', error);
     return null;
   }
 }
 
-// Fetch all signal categories
 export async function fetchSignalCategories() {
+  const query = groq`*[_type == "signalCategory"] | order(name asc) {
+    _id,
+    name,
+    slug,
+    color,
+    description
+  }`;
+
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_APP_URL}/api/signals/categories`,
-      {
-        next: { revalidate: 3600 }, // Revalidate every hour
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to fetch signal categories');
-    }
-
-    const data = await response.json();
-    return data as { name: string; slug: string; count: number }[];
+    return await client.fetch(query);
   } catch (error) {
     console.error('Error fetching signal categories:', error);
     return [];

@@ -12,7 +12,8 @@ export async function GET(
   request: Request,
   { params }: { params: { slug: string } }
 ) {
-  const { slug } = params;
+  // Access slug directly from params without destructuring
+  const slug = params.slug;
 
   const signalQuery = `*[_type == "signal" && slug.current == $slug][0] {
     _id,

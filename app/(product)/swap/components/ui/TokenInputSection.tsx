@@ -200,9 +200,9 @@ export const TokenInputSection = ({
             {formattedAmount && (
               <div className="flex-shrink-0">
                 {isValid ? (
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="h-3 w-3 text-green-500" />
                 ) : (
-                  <AlertCircle className="h-4 w-4 text-red-500" />
+                  <AlertCircle className="h-3 w-3 text-red-500" />
                 )}
               </div>
             )}

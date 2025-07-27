@@ -71,7 +71,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (!tokenInfo && !tokenError) {
     return (
-      <div className="grid grid-row-2 gap-1 w-full h-full overflow-hidden rounded-2xl items-center">
+      <div className="grid grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
         <div className="w-full h-full rounded-2xl gap-1 flex flex-row justify-between items-center">
           <Skeleton className="h-6 w-32" />
         </div>
@@ -95,7 +95,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (tokenError) {
     return (
-      <div className="p-4 w-full dark:bg-zinc-950 bg-white rounded gap-5 h-fit">
+      <div className="p-4 w-full dark:bg-zinc-950 bg-white rounded gap-5 h-22">
         <div className='grid grid-col-2 gap-3 w-full'>
           <div className='grid grid-cols-2 gap-3 w-full'>
             <div className='gap-2 flex flex-col'>
@@ -134,22 +134,22 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (isLoading) {
     return (
-      <div className="grid grid-row-2 gap-1 w-full h-full overflow-hidden rounded-2xl items-center">
+      <div className="grid grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
         <div className="w-full h-full rounded-2xl gap-1 flex flex-row justify-between items-center">
           <Skeleton className="h-6 w-32" />
         </div>
-        <div className="w-full gap-1 h-full justify-center items-center flex flex-row">
+        <div className="w-full gap-1 h-82 justify-center items-center flex flex-row">
           <div className="flex flex-col gap-1 w-full h-full">
-            <Skeleton className="h-20 w-full rounded-2xl" />
-            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
           </div>
           <div className="flex flex-col gap-1 w-full h-full">
-            <Skeleton className="h-20 w-full rounded-2xl" />
-            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
           </div>
           <div className="flex flex-col gap-1 w-full h-full">
-            <Skeleton className="h-20 w-full rounded-2xl" />
-            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
           </div>
         </div>
       </div>
@@ -158,7 +158,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (isError) {
     return (
-      <div className="p-4 w-full dark:bg-zinc-950 bg-white rounded gap-5 h-fit">
+      <div className="p-4 w-full dark:bg-zinc-950 bg-white rounded gap-5 h-22">
         <div className='grid grid-col-2 gap-3 w-full'>
           <div className='grid grid-cols-2 gap-3 w-full'>
             <div className='gap-2 flex flex-col'>

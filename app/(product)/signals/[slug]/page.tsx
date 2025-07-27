@@ -14,7 +14,8 @@ interface SignalPageProps {
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function SignalPage({ params }: SignalPageProps) {
+export default async function SignalPage({ params }: { params: { slug: string } }) {
+  // Access slug directly from params without destructuring
   const signal = await fetchSignalBySlug(params.slug);
 
   if (!signal) {
@@ -178,7 +179,7 @@ export default async function SignalPage({ params }: SignalPageProps) {
                   Target Prices
                 </h3>
                 <div className="space-y-2">
-                  {signal.targetPrices.map((target, index) => (
+                  {signal.targetPrices.map((target: number, index: number) => (
                     <div key={index} className="flex items-center">
                       <div className="w-8 h-8 flex items-center justify-center bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full mr-3">
                         {index + 1}

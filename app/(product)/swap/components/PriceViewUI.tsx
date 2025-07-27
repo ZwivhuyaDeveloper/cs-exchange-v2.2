@@ -116,7 +116,7 @@ export default function PriceViewUI({
           </div>
           {/* Slippage Settings Panel */}
           {showSlippageSettings && slippageTolerance !== undefined && setSlippageTolerance && (
-            <div className="px-5 pb-3">
+            <div className="px-1 pb-3">
               <SlippageTolerance
                 value={slippageTolerance}
                 onChange={setSlippageTolerance}
@@ -247,12 +247,18 @@ export default function PriceViewUI({
                   <p className="text-sm font-medium ">Gas Fee:</p>
                 </div>
                 <div>
-                  <AffiliateFeeBadge price={price} buyToken={toToken} tokenMap={tokenMap} />
+                  {price?.fees && (
+                    <AffiliateFeeBadge 
+                      price={price} 
+                      buyToken={toToken} 
+                      tokenMap={tokenMap} 
+                    />
+                  )}
                 </div>
               </div>
               {/* Token Equivalent Value Display */}
-              <div className="w-full justify-between items-center h-fit flex flex-row">
-                <div className="text-sm font-medium ">
+              <div className="w-full justify-between items-center  hidden h-fit  flex-row">
+                <div className="text-xs font-medium ">
                   Rate:
                 </div>
                 <div>

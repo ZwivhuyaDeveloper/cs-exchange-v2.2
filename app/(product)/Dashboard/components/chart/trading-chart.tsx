@@ -135,7 +135,7 @@ export function TradingChart({
 
   return (
     <Card className="w-full flex flex-col justify-center gap-1 border-none bg-transparent rounded-2xl p-0 h-fit">
-      <CardHeader className="flex flex-row items-center justify-between h-fit py-4 dark:bg-[#0F0F0F] bg-white rounded-none border border-px dark:border-zinc-700 border-zinc-200">
+      <CardHeader className="flex flex-row items-center justify-between h-22 py-4 dark:bg-[#0F0F0F] bg-white rounded-none border border-px dark:border-zinc-700 border-zinc-200">
         <div className="flex items-center gap-2 flex-row justify-start">
           <Image 
             src={tokenInfo.logoURL || ""}

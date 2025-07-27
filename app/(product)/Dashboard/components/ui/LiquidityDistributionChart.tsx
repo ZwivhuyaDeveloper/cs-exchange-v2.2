@@ -250,9 +250,15 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
             data={liquidityData}
             layout="vertical"
             margin={{
-              left: -20,
+              left: 20,
+              right: 20,
+              top: 10,
+              bottom: 10
             }}
+            barCategoryGap={4}
+            barGap={2}
             height={300}
+            width={500}
           >
             <XAxis 
               type="number" 
@@ -266,8 +272,10 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              width={80}
-              tickFormatter={(value) => value.length > 12 ? value.slice(0, 12) + '...' : value}
+              width={120}
+              tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
+              tickFormatter={(value) => value}
+              interval={0}
             />
             <ChartTooltip
               cursor={false}
