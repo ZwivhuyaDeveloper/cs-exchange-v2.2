@@ -66,14 +66,38 @@ export default async function SignalPage({ params }: SignalPageProps) {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-4">
             {signal.token?.logo && (
-              <div className="w-16 h-16 rounded-full bg-white p-1 border border-gray-200 dark:border-gray-700">
-                <Image
-                  src={signal.token.logo}
-                  alt={signal.token.name}
-                  width={64}
-                  height={64}
-                  className="rounded-full w-full h-full object-contain"
-                />
+              <div className="relative w-12 h-12 flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
+                {signal.token.logo ? (
+                  <Image
+                    src={signal.token.logo}
+                    alt={signal.token.name || 'Token'}
+                    width={48}
+                    height={48}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      // Fallback to showing the token symbol if image fails to load
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                      const fallback = target.parentNode?.querySelector('.token-fallback');
+                      if (fallback) {
+                        (fallback as HTMLElement).style.display = 'flex';
+                      }
+                    }}
+                    onLoad={(e) => {
+                      // Hide fallback when image loads successfully
+                      const target = e.target as HTMLImageElement;
+                      const fallback = target.parentNode?.querySelector('.token-fallback');
+                      if (fallback) {
+                        (fallback as HTMLElement).style.display = 'none';
+                      }
+                    }}
+                    priority
+                  />
+                ) : (
+                  <div className="token-fallback absolute inset-0 flex items-center justify-center text-sm font-medium text-gray-500 dark:text-gray-400">
+                    {signal.token.symbol?.substring(0, 3) || 'TKN'}
+                  </div>
+                )}
               </div>
             )}
             <div>

@@ -2,6 +2,12 @@
 import { NextResponse } from 'next/server';
 import { clientFetch } from '../sanity';
 
+type RouteParams = {
+  params: {
+    slug: string;
+  };
+};
+
 export async function GET(
   request: Request,
   { params }: { params: { slug: string } }

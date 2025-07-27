@@ -1,53 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config) => {
-    config.resolve.fallback = { fs: false, net: false, tls: false }
-    config.externals.push('pino-pretty', 'lokijs', 'encoding')
-    return config
+    config.resolve.fallback = { fs: false, net: false, tls: false };
+    config.externals.push('pino-pretty', 'lokijs', 'encoding');
+    return config;
   },
   reactStrictMode: true,
   images: {
-    domains: [
-      'assets.coingecko.com',
-      'raw.githubusercontent.com',
-      'cdn.sanity.io',
-      'sanity-cdn.com'
-      // add more domains here if needed
-    ],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'cdn.sanity.io',
-      },
-            {
-        protocol: 'https',
-        hostname: 'sanity-cdn.com',
+        hostname: '**',
       },
       {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'cdn.discordapp.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'avatars.githubusercontent.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'assets.aceternity.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'raw.githubusercontent.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 'coin-images.coingecko.com',
+        protocol: 'http',
+        hostname: '**',
       }
-
     ]
   }
 }

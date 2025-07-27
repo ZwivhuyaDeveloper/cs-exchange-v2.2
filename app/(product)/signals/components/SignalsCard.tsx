@@ -44,17 +44,37 @@ export function SignalCard({ signal }: SignalCardProps) {
         {/* Header with token info */}
         <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
           <div className="flex items-center space-x-3">
-            {signal.token.logo && (
-              <div className="relative w-8 h-8">
+            <div className="relative w-8 h-8 flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
+              {signal.token.logo ? (
                 <Image
                   src={signal.token.logo}
-                  alt={signal.token.name}
+                  alt={signal.token.name || 'Token'}
                   width={32}
                   height={32}
-                  className="rounded-full"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    // Fallback to showing the token symbol if image fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const fallback = target.parentNode?.querySelector('.token-fallback');
+                    if (fallback) {
+                      (fallback as HTMLElement).style.display = 'flex';
+                    }
+                  }}
+                  onLoad={(e) => {
+                    // Hide fallback when image loads successfully
+                    const target = e.target as HTMLImageElement;
+                    const fallback = target.parentNode?.querySelector('.token-fallback');
+                    if (fallback) {
+                      (fallback as HTMLElement).style.display = 'none';
+                    }
+                  }}
                 />
+              ) : null}
+              <div className="token-fallback absolute inset-0 flex items-center justify-center text-xs font-medium text-gray-500 dark:text-gray-400">
+                {signal.token.symbol?.substring(0, 3) || 'TKN'}
               </div>
-            )}
+            </div>
             <div>
               <h3 className="font-medium text-gray-900 dark:text-white">
                 {signal.token.name} ({signal.token.symbol?.toUpperCase()})
