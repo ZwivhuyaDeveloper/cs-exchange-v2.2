@@ -3,11 +3,15 @@ export interface Token {
     _id: string;
     name: string;
     symbol: string;
+    slug?: string;
     logo?: string;
     price?: number;
     priceChange24h?: number;
     marketCap?: number;
     volume24h?: number;
+    coingeckoId?: string;
+    blockchain?: string;
+    contractAddress?: string;
   }
   
   export interface Analyst {
@@ -15,6 +19,8 @@ export interface Token {
     name: string;
     slug: string;
     image?: string;
+    avatar?: string;
+    title?: string;
     bio?: string;
     socialLinks?: Record<string, string>;
   }
@@ -43,9 +49,15 @@ export interface Token {
     riskRewardRatio?: number;
     status: 'active' | 'filled' | 'target_hit' | 'stop_loss' | 'completed' | 'canceled' | 'expired';
     publishedAt: string;
+    updatedAt?: string;
+    validUntil?: string;
     exitPrice?: number;
     exitDate?: string;
     notes?: string;
+    analysis?: string;
+    takeProfit1?: string;
+    takeProfit2?: string;
+    takeProfit3?: string;
     technicalAnalysis?: {
       indicators?: string[];
       timeframes?: string[];
