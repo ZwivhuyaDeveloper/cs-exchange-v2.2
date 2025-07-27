@@ -30,19 +30,55 @@ export const TokenUSDValue = ({ amount, tokenSymbol, chainId }: TokenUSDValuePro
     setTokenError(null);
     setUsdPrice(null);
     
-    fetch(`/api/token-metadata?symbols=${tokenSymbol}&chainId=${chainId}`)
-      .then(res => {
-        if (!res.ok) throw new Error('Failed to fetch token info');
-        return res.json();
-      })
-      .then(tokens => {
-        if (tokens.length > 0) {
+    const fetchTokenMetadata = async () => {
+      try {
+        const response = await fetch(`/api/token-metadata?symbols=${tokenSymbol}&chainId=${chainId}`);
+        
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const tokens = await response.json();
+        
+        if (tokens?.length > 0) {
           setTokenInfo(tokens[0]);
         } else {
           setTokenError('Token not found');
         }
-      })
-      .catch(() => setTokenError('Failed to load token info'));
+      } catch (error) {
+        console.error('Error fetching token metadata:', error);
+        setTokenError('Failed to load token info');
+        // Fallback to direct CoinGecko search if metadata endpoint fails
+        if (process.env.NEXT_PUBLIC_COINGECKO_API_KEY) {
+          try {
+            const response = await fetch(
+              `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${tokenSymbol.toLowerCase()}`,
+              { 
+                headers: { 
+                  'x-cg-demo-api-key': process.env.NEXT_PUBLIC_COINGECKO_API_KEY 
+                } 
+              }
+            );
+            
+            if (response.ok) {
+              const data = await response.json();
+              if (data && data.length > 0) {
+                setTokenInfo({ 
+                  ...data[0],
+                  coingeckoId: data[0].id
+                });
+                return;
+              }
+            }
+          } catch (e) {
+            console.error('Fallback CoinGecko search failed:', e);
+          }
+        }
+        setTokenError('Failed to load token info');
+      }
+    };
+    
+    fetchTokenMetadata();
   }, [tokenSymbol, chainId]);
 
   const fetchUsdPrice = useCallback(async () => {
@@ -60,24 +96,58 @@ export const TokenUSDValue = ({ amount, tokenSymbol, chainId }: TokenUSDValuePro
       const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
       if (!apiKey) throw new Error("CoinGecko API key is missing");
       
-      const coingeckoId = tokenInfo?.coingeckoId;
+      const coingeckoId = tokenInfo?.coingeckoId || tokenInfo?.id;
       if (!coingeckoId) throw new Error("Token not supported on CoinGecko");
 
       const response = await fetch(
-        `https://api.coingecko.com/api/v3/simple/price?ids=${coingeckoId}&vs_currencies=usd`,
-        { headers: { "x-cg-demo-api-key": apiKey } }
+        `https://api.coingecko.com/api/v3/simple/price?ids=${encodeURIComponent(coingeckoId)}&vs_currencies=usd`,
+        { 
+          headers: { 
+            "x-cg-demo-api-key": apiKey,
+            'Accept': 'application/json'
+          },
+          // Add timeout to prevent hanging requests
+          signal: AbortSignal.timeout(5000)
+        }
       );
 
-      if (!response.ok) throw new Error(`Failed to fetch price: ${response.status}`);
+      if (!response.ok) {
+        // If rate limited, try alternative endpoint
+        if (response.status === 429) {
+          const fallbackResponse = await fetch(
+            `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&ids=${encodeURIComponent(coingeckoId)}`,
+            { 
+              headers: { 
+                "x-cg-demo-api-key": apiKey,
+                'Accept': 'application/json'
+              }
+            }
+          );
+          
+          if (fallbackResponse.ok) {
+            const data = await fallbackResponse.json();
+            if (data && data.length > 0) {
+              setUsdPrice(data[0].current_price);
+              return;
+            }
+          }
+        }
+        throw new Error(`Failed to fetch price: ${response.status}`);
+      }
 
       const data = await response.json();
       const price = data[coingeckoId]?.usd;
 
-      if (!price) throw new Error("No price data available");
+      if (price === undefined) throw new Error("No price data available");
       setUsdPrice(price);
     } catch (err) {
       console.error("Failed to fetch USD price:", err);
-      setError(err instanceof Error ? err.message : "Failed to fetch price");
+      // If we have token info but failed to fetch price, show a more specific error
+      if (tokenInfo?.current_price) {
+        setUsdPrice(tokenInfo.current_price);
+      } else {
+        setError(err instanceof Error ? err.message : "Failed to fetch price");
+      }
     } finally {
       setLoading(false);
     }
