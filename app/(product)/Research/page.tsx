@@ -9,9 +9,6 @@ import TickerTape from "../Dashboard/components/ui/TickerTape";
 import RelatedResearch from "./components/related-research";
 import ResearchSection from "./components/research-section";
 import ResearchDisplay from "../News/components/research-display";
-import { getUserAccess } from "@/app/lib/access-control";
-import SubscriptionBanner from "@/app/components/access-control/SubscriptionBanner";
-import ContentWrapper from "@/app/components/access-control/ContentWrapper";
 import { auth } from '@clerk/nextjs/server';
 
 export const revalidate = 30; // revalidate at most 30 seconds
@@ -43,9 +40,8 @@ async function getData() {
 export default async function Research() {
   const data: simpleResearchCard[] = await getData();
   const { userId } = await auth();
-  const userAccess = await getUserAccess(userId);
 
-  console.log(data);
+  console.log('Research data loaded:', data.length, 'items');
 
   return (
     <div className="bg-zinc-100 dark:bg-black">
@@ -54,54 +50,33 @@ export default async function Research() {
         <NavMenu/>
       </div>
 
-      {/* <Ticker/> */}
-      <div className="h-fit w-full  justify-center dark:bg-[#0F0F0F] bg-zinc-100 items-center flex mt-1 ">
+      <div className="h-fit w-full justify-center dark:bg-[#0F0F0F] bg-zinc-100 items-center flex mt-1">
         <TickerTape/>
       </div> 
 
-      {/* Subscription Banner */}
-      <div className="max-w-7xl mx-auto px-4 mt-4">
-        <SubscriptionBanner userAccess={userAccess} section="research" />
-      </div>
-
-      <div className="grid grid-flow-col justify-center mt-1 gap-2 w-full">
-
-        {/*Left-Section*/}
-        <div className=" w-[350px] gap-2 flex flex-col h-full">
-          <div>
-            {/*<GlobalIndicator/>*/}
-          </div>
-          <div>
-            <ContentWrapper
-              userAccess={userAccess}
-              content={{ accessLevel: 'public' }}
-              title="Related Research"
-              showPreview={true}
-            >
+      <div className="max-w-7xl mx-auto px-4 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {/* Left Section */}
+          <div className="space-y-6">
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
+              <h2 className="text-xl font-semibold mb-4">Related Research</h2>
               <RelatedResearch/>
-            </ContentWrapper>
+            </div>
           </div>
-        </div>
 
-        {/*middle-Section*/}
-        <div className="bg-white">
-          <div>
+          {/* Middle Section - Main Content */}
+          <div className="md:col-span-2 bg-white dark:bg-gray-900 rounded-lg p-4">
+            <h1 className="text-2xl font-bold mb-6">Latest Research</h1>
             <ResearchSection data={data} />
           </div>
-        </div>
 
-        {/*Right-Section*/}
-        <div className="bg-white w-[350px]">
-          <div>
-            <ContentWrapper
-              userAccess={userAccess}
-              content={{ accessLevel: 'premium' }}
-              title="Premium Research Display"
-              description="Access exclusive research insights and market data"
-              showPreview={true}
-            >
+          {/* Right Section */}
+          <div className="space-y-6">
+            <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
+              <h2 className="text-xl font-semibold mb-4">Research Display</h2>
+              <p className="text-muted-foreground mb-4">Access research insights and market data</p>
               <ResearchDisplay/>
-            </ContentWrapper>
+            </div>
           </div>
         </div>
       </div>

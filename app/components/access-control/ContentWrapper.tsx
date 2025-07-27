@@ -7,7 +7,10 @@ import AccessGate from './AccessGate';
 interface ContentWrapperProps {
   children: ReactNode;
   userAccess: UserAccess;
-  content: any; // Content object with access level information
+  content: {
+    accessLevel: 'public' | 'premium' | 'pro' | 'analyst' | 'admin';
+    [key: string]: any; // Allow additional properties
+  };
   title?: string;
   description?: string;
   showPreview?: boolean;

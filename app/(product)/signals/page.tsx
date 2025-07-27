@@ -64,34 +64,21 @@ export default async function SignalsPage({ searchParams }: SignalsPageProps) {
   return (
     <div className="container mx-auto px-4 py-8 space-y-8">
       {/* Header Section */}
-      <ContentWrapper
-        userAccess={userAccess}
-        content={{ accessLevel: 'public' }}
-        title="Trading Signals"
-      >
+      <div>
+        <h1 className="text-3xl font-bold mb-4">Trading Signals</h1>
         <SignalsHeader userAccess={userAccess} />
-      </ContentWrapper>
-
-      {/* Subscription Banner */}
-      <SubscriptionBanner userAccess={userAccess} section="signals" />
+      </div>
 
       {/* Filters Section */}
-      <ContentWrapper
-        userAccess={userAccess}
-        content={{ accessLevel: 'public' }}
-        title="Signal Filters"
-      >
+      <div className="space-y-2">
+        <h2 className="text-xl font-semibold">Signal Filters</h2>
         <SignalsFilters searchParams={searchParams} />
-      </ContentWrapper>
+      </div>
 
       {/* Signals Grid */}
-      <ContentWrapper
-        userAccess={userAccess}
-        content={{ accessLevel: userAccess.canAccess.premiumContent ? 'public' : 'premium' }}
-        title="Premium Trading Signals"
-        description="Access exclusive trading signals from expert analysts"
-        showPreview={true}
-      >
+      <div className="space-y-4">
+        <h2 className="text-2xl font-bold">Trading Signals</h2>
+        <p className="text-muted-foreground">Access trading signals from expert analysts</p>
         <Suspense fallback={<SignalsLoadingSkeleton />}>
           <SignalsGrid 
             searchParams={searchParams}
@@ -99,7 +86,7 @@ export default async function SignalsPage({ searchParams }: SignalsPageProps) {
             userAccess={userAccess}
           />
         </Suspense>
-      </ContentWrapper>
+      </div>
     </div>
   );
 }

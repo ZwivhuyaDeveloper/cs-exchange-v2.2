@@ -9,5 +9,19 @@ import signal from './signal'
 import signalCategory from './signalCategory'
 import tag from './tag'
 import token from './token'
+import user from './user'
 
-export const schemaTypes = [ analystProfile, category, impact, network, news, research, signal, signalCategory, tag, token]
+export const schemaTypes = [
+  analystProfile, 
+  category, 
+  impact, 
+  network, 
+  news, 
+  research, 
+  signal, 
+  signalCategory, 
+  tag, 
+  token, 
+  alerts,
+  user
+]

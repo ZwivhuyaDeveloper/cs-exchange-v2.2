@@ -17,6 +17,24 @@ import {
 import Link from 'next/link';
 import { formatDistanceToNow } from 'date-fns';
 
+interface UserAccess {
+  userId: string | null;
+  role: 'user' | 'premium' | 'analyst' | 'admin';
+  subscription: {
+    tier: string;
+    premiumAccess: boolean;
+    features: string[];
+  } | null;
+  canAccess: {
+    research: boolean;
+    analysis: boolean;
+    signals: boolean;
+    premiumContent: boolean;
+    analystContent: boolean;
+    adminContent: boolean;
+  };
+}
+
 interface SignalsGridProps {
   searchParams: {
     page?: string;
@@ -28,6 +46,7 @@ interface SignalsGridProps {
     featured?: string;
   };
   userId?: string | null;
+  userAccess: UserAccess;
 }
 
 interface Signal {
@@ -93,21 +112,116 @@ interface SignalsResponse {
 }
 
 async function fetchSignals(searchParams: any): Promise<SignalsResponse> {
-  const params = new URLSearchParams();
+  let response: Response | null = null;
   
-  Object.entries(searchParams).forEach(([key, value]) => {
-    if (value) params.append(key, value as string);
-  });
-  
-  const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/signals?${params}`, {
-    cache: 'no-store'
-  });
-  
-  if (!response.ok) {
-    throw new Error('Failed to fetch signals');
+  try {
+    // Log the environment for debugging
+    console.log('Environment:', {
+      NODE_ENV: process.env.NODE_ENV,
+      NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL || 'Not set'
+    });
+    
+    // Build URL with search parameters
+    const params = new URLSearchParams();
+    
+    if (searchParams && typeof searchParams === 'object') {
+      Object.entries(searchParams).forEach(([key, value]) => {
+        if (value !== undefined && value !== null && value !== '') {
+          params.append(key, String(value));
+        }
+      });
+    }
+    
+    // Construct the base URL for both server and client
+    let baseUrl = process.env.NEXT_PUBLIC_BASE_URL || '';
+    
+    // If running on the server and NEXT_PUBLIC_BASE_URL is not set, use the default
+    if (typeof window === 'undefined' && !baseUrl) {
+      // This assumes your API is on the same host as your frontend
+      const protocol = process.env.NODE_ENV === 'production' ? 'https://' : 'http://';
+      const host = process.env.VERCEL_URL || 'localhost:3000';
+      baseUrl = `${protocol}${host}`;
+    }
+    
+    // Ensure there's no double slash between baseUrl and the path
+    const apiPath = '/api/signals';
+    const apiUrl = `${baseUrl.replace(/\/+$/, '')}${apiPath}?${params}`;
+    
+    console.log('Fetching signals from:', apiUrl);
+    
+    // Make the fetch request with a timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+    
+    response = await fetch(apiUrl, {
+      signal: controller.signal,
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    
+    clearTimeout(timeoutId);
+    
+    // Log response status and headers for debugging
+    console.log('Response status:', response.status);
+    console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+    
+    if (!response.ok) {
+      let errorData;
+      try {
+        errorData = await response.json();
+        console.log('Error response body:', errorData);
+      } catch (jsonError) {
+        console.log('Could not parse error response as JSON');
+        errorData = { error: `HTTP error! status: ${response.status}` };
+      }
+      
+      const errorMessage = errorData?.error || `HTTP error! status: ${response.status}`;
+      throw new Error(`Failed to fetch signals: ${errorMessage}`);
+    }
+    
+    const data = await response.json().catch(jsonError => {
+      console.error('Failed to parse JSON response:', jsonError);
+      throw new Error('Invalid JSON response from server');
+    });
+    
+    return data;
+    
+  } catch (error: unknown) {
+    // Enhanced error logging
+    const errorObj = error as Error & { name?: string; message: string; stack?: string };
+    const responseStatus = response?.status;
+    const responseStatusText = response?.statusText;
+    const responseHeaders = response ? Object.fromEntries(response.headers?.entries() || []) : null;
+    
+    console.error('Detailed error in fetchSignals:', {
+      name: errorObj?.name || 'UnknownError',
+      message: errorObj?.message || 'No error message',
+      stack: errorObj?.stack,
+      responseStatus,
+      responseStatusText,
+      responseHeaders,
+      timestamp: new Date().toISOString()
+    });
+    
+    // Handle specific error cases
+    let errorMessage = 'Failed to load signals. Please try again later.';
+    
+    if (errorObj?.name === 'AbortError') {
+      errorMessage = 'Request timed out. Please check your connection and try again.';
+    } else if (errorObj?.message) {
+      errorMessage = errorObj.message;
+    } else if (responseStatus === 401 || responseStatus === 403) {
+      errorMessage = 'Authentication required. Please sign in to view signals.';
+    } else if (responseStatus === 404) {
+      errorMessage = 'The requested resource was not found.';
+    } else if (responseStatus && responseStatus >= 500) {
+      errorMessage = 'Server error. Please try again later.';
+    }
+    
+    throw new Error(errorMessage);
   }
-  
-  return response.json();
 }
 
 function getDirectionIcon(direction: string) {
@@ -397,12 +511,37 @@ export default async function SignalsGrid({ searchParams, userId }: SignalsGridP
       </div>
     );
   } catch (error) {
+    // Log the full error for debugging
     console.error('Error loading signals:', error);
+    
+    // Extract a user-friendly error message
+    let errorMessage = 'An error occurred while loading signals.';
+    if (error instanceof Error) {
+      errorMessage = error.message || errorMessage;
+      
+      // Handle specific error cases
+      if (error.message.includes('Failed to fetch')) {
+        errorMessage = 'Unable to connect to the server. Please check your internet connection and try again.';
+      } else if (error.message.includes('401') || error.message.includes('403')) {
+        errorMessage = 'Authentication error. Please sign in and try again.';
+      }
+    }
+    
     return (
-      <div className="text-center py-12">
-        <div className="text-red-500 mb-4">
-          <h3 className="text-lg font-medium">Error loading signals</h3>
-          <p className="text-sm">Please try again later.</p>
+      <div className="text-center py-12 px-4">
+        <div className="max-w-md mx-auto bg-red-50 dark:bg-red-900/20 p-6 rounded-lg border border-red-200 dark:border-red-800">
+          <h3 className="text-lg font-medium text-red-800 dark:text-red-200 mb-2">
+            Error Loading Signals
+          </h3>
+          <p className="text-red-700 dark:text-red-300 text-sm mb-4">
+            {errorMessage}
+          </p>
+          <button
+            onClick={() => window.location.reload()}
+            className="inline-flex items-center px-4 py-2 bg-red-100 hover:bg-red-200 dark:bg-red-900/50 dark:hover:bg-red-800/70 text-red-700 dark:text-red-200 text-sm font-medium rounded-md transition-colors"
+          >
+            Retry
+          </button>
         </div>
       </div>
     );

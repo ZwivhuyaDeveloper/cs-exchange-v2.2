@@ -94,9 +94,16 @@ export default function SignalsFilters({ searchParams }: SignalsFiltersProps) {
     setFilters(newFilters);
     
     // Update URL with new filters
-    const params = new URLSearchParams(urlSearchParams);
+    const params = new URLSearchParams();
     
-    if (value) {
+    // Copy existing search params if they exist
+    if (urlSearchParams) {
+      for (const [key, value] of urlSearchParams.entries()) {
+        params.set(key, value);
+      }
+    }
+    
+    if (value && value !== 'all') {
       params.set(key, value);
     } else {
       params.delete(key);
@@ -186,7 +193,7 @@ export default function SignalsFilters({ searchParams }: SignalsFiltersProps) {
                 <SelectValue placeholder="All directions" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All directions</SelectItem>
+                <SelectItem value="all">All directions</SelectItem>
                 {DIRECTION_OPTIONS.map((option) => {
                   const Icon = option.icon;
                   return (
@@ -209,7 +216,7 @@ export default function SignalsFilters({ searchParams }: SignalsFiltersProps) {
                 <SelectValue placeholder="All statuses" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All statuses</SelectItem>
+                <SelectItem value="all">All statuses</SelectItem>
                 {STATUS_OPTIONS.map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     <div className="flex items-center space-x-2">
@@ -232,8 +239,8 @@ export default function SignalsFilters({ searchParams }: SignalsFiltersProps) {
                 <SelectValue placeholder="All signals" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="">All signals</SelectItem>
-                <SelectItem value="true">Featured only</SelectItem>
+                <SelectItem value="all">All signals</SelectItem>
+                <SelectItem value="featured">Featured only</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -250,7 +257,7 @@ export default function SignalsFilters({ searchParams }: SignalsFiltersProps) {
                     <SelectValue placeholder="All timeframes" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All timeframes</SelectItem>
+                    <SelectItem value="all">All timeframes</SelectItem>
                     {TIMEFRAME_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         <div className="flex items-center space-x-2">
@@ -270,7 +277,7 @@ export default function SignalsFilters({ searchParams }: SignalsFiltersProps) {
                     <SelectValue placeholder="All risk levels" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All risk levels</SelectItem>
+                    <SelectItem value="all">All risk levels</SelectItem>
                     {RISK_LEVEL_OPTIONS.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
                         <div className="flex items-center space-x-2">
