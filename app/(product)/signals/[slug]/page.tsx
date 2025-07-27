@@ -5,6 +5,8 @@ import { fetchSignalBySlug } from '@/app/actions/signals';
 import { Signal } from '@/app/lib/types/signal';
 import { ArrowUpRight, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
+import { TokenLogo } from '../../components/TokenLogo';
+
 
 interface SignalPageProps {
   params: {
@@ -14,8 +16,7 @@ interface SignalPageProps {
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function SignalPage({ params }: { params: { slug: string } }) {
-  // Access slug directly from params without destructuring
+export default async function SignalPage({ params }: SignalPageProps) {
   const signal = await fetchSignalBySlug(params.slug);
 
   if (!signal) {
@@ -68,37 +69,14 @@ export default async function SignalPage({ params }: { params: { slug: string } 
           <div className="flex items-center gap-4">
             {signal.token?.logo && (
               <div className="relative w-12 h-12 flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
-                {signal.token.logo ? (
-                  <Image
-                    src={signal.token.logo}
-                    alt={signal.token.name || 'Token'}
-                    width={48}
-                    height={48}
-                    className="w-full h-full object-cover"
-                    onError={(e) => {
-                      // Fallback to showing the token symbol if image fails to load
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                      const fallback = target.parentNode?.querySelector('.token-fallback');
-                      if (fallback) {
-                        (fallback as HTMLElement).style.display = 'flex';
-                      }
-                    }}
-                    onLoad={(e) => {
-                      // Hide fallback when image loads successfully
-                      const target = e.target as HTMLImageElement;
-                      const fallback = target.parentNode?.querySelector('.token-fallback');
-                      if (fallback) {
-                        (fallback as HTMLElement).style.display = 'none';
-                      }
-                    }}
-                    priority
-                  />
-                ) : (
-                  <div className="token-fallback absolute inset-0 flex items-center justify-center text-sm font-medium text-gray-500 dark:text-gray-400">
-                    {signal.token.symbol?.substring(0, 3) || 'TKN'}
-                  </div>
-                )}
+                
+                  <TokenLogo
+                  src={signal.token.logo}
+                  alt={signal.token.name || 'Token'}
+                  fallbackText={signal.token.symbol}
+                  size={48}
+                />
+                
               </div>
             )}
             <div>
