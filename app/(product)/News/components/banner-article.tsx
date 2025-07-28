@@ -11,7 +11,7 @@ import { formatDate, isRecent } from "@/app/lib/dateUtils";
 
 export default function BannerArticle({ post }: { post: simpleNewsCard }) {
   return (
-    <div className="w-full p-4 bg-blue-50 dark:bg-zinc-800 rounded-lg mb-4">
+    <div className="w-full p-4 bg-blue-50 shadow-xs shadow-zinc-200 dark:bg-zinc-800 rounded-lg mb-4">
       <div className="flex flex-col md:flex-row gap-6">
         <div className="md:w-1/2">
           <div className='absolute p-3'>

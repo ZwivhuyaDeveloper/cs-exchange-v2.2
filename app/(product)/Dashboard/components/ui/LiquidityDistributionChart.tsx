@@ -8,6 +8,7 @@ import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
+import { size } from 'viem';
 
 interface LiquidityDistributionProps {
   tokenSymbol: string;
@@ -250,30 +251,37 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
             data={liquidityData}
             layout="vertical"
             margin={{
-              left: 20,
-              right: 20,
+              left: 1,
+              right: 1,
               top: 10,
               bottom: 10
             }}
-            barCategoryGap={4}
-            barGap={2}
-            height={300}
+            barCategoryGap={8}
+            barGap={4}
+            height={600}
             width={500}
+            barSize={20}
           >
             <XAxis 
               type="number" 
               dataKey="liquidity" 
               hide 
+              height={600}
+              width={500}
+              tickMargin={2}
+              axisLine={true}
+              scale='sequential'
               tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
             />
             <YAxis
               dataKey="exchange"
               type="category"
               tickLine={false}
-              tickMargin={10}
+              tickMargin={2}
               axisLine={false}
-              width={120}
-              tick={{ fontSize: 12, fill: 'var(--muted-foreground)' }}
+              width={80}
+              height={80}
+              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
               tickFormatter={(value) => value}
               interval={0}
             />

@@ -223,7 +223,7 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
       <CardContent className="pb-0">
         <ChartContainer
           config={chartConfig}
-          className="mx-auto aspect-square max-h-[250px]"
+          className="mx-auto aspect-square max-h-[350px]"
         >
           <RadarChart data={volumeData}>
             <ChartTooltip

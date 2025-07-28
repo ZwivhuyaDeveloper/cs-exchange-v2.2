@@ -1,11 +1,8 @@
 import { simpleNewsCard } from "@/app/lib/interface";
 import { client } from "@/app/lib/sanity";
-;
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape";
-
 import React from "react";
 import { NavMenu } from "../components/layout/NavMenu";
-
 import NewsSection from "./components/news-section";
 import ResearchDisplay from "./components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';

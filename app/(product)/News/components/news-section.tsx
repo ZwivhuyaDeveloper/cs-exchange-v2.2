@@ -140,7 +140,7 @@ export default function NewsSection({ data }: NewsSectionProps) {
         <>
         <div className="grid grid-cols-3 gap-2 justify-center py-2 px-5">
           {currentArticles.map((post, idx) => (
-            <Card key={idx} className="w-fit p-3 m-0 shadow-none border-none h-full gap-2 bg-zinc-100 dark:bg-zinc-800 ">
+            <Card key={idx} className="w-fit p-3 m-0 shadow shadow-zinc-300 border-none h-full gap-2 bg-white dark:bg-zinc-800 ">
               <div>
                 <div className="absolute p-3">
                   <Badge className="w-fit bg-blue-100 text-blue-700 border-px border-none ">

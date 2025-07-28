@@ -118,10 +118,10 @@ export function SignalCard({ signal }: SignalCardProps) {
               </div>
             </div>
             <div>
-              <h3 className="font-medium text-gray-900 dark:text-white">
+              <h3 className="font-medium text-sm text-gray-900 dark:text-white">
                 {signal.token.name} ({signal.token.symbol?.toUpperCase()})
               </h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400">
+              <p className="text-xs text-gray-500 dark:text-gray-400">
                 {signal.signalType && `${signal.signalType} • `}
                 {format(new Date(signal.publishedAt), 'MMM d, yyyy')}
               </p>
@@ -137,36 +137,38 @@ export function SignalCard({ signal }: SignalCardProps) {
         {/* Signal details */}
         <div className="p-4">
 
-          <div className="flex justify-between items-center mb-3">
+          <div className="flex justify-between items-center mb-4">
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor()}`}
             >
-              {signal.status.replace('_', ' ').toUpperCase()}
+              <p className='text-xs'>
+                {signal.status.replace('_', ' ').toUpperCase()}
+              </p>
             </span>
             {signal.riskRewardRatio && (
-              <span className="text-sm text-gray-500 dark:text-gray-400">
+              <span className="text-xs text-gray-500 dark:text-gray-400">
                 R:R {signal.riskRewardRatio.toFixed(2)}
               </span>
             )}
           </div>
 
-          <div className="flex justify-between mb-3">
+          <div className="flex justify-between mb-5">
             <div>
-              <p className="text-sm text-gray-500 dark:text-gray-400">Entry</p>
-              <p className="font-medium">${signal.entryPrice.toFixed(2)}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400">Entry</p>
+              <p className="font-medium text-xs">${signal.entryPrice.toFixed(2)}</p>
             </div>
             {signal.targetPrices?.length > 0 && (
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Targets</p>
-                <p className="font-medium">
-                  {signal.targetPrices.map((t) => `$${t.toFixed(2)}`).join(' → ')}
+                <p className="text-xs text-gray-500 dark:text-gray-400">Targets</p>
+                <p className="font-medium text-xs">
+                  {signal.targetPrices.map((t) => `$${t.toFixed(2)}`).join(' : ')}
                 </p>
               </div>
             )}
             {signal.stopLoss && (
               <div>
-                <p className="text-sm text-gray-500 dark:text-gray-400">Stop Loss</p>
-                <p className="text-red-600 dark:text-red-400 font-medium">
+                <p className="text-xs text-gray-500 dark:text-gray-400">Stop Loss</p>
+                <p className="text-red-600 dark:text-red-400 font-medium text-xs">
                   ${signal.stopLoss.toFixed(2)}
                 </p>
               </div>
@@ -174,13 +176,13 @@ export function SignalCard({ signal }: SignalCardProps) {
           </div>
 
           {/* Market Data Row */}
-          <div className="grid grid-cols-2 gap-2 mb-3 mt-4 text-xs">
+          <div className="grid grid-cols-2 px-1 gap-2 mb-3 mt-4 text-xs">
             {/* Market Trend */}
             {signal.marketConditions?.trend && (
               <div className="flex items-center space-x-1">
                 <FaChartLine className={`${getTrendColor(signal.marketConditions.trend)}`} />
-                <span className="text-gray-500 text-sm dark:text-gray-400">Trend:</span>
-                <span className={`font-medium text-sm ${getTrendColor(signal.marketConditions.trend)}`}>
+                <span className="text-gray-500 text-xs dark:text-gray-400">Trend:</span>
+                <span className={`font-medium text-xs ${getTrendColor(signal.marketConditions.trend)}`}>
                   {signal.marketConditions.trend?.charAt(0).toUpperCase() + signal.marketConditions.trend?.slice(1)}
                 </span>
               </div>
@@ -190,8 +192,8 @@ export function SignalCard({ signal }: SignalCardProps) {
             {signal.timeframe && (
               <div className="flex items-center space-x-1">
                 <FaClock className="text-gray-500" />
-                <span className="text-gray-500 dark:text-gray-400 text-sm">Timeframe:</span>
-                <span className="font-medium text-sm">
+                <span className="text-gray-500 dark:text-gray-400 text-xs">Timeframe:</span>
+                <span className="font-medium text-xs">
                   {signal.timeframe?.split('_').map(word => 
                     word.charAt(0).toUpperCase() + word.slice(1)
                   ).join(' ')}
@@ -203,8 +205,8 @@ export function SignalCard({ signal }: SignalCardProps) {
             {signal.riskLevel && (
               <div className="flex items-center space-x-1">
                 <FaExclamationTriangle className={getRiskColor(signal.riskLevel)} />
-                <span className="text-gray-500 text-sm dark:text-gray-400">Risk:</span>
-                <span className={`font-medium text-sm ${getRiskColor(signal.riskLevel)}`}>
+                <span className="text-gray-500 text-xs dark:text-gray-400">Risk:</span>
+                <span className={`font-medium text-xs ${getRiskColor(signal.riskLevel)}`}>
                   {formatRiskLevel(signal.riskLevel)}
                 </span>
               </div>
@@ -214,10 +216,10 @@ export function SignalCard({ signal }: SignalCardProps) {
             {signal.confidence && (
               <div className="flex items-center space-x-1">
                 <FaThumbsUp className="text-blue-500" />
-                <span className="text-gray-500 text-sm dark:text-gray-400">Confidence:</span>
+                <span className="text-gray-500 text-xs dark:text-gray-400">Confidence:</span>
                 <div className="flex items-center">
-                  <span className="font-medium text-sm">{signal.confidence}/10</span>
-                  <div className="ml-1 w-12 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+                  <span className="font-medium text-xs">{signal.confidence}/10</span>
+                  <div className="ml-1 w-6 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
                     <div 
                       className={`h-full ${signal.confidence >= 7 ? 'bg-green-500' : signal.confidence >= 4 ? 'bg-yellow-500' : 'bg-red-500'}`}
                       style={{ width: `${signal.confidence * 10}%` }}
