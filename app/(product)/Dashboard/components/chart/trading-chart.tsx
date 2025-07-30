@@ -229,7 +229,7 @@ export function TradingChart({
               </svg>
             </Button>
           </DrawerTrigger>
-          <DrawerContent className="h-[1920px] flex">
+          <DrawerContent className="h-[900px] flex">
             <div className="h-[700px]">
               <LiveChart 
                 tokenSymbol={currentTokenSymbol} 
