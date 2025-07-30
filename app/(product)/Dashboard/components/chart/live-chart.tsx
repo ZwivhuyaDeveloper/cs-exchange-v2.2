@@ -60,7 +60,7 @@ const LiveChart = ({
   
   return (
     <div 
-      className="tradingview-widget-container" 
+      className="tradingview-widget-container h-full w-full" 
       ref={containerRef}
       style={{ height: '100%', width: '100%', border: '0%' }}
     />

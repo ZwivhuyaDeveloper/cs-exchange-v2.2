@@ -217,9 +217,9 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
 function StatItem({ title, value, isCurrency }: { title: string; value: number | undefined; isCurrency: boolean }) {
   return (
-    <div className="w-full h-12 rounded-2xl justify-between flex flex-col text-start items-center">
-      <h1 className="text-sm sm:text-xs md:text-xs lg:text-sm w-full font-medium text-zinc-400">{title}</h1>
-      <h2 className="text-md sm:text-md md:text-md lg:text-md text-start font-semibold w-full">
+    <div className="w-full h-12 rounded-2xl justify-between hidden md:flex lg:flex-col text-start items-center">
+      <h1 className="text-xs md:text-sm lg:text-sm w-full font-medium text-zinc-400">{title}</h1>
+      <h2 className="text-xs  md:text-sm lg:text-md text-start font-semibold w-full">
         {value !== undefined
           ? isCurrency
             ? `$${value.toLocaleString()}`

@@ -140,13 +140,13 @@ export function TradingChart({
           <Image 
             src={tokenInfo.logoURL || ""}
             alt={tokenInfo.name}
-            className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
+            className="h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
             width={40}
             height={40}
           />
           <div className="flex flex-col justify-between h-full gap-1">
             <div className="flex flex-row items-center gap-3 w-full justify-between">
-              <div className="text-zinc-700 dark:text-zinc-100 font-semibold text-sm h-full">
+              <div className="text-zinc-700 dark:text-zinc-100 font-semibold text-xs md:text-sm lg:text-sm h-full">
                 {tokenInfo.name} <span className="text-[#00FFC2] font-bold">({tokenInfo.symbol})</span>
               </div>
             </div>
@@ -179,7 +179,7 @@ export function TradingChart({
           <ChartStats tokenSymbol={currentTokenSymbol} />
         </div>
         {otherTokenSymbol && (
-          <button 
+          <Button
             onClick={() => setShowBuyChart(!showBuyChart)}
             className="text-sm w-fit px-3 py-2 rounded-md flex items-center gap-2 shadow-md shadow-black/10 justify-center dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-700 transition-colors"
             disabled={!buyTokenSymbol || !sellTokenSymbol}
@@ -198,10 +198,10 @@ export function TradingChart({
                 />
               )}
             </div>
-          </button>
+          </Button>
         )}
       </CardHeader>
-      <CardContent className="h-[650px] sm:h-[650px] w-full p-0 flex dark:bg-[#0F0F0F] bg-white">
+      <CardContent className="h-[700px] sm:h-[650px] w-full p-0 flex dark:bg-[#0F0F0F] bg-white">
         <LiveChart 
           tokenSymbol={currentTokenSymbol} 
           tradingViewSymbol={tradingViewSymbol}
