@@ -1,3 +1,5 @@
+"use client"
+
 import {simpleResearchCard } from '@/app/lib/interface';
 import React from 'react'
 import { client, urlFor } from "@/app/lib/sanity";

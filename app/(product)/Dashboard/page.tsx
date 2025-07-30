@@ -14,6 +14,7 @@ import NewList from "@/app/(product)/Dashboard/components/tokenList/new-list"
 import LoadingIntro from "@/src/components/ui/loading-intro"
 import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Chart-radar"
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
+import RelatedResearch from "../Research/components/related-research"
 
 
 export default function Page() {
@@ -44,7 +45,7 @@ export default function Page() {
       <main className="flex-1 flex flex-col items-center w-full h-full px-1 md:px-1">
         <div className="flex flex-col lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
           {/* Indicators (Left) */}
-          <div className="lg:w-[400px] w-full flex flex-col gap-2 h-full">
+          <div className="lg:w-[390px] hidden w-full md:flex lg:flex-col gap-2 h-full">
             <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip gap-y-2" type="auto">
               <ScrollArea.Viewport className="w-full overflow-clip h-full flex flex-col gap-y-2">
                 <div className="border border-px dark:border-zinc-700 border-zinc-2000">
@@ -71,7 +72,7 @@ export default function Page() {
           </div>
 
           {/* Chart (Middle) */}
-          <div className="flex flex-row gap-1 w-full">
+          <div className="flex flex-col lg:flex-row md:flex-row gap-1 w-full">
 
 
               <div className="flex-1 flex flex-col gap-1 w-full h-full">
@@ -80,13 +81,13 @@ export default function Page() {
                   sellTokenSymbol={fromToken}
                   setCurrentChartToken={setCurrentChartToken}
                 />
-                <div className="flex flex-col mb-5 md:flex-row gap-1 w-full h-fit items-stretch ">
+                <div className=" lg:flex hidden mb-5 md:flex gap-1 w-full h-fit items-stretch ">
                   <NewList value={toToken} onValueChange={setToToken} label="To Token" />
                 </div>
               </div>
 
               {/* Swap (Right) */}
-              <div className="lg:w-fit w-full flex flex-col gap-1 h-full">
+              <div className="lg:w-fit w-full flex flex-col lg:flex-col  gap-1 h-full">
                 <div className="border border-px dark:border-zinc-700 border-zinc-200">
                   <Swap
                     fromToken={fromToken}
@@ -103,6 +104,9 @@ export default function Page() {
                     }}
                     chainId={chainId}
                   />
+                </div>
+                <div>
+
                 </div>
               </div>
             </div>

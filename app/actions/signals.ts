@@ -8,6 +8,7 @@ export interface FetchSignalsParams {
   category?: string;
   direction?: string;
   search?: string;
+  sort?: string; // Add sort parameter
 }
 
 export interface FetchSignalsResponse {
@@ -25,6 +26,7 @@ export async function fetchSignals({
   category,
   direction,
   search,
+  sort = 'publishedAt_desc',
 }: FetchSignalsParams = {}): Promise<FetchSignalsResponse> {
   const start = (page - 1) * pageSize;
   const end = start + pageSize;
@@ -56,10 +58,14 @@ export async function fetchSignals({
     `);
   }
 
+  // Handle sorting
+  const [sortField, sortDirection] = sort.split('_');
+  const orderClause = ` | order(${sortField} ${sortDirection})`;
+
   const filter = filterConditions.join(' && ');
 
   const query = groq`{
-    "data": *[${filter}] | order(publishedAt desc) [${start}...${end}] {
+    "data": *[${filter}]${orderClause} [${start}...${end}] {
       _id,
       _createdAt,
       _updatedAt,

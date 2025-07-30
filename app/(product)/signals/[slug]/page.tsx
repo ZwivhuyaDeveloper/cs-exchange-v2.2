@@ -23,6 +23,20 @@ export default async function SignalPage({ params }: SignalPageProps) {
     notFound();
   }
 
+  // Helper function to get trend color
+const getTrendColor = (trend: string) => {
+  switch (trend?.toLowerCase()) {
+    case 'bullish':
+      return 'text-green-500';
+    case 'bearish':
+      return 'text-red-500';
+    case 'sideways':
+      return 'text-yellow-500';
+    default:
+      return 'text-gray-500';
+  }
+};
+
   const getDirectionColor = () => {
     switch (signal.direction) {
       case 'buy':
@@ -33,6 +47,23 @@ export default async function SignalPage({ params }: SignalPageProps) {
         return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
       default:
         return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+    }
+  };
+
+  const getRiskColor = (level: string) => {
+    switch (level?.toLowerCase()) {
+      case 'very_low':
+        return 'text-green-500';
+      case 'low':
+        return 'text-blue-500';
+      case 'medium':
+        return 'text-yellow-500';
+      case 'high':
+        return 'text-orange-500';
+      case 'very_high':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
     }
   };
 
@@ -50,6 +81,19 @@ export default async function SignalPage({ params }: SignalPageProps) {
         return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
     }
   };
+
+      // Helper to format risk level text
+    const formatRiskLevel = (level: string) => {
+      if (level === 'very_low') return 'Very Low';
+      if (level === 'low') return 'Low';
+      if (level === 'medium') return 'Medium';
+      if (level === 'high') return 'High';
+      if (level === 'very_high') return 'Very High';
+      return level
+        .split('_')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+    };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -69,7 +113,6 @@ export default async function SignalPage({ params }: SignalPageProps) {
           <div className="flex items-center gap-4">
             {signal.token?.logo && (
               <div className="relative w-12 h-12 flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
-                
                   <TokenLogo
                   src={signal.token.logo}
                   alt={signal.token.name || 'Token'}
@@ -84,7 +127,9 @@ export default async function SignalPage({ params }: SignalPageProps) {
                 {signal.token?.name} ({signal.token?.symbol?.toUpperCase()})
               </h1>
               <div className="flex items-center gap-2 mt-1">
-                <span className={`px-2 py-1 text-xs font-medium rounded-full ${getDirectionColor()}`}>
+                <span
+                  className={`px-2 py-1 text-xs font-medium rounded-full ${getDirectionColor()}`}
+                >
                   {signal.direction.toUpperCase()}
                 </span>
                 <span className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor()}`}>

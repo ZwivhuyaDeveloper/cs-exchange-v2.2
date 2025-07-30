@@ -40,7 +40,11 @@ const getRiskColor = (level: string) => {
 
 // Helper to format risk level text
 const formatRiskLevel = (level: string) => {
-  if (!level) return 'N/A';
+  if (level === 'very_low') return 'Very Low';
+  if (level === 'low') return 'Low';
+  if (level === 'medium') return 'Medium';
+  if (level === 'high') return 'High';
+  if (level === 'very_high') return 'Very High';
   return level
     .split('_')
     .map(word => word.charAt(0).toUpperCase() + word.slice(1))
