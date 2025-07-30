@@ -7,6 +7,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import Image from "next/image";
 import { Separator } from "@radix-ui/react-separator";
 import LiveChart from "./live-chart";
@@ -31,6 +32,7 @@ export function TradingChart({
   setCurrentChartToken
 }: TradingChartProps) {
   const [showBuyChart, setShowBuyChart] = useState(true);
+  const [showLiveChart, setShowLiveChart] = useState(false);
   const [marketData, setMarketData] = useState<TokenMarketData | null>(null);
   const [loadingMarketData, setLoadingMarketData] = useState(true);
   const [tokens, setTokens] = useState<any[]>([]);
@@ -146,7 +148,7 @@ export function TradingChart({
           />
           <div className="flex flex-col justify-between h-full gap-1">
             <div className="flex flex-row items-center gap-3 w-full justify-between">
-              <div className="text-zinc-700 dark:text-zinc-100 font-semibold text-xs md:text-sm lg:text-sm h-full">
+              <div className="text-zinc-700 dark:text-zinc-100 flex-row w-full font-semibold text-xs md:text-sm lg:text-sm h-full">
                 {tokenInfo.name} <span className="text-[#00FFC2] font-bold">({tokenInfo.symbol})</span>
               </div>
             </div>
@@ -158,7 +160,7 @@ export function TradingChart({
               </div>
             ) : marketData ? (
               <div className="flex flex-row items-center gap-2">
-                <p className="text-md font-semibold ">
+                <p className="lg:text-md md:text-md text-xs font-semibold ">
                   ${marketData.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                 </p>
                 <p className={`text-xs font-medium w-fit rounded-2xl px-2 py-1 ${
@@ -201,7 +203,46 @@ export function TradingChart({
           </Button>
         )}
       </CardHeader>
-      <CardContent className="h-[700px] sm:h-[650px] w-full p-0 flex dark:bg-[#0F0F0F] bg-white">
+      {/* Mobile Drawer */}
+      <div className="block h-full sm:hidden">
+        <Drawer>
+          <DrawerTrigger asChild>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="absolute bottom-4 right-4 sm:hidden z-10 w-12 h-12 rounded-full bg-[#6c47ff] text-white shadow-lg"
+            >
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="24" 
+                height="24" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+              >
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+              </svg>
+            </Button>
+          </DrawerTrigger>
+          <DrawerContent className="h-[1920px] flex">
+            <div className="h-[700px]">
+              <LiveChart 
+                tokenSymbol={currentTokenSymbol} 
+                tradingViewSymbol={tradingViewSymbol}
+                theme={resolvedTheme}
+              />
+            </div>
+          </DrawerContent>
+        </Drawer>
+      </div>
+
+      {/* Desktop Chart */}
+      <CardContent className="h-[700px] hidden sm:h-[650px] w-full p-0 lg-flex md-flex dark:bg-[#0F0F0F] bg-white">
         <LiveChart 
           tokenSymbol={currentTokenSymbol} 
           tradingViewSymbol={tradingViewSymbol}
