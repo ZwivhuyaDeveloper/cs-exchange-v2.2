@@ -210,7 +210,7 @@ export function TradingChart({
             <Button 
               variant="ghost" 
               size="sm" 
-              className="sticky bottom-0 right-4 sm:hidden z-50 w-12 h-12 rounded-full bg-[#6c47ff] text-white shadow-lg"
+              className=" sm:hidden z-50 w-12 h-12 rounded-full bg-[#6c47ff] text-white shadow-lg"
             >
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 

@@ -26,6 +26,7 @@ export default function DashboardLayout({
           <header className="sticky top-0 z-50 flex h-fit bg-white items-center border-none rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 ">
             <NavMenu />
           </header>
+          
           {children}
           <BottomTabs/>
         </Providers>
