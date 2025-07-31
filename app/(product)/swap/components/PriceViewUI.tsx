@@ -88,9 +88,7 @@ export default function PriceViewUI({
         <div className="p-5 px-0 gap-3 flex flex-col pb-2">
           <div className="justify-between items-center flex flex-row">
             <div className="flex flex-row gap-2 items-center">
-              <div className="dark:bg-zinc-800 bg-zinc-100 py-1 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Swap</h1></div>
-              <div className="dark:bg-zinc-800 py-1 bg-zinc-100 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Limit</h1></div>
-              <div className="dark:bg-zinc-800 py-1 bg-zinc-100 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Spot</h1></div>
+              <div className="dark:bg-zinc-800 bg-zinc-100 py-1 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Spot Market</h1></div>
             </div>
             <div className="flex items-center gap-2">
               {/* Slippage Tolerance Control */}
