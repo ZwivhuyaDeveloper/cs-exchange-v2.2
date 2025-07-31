@@ -29,10 +29,6 @@ export default function Page() {
   const chainId = 1;
   return (
     <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 flex h-fit bg-white items-center border-none rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 ">
-        <NavMenu />
-      </header>
 
       {/* Ticker */}
       <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
@@ -43,9 +39,9 @@ export default function Page() {
 
       {/* Main 3-column layout */}
       <main className="flex-1 flex flex-col items-center w-full h-full px-1 md:px-1">
-        <div className="flex flex-col lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
+        <div className="flex flex-col-reverse lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
           {/* Indicators (Left) */}
-          <div className="lg:w-[390px] hidden w-full md:flex lg:flex-col gap-2 h-full">
+          <div className="lg:w-[390px] flex w-full md:flex lg:flex-col gap-2 h-full">
             <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip gap-y-2" type="auto">
               <ScrollArea.Viewport className="w-full overflow-clip h-full flex flex-col gap-y-2">
                 <div className="border border-px dark:border-zinc-700 border-zinc-2000">

@@ -210,7 +210,7 @@ export function TradingChart({
             <Button 
               variant="ghost" 
               size="sm" 
-              className="absolute bottom-4 right-4 sm:hidden z-10 w-12 h-12 rounded-full bg-[#6c47ff] text-white shadow-lg"
+              className="sticky bottom-0 right-4 sm:hidden z-50 w-12 h-12 rounded-full bg-[#6c47ff] text-white shadow-lg"
             >
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
@@ -242,7 +242,7 @@ export function TradingChart({
       </div>
 
       {/* Desktop Chart */}
-      <CardContent className="h-[700px] hidden sm:h-[650px] w-full p-0 lg-flex md-flex dark:bg-[#0F0F0F] bg-white">
+      <CardContent className="h-[700px] hidden sm:h-[650px] w-full p-0 lg:flex md:flex dark:bg-[#0F0F0F] bg-white">
         <LiveChart 
           tokenSymbol={currentTokenSymbol} 
           tradingViewSymbol={tradingViewSymbol}
