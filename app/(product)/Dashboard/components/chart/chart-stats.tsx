@@ -71,7 +71,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (!tokenInfo && !tokenError) {
     return (
-      <div className="grid grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
+      <div className=" grid-row-2 hidden sm:grid gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
         <div className="w-full h-full rounded-2xl gap-1 flex flex-row justify-between items-center">
           <Skeleton className="h-6 w-32" />
         </div>
@@ -95,7 +95,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (tokenError) {
     return (
-      <div className="p-4 w-full dark:bg-zinc-950 bg-white rounded gap-5 h-22">
+      <div className="p-4 w-full hidden sm:flex dark:bg-zinc-950 bg-white rounded gap-5 h-22">
         <div className='grid grid-col-2 gap-3 w-full'>
           <div className='grid grid-cols-2 gap-3 w-full'>
             <div className='gap-2 flex flex-col'>
@@ -134,7 +134,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (isLoading) {
     return (
-      <div className="grid grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
+      <div className=" grid-row-2 hidden sm:grid gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
         <div className="w-full h-full rounded-2xl gap-1 flex flex-row justify-between items-center">
           <Skeleton className="h-6 w-32" />
         </div>

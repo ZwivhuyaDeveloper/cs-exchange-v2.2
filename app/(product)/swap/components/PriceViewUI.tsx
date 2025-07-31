@@ -11,8 +11,6 @@ import { TaxInfo } from "./ui/TaxInfo";
 import { TokenSelectorIconList } from "./ui/TokenSelectorIconList";
 import { SlippageTolerance } from "./ui/SlippageTolerance";
 import { useState } from "react";
-import { GelArray } from "drizzle-orm/gel-core";
-import { GitCompareArrowsIcon, Percent, PercentCircle } from "lucide-react";
 import { LoaderOne } from "@/src/components/ui/loader";
 
 export interface PriceViewUIProps {
@@ -99,20 +97,12 @@ export default function PriceViewUI({
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="text-xs px-2 py-1 h-8"
+                  className="text-xs px-2 py-1 h-8 rounded-full border-[#00ffc2] text-[#00ffc2] bg-zinc-100 dark:bg-zinc-900"
                   onClick={() => setShowSlippageSettings(!showSlippageSettings)}
                 >
                   {slippageTolerance}% slippage
                 </Button>
               )}
-              <Button 
-                variant="default" 
-                className="h-8 w-8 bg-[#00ffc2]  rounded-full shadow shadow-zinc-950"
-                onClick={() => setShowSlippageSettings(!showSlippageSettings)}
-              >
-                {/* Settings icon should be passed as a prop or imported here if needed */}
-                <span className="text-lg text-black"><Percent height={20} width={20} className="w-8 h-8"/></span>
-              </Button>
             </div>
           </div>
           {/* Slippage Settings Panel */}

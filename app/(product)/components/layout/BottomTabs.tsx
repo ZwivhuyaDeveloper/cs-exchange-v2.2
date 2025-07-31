@@ -2,18 +2,18 @@
 
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
-import { Home, BarChart2, LineChart, Compass } from "lucide-react"
-import { IconHome, IconHome2, IconHomeDollar, IconSmartHome } from "@tabler/icons-react"
+import { Compass, Newspaper, PaperclipIcon, Settings2 } from "lucide-react"
+import { IconSmartHome } from "@tabler/icons-react"
 
 const BottomTabs = () => {
   const pathname = usePathname()
 
   const navItems = [
-    { name: 'Sentiment', href: '/News', icon: <BarChart2 className="h-6 w-6" /> },
-    { name: 'Analysis', href: '/Research', icon: <LineChart className="h-6 w-6" /> },
-    { name: 'Trade', href: '/Dashboard', icon: <IconSmartHome className="h-6 w-6" /> },
+    { name: 'Sentiment', href: '/News', icon: <Newspaper className="h-6 w-6" /> },
+    { name: 'Analysis', href: '/Research', icon: <PaperclipIcon className="h-6 w-6" /> },
+    { name: 'Trade', href: '/Dashboard', icon: <div className="bg-black dark:bg-[#00ffc2] rounded-full p-2 fixed bottom-5"><IconSmartHome className="h-10 w-10" /></div> },
     { name: 'Signals', href: '/signals', icon: <Compass className="h-6 w-6" /> },
-    { name: 'Explore', href: '/vault', icon: <Compass className="h-6 w-6" /> },
+    { name: 'Explore', href: '/vault', icon: <Settings2 className="h-6 w-6" /> },
   ]
 
   return (
@@ -29,7 +29,7 @@ const BottomTabs = () => {
               href={item.href}
               className={`flex flex-col items-center justify-center flex-1 h-full ${
                 isActive 
-                  ? 'text-[#00ffc2]' 
+                  ? 'text-background ' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >

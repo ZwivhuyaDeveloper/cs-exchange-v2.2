@@ -208,8 +208,8 @@ export function TradingChart({
       {/* Mobile Drawer */}
       <div className="block h-full sm:hidden">
         <Drawer>
-          <DrawerHeader className="flex flex-row items-center justify-between h-22 py-4 dark:bg-[#0F0F0F] bg-white rounded-none border border-px dark:border-zinc-700 border-zinc-200">
-            <div className="flex items-center gap-2 flex-row justify-start">
+          <DrawerHeader className="flex flex-row items-center justify-between h-18 py-4 dark:bg-[#0F0F0F] bg-white rounded-none border border-px dark:border-zinc-700 border-zinc-200">
+            <div className="flex items-center w-full gap-2 flex-row justify-start">
               <Image 
                 src={tokenInfo.logoURL || ""}
                 alt={tokenInfo.name}
@@ -220,8 +220,8 @@ export function TradingChart({
               <div className="flex flex-col w-full justify-between h-full gap-1">
                 <div className="flex flex-row items-center gap-3 w-full justify-between">
                   <div className="text-zinc-700 dark:text-zinc-100 flex flex-row w-full gap-2 font-semibold text-xs md:text-sm lg:text-sm h-full">
-                    <span>{tokenInfo.name}</span> 
-                    <span className="text-[#00FFC2] font-bold">({tokenInfo.symbol})</span>
+                    <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-base ">{tokenInfo.name}</span> 
+                    <span className="text-[#00FFC2] font-bold text-sm">({tokenInfo.symbol})</span>
                   </div>
                 </div>
                 {/* Price & percentage change */}
@@ -232,7 +232,7 @@ export function TradingChart({
                   </div>
                 ) : marketData ? (
                   <div className="flex flex-row items-center gap-2">
-                    <p className="lg:text-md md:text-md text-sm font-semibold ">
+                    <p className="lg:text-md md:text-md text-md font-semibold ">
                       ${marketData.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                     </p>
                     <p className={`text-xs font-medium w-fit rounded-2xl px-2 py-1 ${
@@ -278,8 +278,9 @@ export function TradingChart({
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className=" sm:hidden z-50 w-12 h-12 rounded-full bg-zinc-900 text-white shadow-lg"
+                className=" sm:hidden z-50 w-20 h-10 rounded-full bg-zinc-900 text-white shadow-lg"
               >
+                <p className="text-xs text-white">chart</p>
                 <CandlestickChart color="#00FFC2"/>
               </Button>
             </DrawerTrigger>

@@ -97,7 +97,7 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
         >
           {value ? (
             <>
-              <Avatar className="h-6 w-6">
+              <Avatar className="h-8 w-8 sm:h-6 sm:w-6">
                 <AvatarImage src={tokenMap[value]?.logoURL || tokenMap[value]?.logoURI} />
               </Avatar>
               <span className="font-medium text-xs text-black dark:text-white">{value.toUpperCase()}</span>

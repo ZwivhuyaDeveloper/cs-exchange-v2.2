@@ -41,7 +41,7 @@ export function NavMenu() {
             height={25} 
             alt="Cyclespace Logo"
           />
-          <Link href="/" className={`${_tourney.className} antialiased text-xl md:text-2xl font-semibold bg-black dark:bg-white text-transparent bg-clip-text`}>
+          <Link href="/" className={`${_tourney.className} antialiased text-xl hidden sm:flex md:text-2xl font-semibold bg-black dark:bg-white text-transparent bg-clip-text`}>
             CYCLESPACE
           </Link>
         </div>
@@ -50,7 +50,7 @@ export function NavMenu() {
         <NavigationMenuList className="hidden md:flex h-full items-center font-normal text-foreground ml-6">
           <NavigationMenuItem className="font-light flex gap-0">
             {navItems.map((item) => (
-              <Link href={item.href} key={item.href} legacyBehavior passHref>
+              <Link href={item.href} key={item.href} passHref>
                 <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                   <p className="text-sm font-medium">{item.name}</p>
                 </NavigationMenuLink>
@@ -62,7 +62,7 @@ export function NavMenu() {
 
       {/* Right side controls */}
       <div className="flex items-center gap-2">
-        <div className="hidden sm:flex items-center gap-2">
+        <div className=" sm:flex items-center gap-2">
           <SignedOut>
             <SignInButton>
               <Button size="sm" className="bg-[#6c47ff] hover:bg-[#5a3bd8] text-white">
@@ -79,11 +79,11 @@ export function NavMenu() {
             <UserButton />
           </SignedIn>
         </div>
-        <div className="ml-2">
-          <ThemeToggle />
-        </div>
-        <div className="text-xs h-fit py-1 hidden sm:block">
+        <div className="text-xs h-fit py-1  sm:block">
           <ConnectButton />
+        </div>
+        <div className="ml-2 ">
+          <ThemeToggle />
         </div>
       </div>
     </NavigationMenu>

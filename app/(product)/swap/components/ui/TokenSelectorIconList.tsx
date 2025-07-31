@@ -32,7 +32,7 @@ export function TokenSelectorIconList({
           `}
           onClick={() => onSelect(token.symbol.toLowerCase())}
         >
-          <Avatar className="h-6 w-6">
+          <Avatar className="h-8 w-8 sm:h-6 sm:w-6">
             <AvatarImage src={token.logoURL || token.logoURI} />
           </Avatar>
         </button>
