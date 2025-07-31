@@ -174,7 +174,7 @@ export const TokenInputSection = ({
             <Input
               id={`${label}-amount`}
               value={formattedAmount}
-              className={`h-11 sm:h-11 md:h-11 lg-h-11 w-full sm:text-xl md:text-2xl lg:text-3xl bg-transparent shadow-none border-transparent text-4xl font-semibold focus:outline-none active:outline-none active:bg-transparent focus:bg-transparent transition-colors ${
+              className={`h-11 sm:h-11 md:h-11 lg-h-11 w-full text-3xl md:text-2xl lg:text-3xl bg-transparent shadow-none border-transparent  font-semibold focus:outline-none active:outline-none active:bg-transparent focus:bg-transparent transition-colors ${
                 !isValid && validationError ? 'text-red-500' : ''
               }`}
               type="string"

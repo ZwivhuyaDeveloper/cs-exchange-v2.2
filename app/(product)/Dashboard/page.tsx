@@ -33,7 +33,7 @@ export default function Page() {
     <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
 
       {/* Ticker */}
-      <div className="w-full h-fit hidden sm:flex justify-center items-center py-1 px-1 md:py-1 ">
+      <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
         <div className="border border-px dark:border-zinc-700 border-zinc-200 w-full">
           <TickerTape />
         </div>
@@ -73,7 +73,7 @@ export default function Page() {
           <div className="flex flex-col lg:flex-row md:flex-row gap-1 w-full">
 
 
-              <div className="flex-1 flex flex-col gap-1 mt-1 md:mt-0 lg:mt-0 w-full h-full">
+              <div className="flex-1 flex flex-col gap-1 mt-0 sm:mt-1 md:mt-0 lg:mt-0 w-full h-full">
                 <TradingChart
                   buyTokenSymbol={toToken}
                   sellTokenSymbol={fromToken}
@@ -86,12 +86,7 @@ export default function Page() {
 
               {/* Swap (Right) */}
               <div className="lg:w-fit w-full flex flex-col lg:flex-col  gap-1 h-full">
-                <Tabs defaultValue="swap" className="bg-zinc-900/60 mt-0 lg:mt-0 md:mt-0 ">
-                  <TabsList className="w-full border border-px rounded-none border-zinc-700 bg-zinc-900/50">
-                    <TabsTrigger value="swap">Swap</TabsTrigger>
-                    <TabsTrigger value="limit">Limit</TabsTrigger>
-                  </TabsList>
-                  <TabsContent value="swap" className="mt-0">
+                  <div className="mt-0">
                     <div className="flex dark:border-zinc-700 bg-white border border-zinc-100 border-px">
                       <Swap
                         fromToken={fromToken}
@@ -109,15 +104,8 @@ export default function Page() {
                         chainId={chainId}
                       />
                     </div>
-                  </TabsContent>
-                  <TabsContent value="limit" className="dark:border-zinc-700 bg-white border-zinc-200 border-px">
-                    <div className="">
-                      <LimiOrder /> 
-                    </div>
-                  </TabsContent>
-                </Tabs>
+                  </div>
                 <div>
-
                 </div>
               </div>
             </div>

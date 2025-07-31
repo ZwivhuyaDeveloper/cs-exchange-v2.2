@@ -3,15 +3,17 @@
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
 import { Home, BarChart2, LineChart, Compass } from "lucide-react"
+import { IconHome, IconHome2, IconHomeDollar, IconSmartHome } from "@tabler/icons-react"
 
 const BottomTabs = () => {
   const pathname = usePathname()
 
   const navItems = [
-    { name: 'Trade', href: '/Dashboard', icon: <Home className="h-5 w-5" /> },
-    { name: 'Sentiment', href: '/News', icon: <BarChart2 className="h-5 w-5" /> },
-    { name: 'Analysis', href: '/Research', icon: <LineChart className="h-5 w-5" /> },
-    { name: 'Explore', href: '/vault', icon: <Compass className="h-5 w-5" /> },
+    { name: 'Sentiment', href: '/News', icon: <BarChart2 className="h-6 w-6" /> },
+    { name: 'Analysis', href: '/Research', icon: <LineChart className="h-6 w-6" /> },
+    { name: 'Trade', href: '/Dashboard', icon: <IconSmartHome className="h-6 w-6" /> },
+    { name: 'Signals', href: '/signals', icon: <Compass className="h-6 w-6" /> },
+    { name: 'Explore', href: '/vault', icon: <Compass className="h-6 w-6" /> },
   ]
 
   return (
@@ -27,13 +29,12 @@ const BottomTabs = () => {
               href={item.href}
               className={`flex flex-col items-center justify-center flex-1 h-full ${
                 isActive 
-                  ? 'text-[#6c47ff]' 
+                  ? 'text-[#00ffc2]' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <div className="flex flex-col items-center">
                 {item.icon}
-                <span className="text-xs mt-1">{item.name}</span>
               </div>
             </Link>
           )

@@ -11,6 +11,9 @@ import { TaxInfo } from "./ui/TaxInfo";
 import { TokenSelectorIconList } from "./ui/TokenSelectorIconList";
 import { SlippageTolerance } from "./ui/SlippageTolerance";
 import { useState } from "react";
+import { GelArray } from "drizzle-orm/gel-core";
+import { GitCompareArrowsIcon, Percent, PercentCircle } from "lucide-react";
+import { LoaderOne } from "@/src/components/ui/loader";
 
 export interface PriceViewUIProps {
   loading: boolean;
@@ -81,10 +84,10 @@ export default function PriceViewUI({
   
   return (
     <div className="justify-center items-center gap-2 sm:w-fit md:w-fit w-fit h-fit max-h-fit px-1 pb-5">
-      {loading && <div className="text-center text-blue-500">Loading price...</div>}
+      {loading && <div className="text-center text-blue-500 justify-center items-center"><LoaderOne /></div>}
       {apiError && <div className="text-center text-red-500">{apiError}</div>}
       {/* swap */}
-      <div className="w-[350px] h-fit flex flex-col bg-transparent my-0 justify-start gap-2 px-3">
+      <div className="w-[380px] md:w-[350px] lg:w-[350px] h-fit flex flex-col bg-transparent my-0 justify-start gap-2 px-3">
         <div className="p-5 px-0 gap-3 flex flex-col pb-2">
           <div className="justify-between items-center flex flex-row">
             <div className="flex flex-row gap-2 items-center">
@@ -104,17 +107,17 @@ export default function PriceViewUI({
               )}
               <Button 
                 variant="default" 
-                className="h-8 w-8 bg-transparent rounded-full shadow shadow-zinc-950"
+                className="h-8 w-8 bg-[#00ffc2]  rounded-full shadow shadow-zinc-950"
                 onClick={() => setShowSlippageSettings(!showSlippageSettings)}
               >
                 {/* Settings icon should be passed as a prop or imported here if needed */}
-                <span>⚙️</span>
+                <span className="text-lg text-black"><Percent height={20} width={20} className="w-8 h-8"/></span>
               </Button>
             </div>
           </div>
           {/* Slippage Settings Panel */}
           {showSlippageSettings && slippageTolerance !== undefined && setSlippageTolerance && (
-            <div className="px-1 pb-3">
+            <div className=" w-full pb-3">
               <SlippageTolerance
                 value={slippageTolerance}
                 onChange={setSlippageTolerance}

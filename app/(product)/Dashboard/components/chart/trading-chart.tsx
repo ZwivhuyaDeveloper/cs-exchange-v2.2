@@ -13,6 +13,8 @@ import { Separator } from "@radix-ui/react-separator";
 import LiveChart from "./live-chart";
 import { useTheme } from "@/context/ThemeContext";
 import ChartStats from "./chart-stats";
+import { ChartAreaLinear } from "../ui/Linear-Chart";
+import { CandlestickChart, ChartAreaIcon, ChartBarIncreasing, LucideCandlestickChart } from "lucide-react";
 
 
 interface TradingChartProps {
@@ -215,10 +217,11 @@ export function TradingChart({
                 width={40}
                 height={40}
               />
-              <div className="flex flex-col justify-between h-full gap-1">
+              <div className="flex flex-col w-full justify-between h-full gap-1">
                 <div className="flex flex-row items-center gap-3 w-full justify-between">
-                  <div className="text-zinc-700 dark:text-zinc-100 flex-row w-full font-semibold text-xs md:text-sm lg:text-sm h-full">
-                    {tokenInfo.name} <span className="text-[#00FFC2] font-bold">({tokenInfo.symbol})</span>
+                  <div className="text-zinc-700 dark:text-zinc-100 flex flex-row w-full gap-2 font-semibold text-xs md:text-sm lg:text-sm h-full">
+                    <span>{tokenInfo.name}</span> 
+                    <span className="text-[#00FFC2] font-bold">({tokenInfo.symbol})</span>
                   </div>
                 </div>
                 {/* Price & percentage change */}
@@ -229,7 +232,7 @@ export function TradingChart({
                   </div>
                 ) : marketData ? (
                   <div className="flex flex-row items-center gap-2">
-                    <p className="lg:text-md md:text-md text-xs font-semibold ">
+                    <p className="lg:text-md md:text-md text-sm font-semibold ">
                       ${marketData.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                     </p>
                     <p className={`text-xs font-medium w-fit rounded-2xl px-2 py-1 ${
@@ -252,7 +255,7 @@ export function TradingChart({
             {otherTokenSymbol && (
               <Button
                 onClick={() => setShowBuyChart(!showBuyChart)}
-                className="text-sm w-fit px-3 py-2 rounded-md flex items-center gap-2 shadow-md shadow-black/10 justify-center dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-700 transition-colors"
+                className="text-sm w-fit px-3 py-2 rounded-md hidden lg:block md:block items-center gap-2 shadow-md shadow-black/10 justify-center dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-700 transition-colors"
                 disabled={!buyTokenSymbol || !sellTokenSymbol}
               >
                 <div className="flex flex-row gap-2 items-center w-full justify-between">
@@ -275,28 +278,17 @@ export function TradingChart({
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className=" sm:hidden z-50 w-12 h-12 rounded-full bg-[#00FFC2] text-black shadow-lg"
+                className=" sm:hidden z-50 w-12 h-12 rounded-full bg-zinc-900 text-white shadow-lg"
               >
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  width="24" 
-                  height="24" 
-                  viewBox="0 0 24 24" 
-                  fill="none" 
-                  stroke="currentColor" 
-                  strokeWidth="2" 
-                  strokeLinecap="round" 
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                  <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                  <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                </svg>
+                <CandlestickChart color="#00FFC2"/>
               </Button>
             </DrawerTrigger>
           </DrawerHeader>
           <DrawerContent className="h-[900px] flex">
-            <div className="h-[700px]">
+            <div>
+              
+            </div>
+            <div className="h-[700px] p-2">
               <LiveChart 
                 tokenSymbol={currentTokenSymbol} 
                 tradingViewSymbol={tradingViewSymbol}
