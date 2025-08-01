@@ -10,6 +10,7 @@ import { TokenEquivalentValue } from "./ui/TokenEquivalentValue";
 import { TaxInfo } from "./ui/TaxInfo";
 import { TokenSelectorIconList } from "./ui/TokenSelectorIconList";
 import { SlippageTolerance } from "./ui/SlippageTolerance";
+import { PercentageSelector } from "./ui/PercentageSelector";
 import { useState } from "react";
 import { LoaderOne } from "@/src/components/ui/loader";
 
@@ -130,12 +131,15 @@ export default function PriceViewUI({
                 chainId={chainId}
                 excludedToken={toToken}
               />
-              <div className="flex gap-2">
-                <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md" />
-                <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md" />
-                <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md" />
-                <div className="dark:bg-zinc-900 bg-white h-10 w-10 rounded-md" />
-              </div>
+              <PercentageSelector 
+                balance={balanceData?.formatted}
+                decimals={sellTokenDecimals}
+                onSelect={(amount) => {
+                  setTradeDirection("sell");
+                  setSellAmount(amount);
+                }}
+                className="sm:flex w-full"
+              />
             </div>
             <TokenInputSection
               label="sell"

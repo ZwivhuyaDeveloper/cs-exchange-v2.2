@@ -218,7 +218,7 @@ export const TokenInputSection = ({
         )}
         
         {/* Balance Display */}
-        {balance && label === "sell" && (
+        {/*{balance && label === "sell" && (
           <div className="flex items-center justify-between px-1">
             <span className="text-xs text-gray-500">
               Balance: {parseFloat(balance).toLocaleString()} {token.toUpperCase()}
@@ -237,7 +237,7 @@ export const TokenInputSection = ({
               </button>
             )}
           </div>
-        )}
+        )}*/}
       </div>
     </section>
   );

@@ -31,7 +31,7 @@ export default function Page() {
   const chainId = 1;
   return (
     <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
-
+      
       {/* Ticker */}
       <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
         <div className="border border-px dark:border-zinc-700 border-zinc-200 w-full">
