@@ -47,10 +47,10 @@ export default async function News() {
         <TickerTape/>
       </div> 
 
-      <div className="flex-col flex md:flex-row lg:flex-row justify-center mt-1 gap-2 w-full">
+      <div className="flex-col-reverse flex md:flex-row lg:flex-row justify-center mt-1 gap-2 w-full">
 
         {/*Left-Section*/}
-        <div className="lg:w-[460px] w-full gap-2 flex flex-col h-full">
+        <div className="lg:w-[460px] w-full gap-2  flex-col h-full">
           <div>
             <RelatedNews/>
           </div>

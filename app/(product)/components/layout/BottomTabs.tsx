@@ -13,7 +13,7 @@ const BottomTabs = () => {
   const navItems = [
     { name: 'Sentiment', href: '/News', icon: <Newspaper className="h-6 w-6" /> },
     { name: 'Analysis', href: '/Research', icon: <IconNews className="h-7 w-7" /> },
-    { name: 'Trade', href: '/Dashboard', icon: <div className="bg-black dark:bg-[#00ffc2] rounded-full p-2 fixed bottom-5"><IconSmartHome className="h-10 w-10" /></div> },
+    { name: 'Trade', href: '/Dashboard', icon: <div className="bg-black dark:bg-zinc-900 rounded-full p-2 fixed bottom-5"><IconSmartHome className="h-10 w-10" /></div> },
     { name: 'Signals', href: '/signals', icon: <Compass className="h-6 w-6" /> },
     { name: 'Explore', href: '/vault', icon: <Settings2 className="h-6 w-6" /> },
   ]
@@ -31,7 +31,7 @@ const BottomTabs = () => {
               href={item.href}
               className={`flex flex-col items-center justify-center flex-1 h-full ${
                 isActive 
-                  ? 'text-background ' 
+                  ? 'text-[#00ffc2] ' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >

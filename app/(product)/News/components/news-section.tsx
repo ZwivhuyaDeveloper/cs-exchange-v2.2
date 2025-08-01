@@ -100,10 +100,10 @@ export default function NewsSection({ data }: NewsSectionProps) {
 
   return (
     <div className="bg-white dark:bg-[#0F0F0F]">
-      <div className="flex flex-col  justify-between items-start sm:items-center px-5 pt-4 gap-4">
-        <div className="justify-between flex flex-row w-full">
+      <div className="flex flex-col justify-between items-start sm:items-center px-5 pt-4 gap-4">
+        <div className="justify-between space-y-2 lg:space-y-0 flex flex-col lg:flex-row w-full">
           <h1 className="text-lg flex flex-row justify-between text-start text-zinc-500 font-semibold tracking-wide">
-            <span className="flex flex-row gap-1 text-3xl text-black dark:text-white font-bold">
+            <span className="flex flex-row gap-1 text-lg lg:text-3xl text-black dark:text-white font-bold">
               <p className="text-blue-500">Latest</p>Headlines
             </span>
           </h1>
@@ -113,7 +113,7 @@ export default function NewsSection({ data }: NewsSectionProps) {
             placeholder="Search by title, category, or tags..." 
           />
         </div>
-        <div className="">
+        <div className="w-full ">
           <NewsFilter 
             categories={categories} 
             onFilterChange={handleFilterChange} 
@@ -141,7 +141,7 @@ export default function NewsSection({ data }: NewsSectionProps) {
         <>
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 justify-center py-2 px-5">
           {currentArticles.map((post, idx) => (
-            <Card key={idx} className="w-fit p-3 m-0 shadow shadow-zinc-300 border-none h-full gap-2 bg-white dark:bg-zinc-800 ">
+            <Card key={idx} className="w-fit p-3 m-0 shadow border-none shadow-zinc-200 dark:shadow-zinc-900 h-full gap-2 bg-white dark:bg-zinc-800 ">
               <div>
                 <div className="absolute p-3">
                   <Badge className="w-fit bg-blue-100 text-blue-700 border-px border-none ">
