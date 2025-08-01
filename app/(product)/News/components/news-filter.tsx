@@ -45,7 +45,7 @@ export default function NewsFilter({
           
           <div 
             ref={scrollContainerRef}
-            className="flex overflow-x-auto gap-2 scrollbar-hide max-w-full mx-1"
+            className="grid overflow-x-auto grid-rows-1 lg:flex flex-wrap  gap-2 scrollbar-hide lg:max-w-full mx-1"
           >
             {filteredCategories.map((category, idx) => (
               <Button

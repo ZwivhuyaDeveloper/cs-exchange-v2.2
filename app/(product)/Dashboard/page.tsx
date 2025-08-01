@@ -14,6 +14,8 @@ import LoadingIntro from "@/src/components/ui/loading-intro"
 import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Chart-radar"
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
 import "@rainbow-me/rainbowkit/styles.css";
+import NewsCards from "./components/news-cards"
+import NewsCardsWrapper from "./components/news-cards-wrapper"
 
 export default function Page() {
   const [fromToken, setFromToken] = useState("link");
@@ -82,26 +84,24 @@ export default function Page() {
 
               {/* Swap (Right) */}
               <div className="lg:w-fit w-full flex flex-col lg:flex-col  gap-1 h-full">
-                  <div className="mt-0">
-                    <div className="flex dark:border-zinc-700 bg-white border border-zinc-100 border-px">
-                      <Swap
-                        fromToken={fromToken}
-                        setFromToken={setFromToken}
-                        toToken={toToken}
-                        setToToken={setToToken}
-                        setCurrentChartToken={setCurrentChartToken}
-                        price={undefined}
-                        setPrice={function (price: any): void {
-                          throw new Error("Function not implemented.")
-                        }}
-                        setFinalize={function (finalize: boolean): void {
-                          throw new Error("Function not implemented.")
-                        }}
-                        chainId={chainId}
-                      />
-                    </div>
+                <div className="mt-0">
+                  <div className="flex dark:border-zinc-700 bg-white border border-zinc-100 border-px">
+                    <Swap
+                      fromToken={fromToken}
+                      setFromToken={setFromToken}
+                      toToken={toToken}
+                      setToToken={setToToken}
+                      setCurrentChartToken={setCurrentChartToken}
+                      price={undefined}
+                      setPrice={function (price: any): void {
+                        throw new Error("Function not implemented.")
+                      }}
+                      setFinalize={function (finalize: boolean): void {
+                        throw new Error("Function not implemented.")
+                      }}
+                      chainId={chainId}
+                    />
                   </div>
-                <div>
                 </div>
               </div>
             </div>

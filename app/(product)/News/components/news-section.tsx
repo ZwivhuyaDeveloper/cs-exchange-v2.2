@@ -113,12 +113,13 @@ export default function NewsSection({ data }: NewsSectionProps) {
             placeholder="Search by title, category, or tags..." 
           />
         </div>
-
-        <NewsFilter 
-          categories={categories} 
-          onFilterChange={handleFilterChange} 
-          selectedCategory={selectedCategory}
-        />
+        <div className="">
+          <NewsFilter 
+            categories={categories} 
+            onFilterChange={handleFilterChange} 
+            selectedCategory={selectedCategory}
+          />
+        </div>
         
       </div>
       
@@ -138,7 +139,7 @@ export default function NewsSection({ data }: NewsSectionProps) {
         </div>
       ) : (
         <>
-        <div className="grid grid-cols-3 gap-2 justify-center py-2 px-5">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 justify-center py-2 px-5">
           {currentArticles.map((post, idx) => (
             <Card key={idx} className="w-fit p-3 m-0 shadow shadow-zinc-300 border-none h-full gap-2 bg-white dark:bg-zinc-800 ">
               <div>
