@@ -7,14 +7,14 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerHeader, DrawerTrigger } from "@/components/ui/drawer";
 import Image from "next/image";
 import { Separator } from "@radix-ui/react-separator";
 import LiveChart from "./live-chart";
 import { useTheme } from "@/context/ThemeContext";
 import ChartStats from "./chart-stats";
 import { ChartAreaLinear } from "../ui/Linear-Chart";
-import { CandlestickChart, ChartAreaIcon, ChartBarIncreasing, LucideCandlestickChart } from "lucide-react";
+import { CandlestickChart, ChartAreaIcon, ChartBarIncreasing, LucideCandlestickChart, X } from "lucide-react";
 
 
 interface TradingChartProps {
@@ -280,15 +280,42 @@ export function TradingChart({
                 size="sm" 
                 className=" sm:hidden z-50 w-20 h-10 rounded-full bg-zinc-900 text-white shadow-lg"
               >
-                <p className="text-xs text-white">chart</p>
+                <p className="text-xs text-white">Chart</p>
                 <CandlestickChart color="#00FFC2"/>
               </Button>
             </DrawerTrigger>
           </DrawerHeader>
           <DrawerContent className="h-[900px] flex">
+            <div className="w-full flex justify-between px-2 py-1 mt-2">
+            {otherTokenSymbol && (
+              <Button
+                onClick={() => setShowBuyChart(!showBuyChart)}
+                className="text-sm w-fit px-3 py-2 rounded-md lg:block md:block items-center gap-2 shadow-md shadow-black/10 justify-center dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-700 transition-colors"
+                disabled={!buyTokenSymbol || !sellTokenSymbol}
+              >
+                <span className="text-xs text-[#00FFC2]">Switch Token</span>
+                <div className="flex flex-row gap-2 items-center w-full justify-between">
+                  <span className="dark:text-zinc-100 text-black font-medium uppercase  text-xs">
+                    {otherTokenSymbol}
+                  </span>
+                  {otherTokenInfo && (
+                    <Image 
+                      src={otherTokenInfo.logoURL || ""}
+                      alt={otherTokenInfo.name}
+                      className="h-5 w-5 rounded-full"
+                      width={20}
+                      height={20}
+                    />
+                  )}
+                </div>
+              </Button>
+            )}
             <div>
-              
+              <DrawerClose>
+                <Button variant="default" size="sm" className="text-xs bg-[#00FFC2]" onClick={() => setShowBuyChart(false)}> Close <X className="h-3 w-3" /></Button>
+              </DrawerClose>
             </div>
+          </div>
             <div className="h-[700px] p-2">
               <LiveChart 
                 tokenSymbol={currentTokenSymbol} 

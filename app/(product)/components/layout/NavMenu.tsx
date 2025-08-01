@@ -20,6 +20,8 @@ import {
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/ui/drawer';
+import "@rainbow-me/rainbowkit/styles.css";
+
 
 import Light from "@/public/Cyclespace-logo/CS logo color.png";
 
@@ -207,8 +209,8 @@ export const NavMenu = React.memo(() => {
                   </div>
                 </SignedIn>
                 
-                <div className="pt-2 w-full flex">
-                  <ConnectButton />
+                <div className="pt-2 flex">
+                  <ConnectButton  />
                 </div>
               </div>
             </div>

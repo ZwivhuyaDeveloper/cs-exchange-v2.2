@@ -1,5 +1,5 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useState, useCallback, useRef, ReactElement } from "react";
 import { formatUnits, parseUnits } from "ethers";
 import {
   useReadContract,
@@ -515,7 +515,7 @@ export default function PriceView({
     taker,
     onClick,
     sellTokenAddress,
-    disabled,
+    disabled = false,
     price,
   }: {
     taker: Address;
@@ -523,32 +523,55 @@ export default function PriceView({
     sellTokenAddress: Address;
     disabled?: boolean;
     price: any;
-  }) {
+  }): ReactElement {
     // If price.issues.allowance is null, show the Review Trade button
     if (price?.issues.allowance === null) {
       return (
-        <div className="w-full px-3 justify-start">
+        <div className="w-full px-3 justify-start space-y-2">
           <button
             type="button"
             disabled={disabled}
-            onClick={() => {
-              // fetch data, when finished, show quote view
-              onClick();
-            }}
-            className="w-full bg-blue-500 text-white p-2 hover:bg-blue-700 disabled:opacity-25 rounded-3xl"
+            onClick={onClick}
+            className={`w-full text-white p-3 rounded-xl font-medium transition-all duration-200 ${
+              disabled 
+                ? 'bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed shadow-inner' 
+                : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+            }`}
           >
-            {disabled ? "Insufficient Balance" : "Review Trade"}
+            {disabled ? (
+              <div className="flex items-center justify-center space-x-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Insufficient Balance</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <span>Review Trade</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            )}
           </button>
+          {disabled && (
+            <div className="text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                Add funds to your wallet to continue
+              </p>
+            </div>
+          )}
         </div>
       );
     }
 
     // Determine the spender from price.issues.allowance
     const spender = price?.issues.allowance.spender;
+    const MAX_ALLOWANCE = BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639935'); // 2^256 - 1
 
     // 1. Read from erc20, check approval for the determined spender to spend sellToken
     const { data: allowance, refetch } = useReadContract({
-      address: sellTokenAddress,
+      address: sellTokenAddress as Address,
       abi: erc20Abi,
       functionName: "allowance",
       args: [taker, spender],
@@ -557,7 +580,7 @@ export default function PriceView({
 
     // 2. (only if no allowance): write to erc20, approve token allowance for the determined spender
     const { data } = useSimulateContract({
-      address: sellTokenAddress,
+      address: sellTokenAddress as Address,
       abi: erc20Abi,
       functionName: "approve",
       args: [spender, MAX_ALLOWANCE],

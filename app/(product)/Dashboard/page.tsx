@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { NavMenu } from "@/app/(product)/components/layout/NavMenu"
 import MarketStats from "@/app/(product)/Dashboard/components/ui/MarketStats"
 import TechnicalSpecs from "@/app/(product)/Dashboard/components/ui/TechnicalSpecs"
 import { TradingChart } from "@/app/(product)/Dashboard/components/chart/trading-chart"
@@ -14,10 +13,7 @@ import NewList from "@/app/(product)/Dashboard/components/tokenList/new-list"
 import LoadingIntro from "@/src/components/ui/loading-intro"
 import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Chart-radar"
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
-import RelatedResearch from "../Research/components/related-research"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import LimiOrder from "../swap/components/LimiOrder"
-
+import "@rainbow-me/rainbowkit/styles.css";
 
 export default function Page() {
   const [fromToken, setFromToken] = useState("link");

@@ -3,14 +3,16 @@
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
 import { Compass, Newspaper, PaperclipIcon, Settings2 } from "lucide-react"
-import { IconSmartHome } from "@tabler/icons-react"
+import { IconNews, IconNewSection, IconSmartHome } from "@tabler/icons-react"
+import { Newsreader } from "next/font/google"
+import { FaHackerNewsSquare, FaRegNewspaper } from "react-icons/fa"
 
 const BottomTabs = () => {
   const pathname = usePathname()
 
   const navItems = [
     { name: 'Sentiment', href: '/News', icon: <Newspaper className="h-6 w-6" /> },
-    { name: 'Analysis', href: '/Research', icon: <PaperclipIcon className="h-6 w-6" /> },
+    { name: 'Analysis', href: '/Research', icon: <IconNews className="h-7 w-7" /> },
     { name: 'Trade', href: '/Dashboard', icon: <div className="bg-black dark:bg-[#00ffc2] rounded-full p-2 fixed bottom-5"><IconSmartHome className="h-10 w-10" /></div> },
     { name: 'Signals', href: '/signals', icon: <Compass className="h-6 w-6" /> },
     { name: 'Explore', href: '/vault', icon: <Settings2 className="h-6 w-6" /> },

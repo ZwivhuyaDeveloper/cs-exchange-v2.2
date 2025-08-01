@@ -13,6 +13,7 @@ import { SlippageTolerance } from "./ui/SlippageTolerance";
 import { PercentageSelector } from "./ui/PercentageSelector";
 import { useState } from "react";
 import { LoaderOne } from "@/src/components/ui/loader";
+import { Dot } from "lucide-react";
 
 export interface PriceViewUIProps {
   loading: boolean;
@@ -83,14 +84,21 @@ export default function PriceViewUI({
   
   return (
     <div className="justify-center items-center gap-2 sm:w-fit md:w-fit w-fit h-fit max-h-fit px-1 pb-5">
-      {loading && <div className="text-center text-blue-500 justify-center items-center"><LoaderOne /></div>}
       {apiError && <div className="text-center text-red-500">{apiError}</div>}
       {/* swap */}
       <div className="w-[380px] md:w-[350px] lg:w-[350px] h-fit flex flex-col bg-transparent my-0 justify-start gap-2 px-3">
         <div className="p-5 px-0 gap-3 flex flex-col pb-2">
           <div className="justify-between items-center flex flex-row">
             <div className="flex flex-row gap-2 items-center">
-              <div className="dark:bg-zinc-800 bg-zinc-100 py-1 rounded-4xl text-xs px-3"><h1 className="text-md font-semibold">Spot Market</h1></div>
+              <div className="dark:bg-zinc-800 bg-zinc-100 h-fit py-2 w-full items-center gap-3 flex-row flex rounded-4xl text-xs px-3">
+                <h1 className="text-md font-semibold"> Spot Market</h1>
+                <div>
+                  {loading && 
+                    <div className="text-center w-full h-full justify-center items-center">
+                      <LoaderOne />
+                    </div>}
+                </div>
+              </div>
             </div>
             <div className="flex items-center gap-2">
               {/* Slippage Tolerance Control */}
