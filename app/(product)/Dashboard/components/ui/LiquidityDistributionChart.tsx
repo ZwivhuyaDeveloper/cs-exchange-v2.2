@@ -9,6 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
 import { size } from 'viem';
+import Image from 'next/image';
 
 interface LiquidityDistributionProps {
   tokenSymbol: string;
@@ -233,10 +234,16 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
     <Card className="rounded-none border-none bg-white dark:bg-[#0F0F0F]">
       <CardHeader className="flex flex-row items-center px-3 gap-2 justify-between">
         <div className="flex flex-row items-center gap-2">
-          <div className="rounded-full p-1 bg-[#00FFC2]/30 text-[#00FFC2]">
-            <BarChart3 strokeWidth={3} width={18} height={18}/>
+          <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+            <Image 
+              src={tokenInfo.logoURL || ""}
+              alt={tokenInfo.name}
+              className="h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
+              width={40}
+              height={40}
+            />
           </div>
-          <CardTitle>Liquidity Distribution - {tokenSymbol.toUpperCase()}</CardTitle>
+          <CardTitle>Liquidity Distribution  <span className="dark:text-[#00FFC2] text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span></CardTitle>
         </div>
         <div className='flex flex-row items-center justify-center h-fit w-fit'>
           <div className=' w-3 h-3 bg-green-300 rounded-full translate-x-3 '/>
@@ -310,7 +317,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
             />
             <Bar 
               dataKey="liquidity" 
-              fill="#00FFC2" 
+              fill="#0E76FD" 
               radius={[0, 4, 4, 0]}
             />
           </BarChart>

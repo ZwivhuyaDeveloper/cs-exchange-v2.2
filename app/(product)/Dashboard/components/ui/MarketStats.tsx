@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { PercentDiamond } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface MarketStatsProps {
   tokenSymbol: string;
@@ -193,11 +194,17 @@ export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsPro
 
       <div className='flex flex-row justify-between items-center'>
         <div className="items-center w-full flex flex-row gap-3">
-          <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
-            <span className="text-[#00FFC2] text-[8px] font-bold"><PercentDiamond width={16} height={16}/></span>
+          <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+            <Image 
+              src={tokenInfo.logoURL || ""}
+              alt={tokenInfo.name}
+              className="h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
+              width={40}
+              height={40}
+            />
           </div>
           <h1 className="dark:text-white text-black font-semibold text-md sm:text-md">
-            Market stats for <span className="dark:text-[#00FFC2] text-[#00FFC2]">{tokenSymbol.toUpperCase()}</span>
+            Market stats for <span className="dark:text-[#00FFC2] text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
           </h1>
         </div>
 

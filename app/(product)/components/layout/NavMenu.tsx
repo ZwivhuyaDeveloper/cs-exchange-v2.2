@@ -23,7 +23,8 @@ import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/
 import "@rainbow-me/rainbowkit/styles.css";
 
 
-import Light from "@/public/Cyclespace-logo/CS logo color.png";
+import DarkLogo from "@/public/Cyclespace-logo/CS logo color.png";
+import LightLogo from "@/public/Cyclespace-logo/CSblue.png";
 
 const _tourney = Tourney({ 
   subsets: ['latin'],
@@ -80,10 +81,18 @@ export const NavMenu = React.memo(() => {
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2">
           <Image 
-            src={Light} 
+            src={DarkLogo} 
             width={25} 
             height={25} 
             alt="Cyclespace Logo"
+            className="hidden dark:block"
+          />
+          <Image 
+            src={LightLogo} 
+            width={25} 
+            height={25} 
+            alt="Cyclespace Logo"
+            className="block dark:hidden"
           />
           <Link href="/" className={`${_tourney.className} antialiased text-xl  sm:flex md:text-2xl font-semibold bg-black dark:bg-white text-transparent bg-clip-text`}>
             CYCLESPACE
@@ -150,10 +159,18 @@ export const NavMenu = React.memo(() => {
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-2">
                 <Image 
-                  src={Light} 
+                  src={DarkLogo} 
                   width={25} 
                   height={25} 
                   alt="Cyclespace Logo"
+                  className="hidden dark:block"
+                />
+                <Image 
+                  src={LightLogo} 
+                  width={25} 
+                  height={25} 
+                  alt="Cyclespace Logo"
+                  className="block dark:hidden"
                 />
                 <span className={`${_tourney.className} text-xl font-semibold bg-black dark:bg-white text-transparent bg-clip-text`}>
                   CYCLESPACE

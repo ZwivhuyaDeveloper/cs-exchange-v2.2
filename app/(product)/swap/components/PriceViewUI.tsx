@@ -106,7 +106,7 @@ export default function PriceViewUI({
                 <Button 
                   variant="outline" 
                   size="sm" 
-                  className="text-xs px-2 py-1 h-8 rounded-full border-[#00ffc2] text-[#00ffc2] bg-zinc-100 dark:bg-zinc-900"
+                  className="text-xs px-2 py-1 h-8 rounded-full dark:border-[#00FFC2] border-[#0E76FD] dark:text-[#00FFC2] text-[#0E76FD] dark:bg-zinc-900 bg-zinc-100"
                   onClick={() => setShowSlippageSettings(!showSlippageSettings)}
                 >
                   {slippageTolerance}% slippage

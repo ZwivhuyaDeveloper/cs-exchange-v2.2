@@ -8,6 +8,7 @@ import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLe
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface VolumeRadarProps {
   tokenSymbol: string;
@@ -214,10 +215,16 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
     <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
       <CardHeader className="items-center">
         <div className="flex flex-row items-center gap-2">
-          <div className="rounded-full p-1 bg-[#00FFC2]/30 text-[#00FFC2]">
-            <Activity strokeWidth={3} width={18} height={18}/>
+          <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+            <Image 
+              src={tokenInfo.logoURL || ""}
+              alt={tokenInfo.name}
+              className="h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
+              width={40}
+              height={40}
+            />
           </div>
-          <CardTitle>24h Volume - {tokenSymbol.toUpperCase()}</CardTitle>
+          <CardTitle>24h Volume <span className="dark:text-[#00FFC2] text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span></CardTitle>
         </div>
       </CardHeader>
       <CardContent className="pb-0">

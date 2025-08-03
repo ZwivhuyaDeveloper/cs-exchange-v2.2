@@ -165,20 +165,20 @@ export default function NewsSection({ data }: NewsSectionProps) {
                 </p>
 
               <div className="justify-between flex flex-row items-center mt-2 w-full">
-                <div className="flex flex-row justify-between ">
-                  {isRecent(post.publishedAt) && (
-                      <span className="animate-pulse"><Badge>New</Badge></span>
-                    )}
-                  <span className="text-sm text-zinc-800">
+              <div className="flex items-center justify-between gap-4">
+                {isRecent(post.publishedAt) && (
+                  <span className="ml-1 animate-pulse">🆕</span>
+                )}
+                <span className="text-sm text-zinc-500 dark:text-zinc-400">
                     {formatDate(post.publishedAt, {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
                     })}
-                  </span>
-                </div>
+                </span>
+              </div>
                   {/* impact display */}
                   <div className="flex flex-row items-center gap-1">
                     <h3 className="text-xs font-medium">Impact:</h3>

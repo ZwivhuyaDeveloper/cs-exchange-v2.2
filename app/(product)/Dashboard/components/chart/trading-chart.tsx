@@ -13,8 +13,7 @@ import { Separator } from "@radix-ui/react-separator";
 import LiveChart from "./live-chart";
 import { useTheme } from "@/context/ThemeContext";
 import ChartStats from "./chart-stats";
-import { ChartAreaLinear } from "../ui/Linear-Chart";
-import { CandlestickChart, ChartAreaIcon, ChartBarIncreasing, LucideCandlestickChart, X } from "lucide-react";
+import { CandlestickChart, X } from "lucide-react";
 
 
 interface TradingChartProps {
@@ -114,7 +113,7 @@ export function TradingChart({
   // Loading state when token info is not available
   if (!tokenInfo || !currentTokenSymbol) {
     return (
-      <Card className="w-full flex flex-col justify-start border-transparent bg-transparent rounded-none mt-0 h-full">
+      <Card className="w-full hidden sm:flex-col justify-start border-transparent bg-transparent rounded-none mt-0 h-full">
         <CardHeader className="flex flex-row items-center justify-between h-[18px]">
           <div className="flex items-center gap-4 flex-row justify-start">
             <div className="h-8 w-8 rounded-full dark:bg-zinc-700 bg-zinc-100 animate-pulse" />
@@ -151,7 +150,7 @@ export function TradingChart({
           <div className="flex flex-col justify-between h-full gap-1">
             <div className="flex flex-row items-center gap-3 w-full justify-between">
               <div className="text-zinc-700 dark:text-zinc-100 flex-row w-full font-semibold text-xs md:text-sm lg:text-sm h-full">
-                {tokenInfo.name} <span className="text-[#00FFC2] font-bold">({tokenInfo.symbol})</span>
+                {tokenInfo.name} <span className="dark:text-[#00FFC2] text-[#0E76FD] font-bold">({tokenInfo.symbol})</span>
               </div>
             </div>
             {/* Price & percentage change */}
@@ -221,12 +220,12 @@ export function TradingChart({
                 <div className="flex flex-row items-center gap-3 w-full justify-between">
                   <div className="text-zinc-700 dark:text-zinc-100 flex flex-row w-full gap-2 font-semibold text-xs md:text-sm lg:text-sm h-full">
                     <span className="w-full overflow-hidden text-ellipsis whitespace-nowrap text-base ">{tokenInfo.name}</span> 
-                    <span className="text-[#00FFC2] font-bold text-sm">({tokenInfo.symbol})</span>
+                    <span className="dark:text-[#00FFC2] text-[#0E76FD] font-bold text-sm">({tokenInfo.symbol})</span>
                   </div>
                 </div>
                 {/* Price & percentage change */}
                 {loadingMarketData ? (
-                  <div className="flex flex-row gap-2">
+                  <div className="hidden sm:flex flex-row gap-2">
                     <div className="h-4 w-16 bg-zinc-700 rounded animate-pulse" />
                     <div className="h-4 w-10 bg-zinc-700 rounded animate-pulse" />
                   </div>
@@ -278,10 +277,10 @@ export function TradingChart({
               <Button 
                 variant="ghost" 
                 size="sm" 
-                className=" sm:hidden z-50 w-20 h-10 rounded-full bg-zinc-900 text-white shadow-lg"
+                className=" sm:hidden z-50 w-20 h-10 rounded-full bg-[#0E76FD] dark:bg-zinc-800 text-white shadow-lg"
               >
-                <p className="text-xs text-white">Chart</p>
-                <CandlestickChart color="#00FFC2"/>
+                <p className="text-xs dark:text-zinc-100 text-white">Chart</p>
+                <CandlestickChart  className="dark:text-[#00FFC2] text-white bg-clip-text"/>
               </Button>
             </DrawerTrigger>
           </DrawerHeader>
@@ -293,7 +292,7 @@ export function TradingChart({
                 className="text-sm w-fit px-3 py-2 rounded-md lg:block md:block items-center gap-2 shadow-md shadow-black/10 justify-center dark:bg-zinc-800 bg-zinc-100 hover:bg-zinc-700 transition-colors"
                 disabled={!buyTokenSymbol || !sellTokenSymbol}
               >
-                <span className="text-xs text-[#00FFC2]">Switch Token</span>
+                <span className="text-xs dark:text-[#00FFC2] text-[#0E76FD]">Switch Token</span>
                 <div className="flex flex-row gap-2 items-center w-full justify-between">
                   <span className="dark:text-zinc-100 text-black font-medium uppercase  text-xs">
                     {otherTokenSymbol}
@@ -312,7 +311,7 @@ export function TradingChart({
             )}
             <div>
               <DrawerClose>
-                <Button variant="default" size="sm" className="text-xs bg-[#00FFC2]" onClick={() => setShowBuyChart(false)}> Close <X className="h-3 w-3" /></Button>
+                <Button variant="default" size="sm" className="text-xs dark:bg-[#00FFC2] bg-[#0E76FD]" onClick={() => setShowBuyChart(false)}> Close <X className="h-3 w-3" /></Button>
               </DrawerClose>
             </div>
           </div>

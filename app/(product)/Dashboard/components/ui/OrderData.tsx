@@ -3,6 +3,7 @@ import { Card, CardDescription, CardTitle, CardContent } from '@/components/ui/c
 import { Skeleton } from '@/components/ui/skeleton';
 import { Scale } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import Image from 'next/image';
 
 interface OrderDataProps {
   tokenSymbol: string;
@@ -179,7 +180,7 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
         <CardContent className="flex flex-row gap-1 p-0">
           <div className="flex w-full h-2 gap-1 px-5">
             <div className="bg-[#00FFC2]  rounded-3xl" style={{ width: `${width1}%` }} />
-            <div className="bg-rose-600 dark:bg-blue-600 rounded-3xl" style={{ width: `${width2}%` }} />
+            <div className="bg-[#0E76FD] rounded-3xl" style={{ width: `${width2}%` }} />
           </div>
         </CardContent>
       </Card>
@@ -273,12 +274,18 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
     <Card className="h-full w-full rounded-none border-none dark:bg-[#0F0F0F] bg-white flex flex-col gap-2 ">
       <CardTitle className="px-5 gap-3 flex">
         <div className="flex flex-row gap-3 items-center mb-3">
-          <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
-            <span className="text-[#00FFC2] text-[8px] font-bold">
-              <Scale width={17} height={17} />
-            </span>
+          <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+            <Image 
+              src={tokenInfo.logoURL || ""}
+              alt={tokenInfo.name}
+              className="h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
+              width={40}
+              height={40}
+            />
           </div>
-          <h1 className="dark:text-white text-black font-semibold text-md sm:text-md">Strength Index</h1>
+          <h1 className="dark:text-white text-black font-semibold text-md sm:text-md gap-1 flex">Strength Index 
+            <span className="dark:text-[#00FFC2] text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
+          </h1>
         </div>
       </CardTitle>
       {renderSection('Buy orders', 'Sell orders', orderData.buys, orderData.sells)}

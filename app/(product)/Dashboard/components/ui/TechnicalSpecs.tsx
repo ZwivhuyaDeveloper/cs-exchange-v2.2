@@ -10,6 +10,7 @@ import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/component
 import { ChevronDownIcon, CopyIcon, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
+import Image from 'next/image';
 
 interface TechnicalSpecsProps {
   tokenSymbol: string;
@@ -213,8 +214,14 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <div className='w-full flex flex-row gap-3'>
-            <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#00FFC2] text-[8px] font-bold"><List width={17} height={17}/></span>
+            <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+              <Image 
+                src={tokenInfo.logoURL || ""}
+                alt={tokenInfo.name}
+                className="h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
+                width={40}
+                height={40}
+              />
             </div>
             <h1 className="dark:text-white text-back font-semibold text-md sm:text-md"> Technical Specifications </h1>
           </div>
