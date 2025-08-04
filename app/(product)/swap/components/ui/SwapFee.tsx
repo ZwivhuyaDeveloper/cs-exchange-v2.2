@@ -109,7 +109,7 @@ export function AffiliateFeeBadge({ price, buyToken, tokenMap }: FeeBadgeProps) 
       className="justify-end w-full items-end h-fit bg-transparent border-transparent gap-1 m-0 p-0"
     >
       <div className="flex w-full justify-end">
-        <div className="text-muted-foreground text-xs font-medium">
+        <div className="text-muted-foreground text-sm font-medium">
           Fee: {feeData.amount} {feeData.symbol}
         </div>
       </div>

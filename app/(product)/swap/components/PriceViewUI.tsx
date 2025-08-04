@@ -259,29 +259,20 @@ export default function PriceViewUI({
                   )}
                 </div>
               </div>
-              {/* Token Equivalent Value Display */}
-              <div className="w-full justify-between items-center  hidden h-fit  flex-row">
-                <div className="text-xs font-medium ">
-                  Rate:
+              {/* Tax Information Display */}
+              <div className="flex flex-row justify-between items-center w-full mb-4">
+                <div>
+                  <p className="text-sm font-medium ">Tax:</p>
                 </div>
                 <div>
-                  <TokenEquivalentValue
-                    sellToken={fromToken}
-                    buyToken={toToken}
-                    chainId={chainId}
-                    tokenMap={tokenMap}
-                  />
-                </div>
-              </div>
-              {/* Tax Information Display */}
-              <div>
-                <TaxInfo
+                  <TaxInfo
                   buyTokenTax={buyTokenTax}
                   sellTokenTax={sellTokenTax}
                   buyToken={toToken}
                   sellToken={fromToken}
                   tokenMap={tokenMap}
                 />
+                </div>
               </div>
             </CardContent>
           </Card>

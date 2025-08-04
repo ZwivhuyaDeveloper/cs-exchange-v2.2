@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 import { Menu, X } from 'lucide-react';
 import { Tourney } from 'next/font/google';
-import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton, useAuth } from '@clerk/nextjs';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 import {
   NavigationMenu,
@@ -17,7 +17,8 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
-import { Button } from '@/components/ui/button';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/ui/drawer';
 import "@rainbow-me/rainbowkit/styles.css";
@@ -72,9 +73,26 @@ export const NavMenu = React.memo(() => {
     setIsOpen(false);
   }, []);
 
+  const { isLoaded, userId } = useAuth();
+
+  // Navigation items for authenticated users
+  const authNavItems = [
+    { name: 'Dashboard', href: '/dashboard' },
+    { name: 'Portfolio', href: '/portfolio' },
+    { name: 'Signals', href: '/signals' },
+    { name: 'Research', href: '/research' },
+  ];
+
+  // Navigation items for unauthenticated users
+  const publicNavItems = [
+    { name: 'Features', href: '/#features' },
+    { name: 'Pricing', href: '/pricing' },
+    { name: 'About', href: '/about' },
+  ];
+
   return (
     <NavigationMenu 
-      className="w-full flex justify-between items-center gap-4 sm:gap-8 h-14 px-4 backdrop-filter backdrop-blur-2xl dark:bg-[#0F0F0F] bg-white border-b border-px dark:border-zinc-700 border-zinc-200 backdrop-brightness-200"
+      className="w-full flex justify-between items-center gap-4 sm:gap-8 h-16 px-4 backdrop-filter backdrop-blur-2xl dark:bg-[#0F0F0F]/95 bg-white/95 border-b border-px dark:border-zinc-700 border-zinc-200"
       data-testid="nav-menu"
     >
       {/* Logo and Desktop Navigation */}
@@ -115,20 +133,37 @@ export const NavMenu = React.memo(() => {
       <div className="hidden md:flex items-center gap-2">
         <div className="flex items-center gap-2">
           <SignedOut>
-            <SignInButton>
-              <Button size="sm" className="bg-[#6c47ff] hover:bg-[#5a3bd8] text-white">
-                Sign In
-              </Button>
-            </SignInButton>
-            <SignUpButton>
-              <Button variant="outline" size="sm">
-                Sign Up
-              </Button>
-            </SignUpButton>
+            <SignedIn>
+              <div className="flex items-center gap-2">
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/dashboard">Dashboard</Link>
+                </Button>
+                <UserButton 
+                  afterSignOutUrl="/"
+                  appearance={{
+                    elements: {
+                      userButtonAvatarBox: 'h-8 w-8',
+                      userButtonPopoverCard: 'p-4',
+                    },
+                  }}
+                />
+              </div>
+            </SignedIn>
+            <SignedOut>
+              <div className="flex items-center gap-2">
+                <SignInButton mode="modal">
+                  <Button variant="ghost" size="sm" className="hidden sm:inline-flex">
+                    Sign In
+                  </Button>
+                </SignInButton>
+                <SignUpButton mode="modal">
+                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                    Get Started
+                  </Button>
+                </SignUpButton>
+              </div>
+            </SignedOut>
           </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
         </div>
         <div className="text-xs h-fit py-1">
           <ConnectButton />
@@ -186,6 +221,30 @@ export const NavMenu = React.memo(() => {
 
             {/* Navigation Links */}
             <nav className="flex-1 space-y-2">
+              <NavigationMenuList>
+                <SignedIn>
+                  {authNavItems.map((item) => (
+                    <NavigationMenuItem key={item.href}>
+                      <Link href={item.href} legacyBehavior passHref>
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                          {item.name}
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                  ))}
+                </SignedIn>
+                <SignedOut>
+                  {publicNavItems.map((item) => (
+                    <NavigationMenuItem key={item.href}>
+                      <Link href={item.href} legacyBehavior passHref>
+                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                          {item.name}
+                        </NavigationMenuLink>
+                      </Link>
+                    </NavigationMenuItem>
+                  ))}
+                </SignedOut>
+              </NavigationMenuList>
               {navItems.map((item) => (
                 <Link 
                   key={item.href} 

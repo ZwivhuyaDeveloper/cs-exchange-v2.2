@@ -34,7 +34,7 @@ export function TaxInfo({ buyTokenTax, sellTokenTax, buyToken, sellToken, tokenM
           className="justify-end w-full items-end h-fit bg-transparent border-transparent gap-1 m-0 p-0"
         >
           <div className="flex w-full justify-end">
-            <div className="text-muted-foreground text-xs font-medium">
+            <div className="text-muted-foreground text-sm font-medium">
               {(tokenMap?.[buyToken]?.symbol || buyToken)} Buy Tax: {formatTax(buyTokenTax.buyTaxBps)}%
             </div>
           </div>
@@ -46,8 +46,11 @@ export function TaxInfo({ buyTokenTax, sellTokenTax, buyToken, sellToken, tokenM
           className="justify-end w-full items-end h-fit bg-transparent border-transparent gap-1 m-0 p-0"
         >
           <div className="flex w-full justify-end">
-            <div className="text-muted-foreground text-xs font-medium">
-              {(tokenMap?.[sellToken]?.symbol || sellToken)} Sell Tax: {formatTax(sellTokenTax.sellTaxBps)}%
+            <div className="text-muted-foreground text-sm font-medium">
+              <span className="text-sm">
+                {(tokenMap?.[sellToken]?.symbol || sellToken)} Sell Tax:
+              </span>
+              <span className="text-sm"> {formatTax(sellTokenTax.sellTaxBps)}%</span>
             </div>
           </div>
         </Badge>
