@@ -30,11 +30,6 @@ export default async function SignalsPage({
   return (
     <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
 
-      {/* Header */}
-      <header className="sticky top-0 z-50 flex h-fit bg-white items-center border-none rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 ">
-        <NavMenu />
-      </header>
-
       {/* Ticker */}
       <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
         <div className="border border-px dark:border-zinc-700 border-zinc-200 w-full">
@@ -44,11 +39,11 @@ export default async function SignalsPage({
 
       <div className='w-full flex flex-row gap-1'>
 
-        <div className='w-[520px] bg-white'>
+        <div className='w-[520px] hidden sm:flex bg-white'>
           <TrendingNews />
         </div>
 
-        <div className='w-full bg-white px-2'>
+        <div className='w-full bg-white dark:bg-[#0f0f0f] border border-px border-zinc-200 dark:border-zinc-700 px-2'>
           <div className="mb-8 px-2 mt-3">
             <h1 className="font-bold text-gray-900 text-xl dark:text-white mb-2">Trading Signals</h1>
             <p className="text-gray-600 dark:text-gray-300 text-md">
@@ -88,7 +83,7 @@ export default async function SignalsPage({
     </div>
         </div>
 
-        <div className='w-[420px] bg-white'>
+        <div className='w-[420px] hidden sm:flex bg-white'>
 
         </div>
 

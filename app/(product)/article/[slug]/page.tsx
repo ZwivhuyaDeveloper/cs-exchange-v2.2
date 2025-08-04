@@ -7,6 +7,7 @@ import Image from "next/image";
 import React from "react";
 import { Badge } from '@/components/ui/badge';
 import { BackButton } from '@/app/(product)/components/ui/BackButton';
+import { KeyPoints } from "@/app/(product)/components/KeyPoints";
 import ResearchDisplay from "../../News/components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';
 import { formatDate } from "@/app/lib/dateUtils";
@@ -32,11 +33,17 @@ async function getData(slug: string) {
           "author": author->{
             name,
             avatar
+          },
+          "keyPoints": keyPoints[]{
+            _key,
+            point,
+            description
           }
       }[0]`;
 
   const data = await client.fetch(query);
   console.log('Fetched article data:', JSON.stringify(data, null, 2));
+  console.log('Key points data:', data?.keyPoints);
   return data;
 }
 
@@ -122,6 +129,16 @@ export default async function Page({
           <div className="sm:mt-16 mt-8 prose text-lg px-6 sm:px-20 prose-blue prose-lg dark:prose-invert prose-li:marker:text-primary prose-a:text-primary">
             <PortableText value={data.content} />
           </div>
+
+          {data.keyPoints && data.keyPoints.length > 0 && (
+            <div className="px-6 sm:px-20 mt-12">
+              <KeyPoints 
+                points={data.keyPoints} 
+                title="Key Takeaways"
+                className="max-w-4xl mx-auto"
+              />
+            </div>
+          )}
 
           <div className="justify-center sm:px-0 px-4 items-center flex">
             <Image

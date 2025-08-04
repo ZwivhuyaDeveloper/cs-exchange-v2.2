@@ -60,7 +60,6 @@ export default async function Research() {
           <div className="space-y-6">
             <div className="bg-white dark:bg-gray-900 rounded-lg p-4">
               <h2 className="text-xl font-semibold mb-4">Related Research</h2>
-              <RelatedResearch/>
             </div>
           </div>
 

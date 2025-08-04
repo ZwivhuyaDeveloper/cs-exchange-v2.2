@@ -65,7 +65,7 @@ export default async function News() {
         </div>
 
         {/*middle-Section*/}
-        <div className="w-full px-1 lg:w-full">
+        <div className="w-full px-1 overflow-hidden sm:w-full">
           <div>
             <NewsSection data={data} />
           </div>

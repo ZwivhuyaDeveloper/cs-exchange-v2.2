@@ -45,6 +45,11 @@ export interface simpleNewsCard {
   impacts: Impact[];
   tags: Tag[];
   author: Author | null;
+  keyPoints?: Array<{
+    _key: string;
+    point: string;
+    description?: string;
+  }>;
 }
 
 export interface fullNews {
@@ -61,6 +66,11 @@ export interface fullNews {
   impacts: Impact[];
   tags: Tag[];
   author: Author | null;
+  keyPoints?: Array<{
+    _key: string;
+    point: string;
+    description?: string;
+  }>;
 }
 
 export interface simpleResearchCard {
