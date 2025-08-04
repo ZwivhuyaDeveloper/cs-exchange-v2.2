@@ -273,15 +273,13 @@ export function TradingChart({
                 </div>
               </Button>
             )}
-            <DrawerTrigger>
-              <Button 
-                variant="ghost" 
-                size="sm" 
-                className=" sm:hidden z-50 w-20 h-10 rounded-full bg-[#0E76FD] dark:bg-zinc-800 text-white shadow-lg"
+            <DrawerTrigger asChild>
+              <div 
+                className="sm:hidden w-fit px-3 z-50 h-10 rounded-full bg-[#0E76FD] dark:bg-zinc-800 text-white shadow-lg flex items-center justify-center gap-1 cursor-pointer hover:opacity-90 transition-opacity"
               >
                 <p className="text-xs dark:text-zinc-100 text-white">Chart</p>
-                <CandlestickChart  className="dark:text-[#00FFC2] text-white bg-clip-text"/>
-              </Button>
+                <CandlestickChart className="dark:text-[#00FFC2] text-white h-4 w-4" />
+              </div>
             </DrawerTrigger>
           </DrawerHeader>
           <DrawerContent className="h-[900px] flex">

@@ -77,6 +77,15 @@ export const TokenEquivalentValue = ({
 
     if (!sellTokenInfo || !buyTokenInfo) {
       console.warn('Token info not found', { sellToken, buyToken });
+      setError('Token information not available');
+      setLoading(false);
+      return;
+    }
+
+    // Skip if tokens are the same
+    if (sellToken.toLowerCase() === buyToken.toLowerCase()) {
+      setRate('1.0'); // 1:1 rate for same tokens
+      setLoading(false);
       return;
     }
 
@@ -105,7 +114,13 @@ export const TokenEquivalentValue = ({
       const data: PriceResponse = await response.json();
 
       if (data?.validationErrors?.length) {
-        throw new Error(data.validationErrors[0]?.description || 'Invalid price response');
+        console.warn('Price API validation error:', data.validationErrors);
+        // Don't throw here, try CoinGecko as fallback
+        if (sellTokenInfo.coingeckoId && buyTokenInfo.coingeckoId) {
+          await fetchCoingeckoRate(sellTokenInfo, buyTokenInfo);
+          return;
+        }
+        throw new Error('No valid price data available');
       }
 
       if (data?.buyAmount) {
@@ -186,8 +201,8 @@ export const TokenEquivalentValue = ({
     return () => clearTimeout(debounceTimer);
   }, [fetchTokenPrice]);
 
-  // Skip if tokens are the same or not selected
-  if (!sellToken || !buyToken || sellToken.toLowerCase() === buyToken.toLowerCase()) {
+  // Skip if tokens are not selected
+  if (!sellToken || !buyToken) {
     return null;
   }
 
@@ -201,10 +216,18 @@ export const TokenEquivalentValue = ({
     }
 
     if (error) {
+      const sellSymbol = getTokenInfo(sellToken)?.symbol?.toUpperCase() || sellToken.toUpperCase();
+      const buySymbol = getTokenInfo(buyToken)?.symbol?.toUpperCase() || buyToken.toUpperCase();
+      
       return (
-        <span className="text-xs text-muted-foreground">
-          Rate unavailable
-        </span>
+        <div className="flex flex-col items-end">
+          <span className="text-xs text-muted-foreground">
+            Rate unavailable
+          </span>
+          <span className="text-[10px] text-muted-foreground/50">
+            {sellSymbol}/{buySymbol}
+          </span>
+        </div>
       );
     }
 

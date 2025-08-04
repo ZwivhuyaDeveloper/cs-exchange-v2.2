@@ -189,11 +189,11 @@ export default function NewsSection({ data }: NewsSectionProps) {
                             key={impactIdx}
                             className={cn(
                               "text-xs",
-                              impact.color === 'blue' && "bg-blue-100 text-blue-800 border-blue-200",
-                              impact.color === 'green' && "bg-green-100 text-green-800 border-green-200",
-                              impact.color === 'red' && "bg-red-100 text-red-800 border-red-200",
-                              impact.color === 'yellow' && "bg-yellow-100 text-yellow-800 border-yellow-200",
-                              impact.color === 'purple' && "bg-purple-100 text-purple-800 border-purple-200",
+                              impact.color === 'blue' && "bg-blue-300 text-blue-950 border-blue-200",
+                              impact.color === 'green' && "bg-green-300 text-green-950 border-green-200",
+                              impact.color === 'red' && "bg-red-300 text-red-950 border-red-200",
+                              impact.color === 'yellow' && "bg-yellow-300 text-yellow-950 border-yellow-200",
+                              impact.color === 'purple' && "bg-purple-300 text-purple-950 border-purple-200",
                             )}
                           >
                             <Globe width={8} height={8} strokeWidth={3} className="w-8 h-8"/>
@@ -214,11 +214,11 @@ export default function NewsSection({ data }: NewsSectionProps) {
                         key={tagIdx}
                         className={cn(
                           "text-xs",
-                          tag.color === 'blue' && "bg-blue-100 text-blue-800 border-blue-200",
-                          tag.color === 'green' && "bg-green-100 text-green-800 border-green-200",
-                          tag.color === 'red' && "bg-red-100 text-red-800 border-red-200",
-                          tag.color === 'yellow' && "bg-yellow-100 text-yellow-800 border-yellow-200",
-                          tag.color === 'purple' && "bg-purple-100 text-purple-800 border-purple-200",
+                          tag.color === 'blue' && "bg-blue-300 text-blue-950 border-blue-200",
+                          tag.color === 'green' && "bg-green-300 text-green-950 border-green-200",
+                          tag.color === 'red' && "bg-red-300 text-red-950 border-red-200",
+                          tag.color === 'yellow' && "bg-yellow-300 text-yellow-950 border-yellow-200",
+                          tag.color === 'purple' && "bg-purple-300 text-purple-950 border-purple-200",
                         )}
                       >
                         <Tag width={10} height={10} strokeWidth={3} className="w-10 h-10"/>
