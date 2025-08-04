@@ -11,6 +11,8 @@ import { ChevronDownIcon, CopyIcon, List } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
 import Image from 'next/image';
+import { InfoCard } from './InfoCard';
+import { getTechnicalSpecsInfo } from './componentData';
 
 interface TechnicalSpecsProps {
   tokenSymbol: string;
@@ -211,24 +213,24 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
 
   return (
     <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">
-          <div className='w-full flex flex-row gap-3'>
-            <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-              <Image 
-                src={tokenInfo.logoURL || ""}
-                alt={tokenInfo.name}
-                className="h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
-                width={40}
-                height={40}
-              />
-            </div>
-            <h1 className="dark:text-white text-back font-semibold text-md sm:text-md"> Technical Specifications </h1>
+      <CardHeader className="flex flex-row items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+            <Image 
+              src={tokenInfo.logoURL || ""}
+              alt={tokenInfo.name}
+              className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
+              width={40}
+              height={40}
+            />
           </div>
-          <Badge variant="secondary" className='text-[#00FFC2] bg-[#00FFC2]/20 items-center justify-center'>
-            Rank #{specsData.marketCapRank}
-          </Badge>
-        </CardTitle>
+          <CardTitle className="text-lg font-semibold flex items-center gap-2">
+            Technical Specs <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
+          </CardTitle>
+        </div>
+        <div className="flex items-center gap-2">
+          <InfoCard {...getTechnicalSpecsInfo()} />
+        </div>
       </CardHeader>
       <CardContent className="grid gap-4">
         {/* Contract Address */}
@@ -254,7 +256,7 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
           <span className="text-sm text-muted-foreground">Categories</span>
           <div className="flex flex-wrap gap-2">
             {specsData.categories?.map((category) => (
-              <Badge key={category} variant="outline" className='font-semibold  text-black border-none border-[#0E76FD]/0 bg-[#00FFC2]/10 dark:bg-[#00FFC2]'>
+              <Badge key={category} variant="outline" className='font-semibold dark:text-[#00FFC2] text-[#0E76FD] border-none border-[#0E76FD]/0 bg-[#0E76FD]/10 dark:bg-[#00FFC2]/20'>
                 {category}
               </Badge>
             ))}

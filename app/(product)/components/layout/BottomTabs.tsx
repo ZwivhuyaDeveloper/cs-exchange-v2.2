@@ -2,8 +2,8 @@
 
 import Link from "next/link"
 import { usePathname } from 'next/navigation'
-import { Compass, Newspaper, PaperclipIcon, Settings2 } from "lucide-react"
-import { IconNews, IconNewSection, IconSmartHome } from "@tabler/icons-react"
+import { Compass, Newspaper, Settings2 } from "lucide-react"
+import { IconNews, IconSmartHome } from "@tabler/icons-react"
 import { Newsreader } from "next/font/google"
 import { FaHackerNewsSquare, FaRegNewspaper } from "react-icons/fa"
 
@@ -12,8 +12,8 @@ const BottomTabs = () => {
 
   const navItems = [
     { name: 'Sentiment', href: '/News', icon: <Newspaper className="h-6 w-6" /> },
-    { name: 'Analysis', href: '/Research', icon: <IconNews className="h-7 w-7" /> },
-    { name: 'Trade', href: '/Dashboard', icon: <div className="bg-black dark:bg-zinc-900 rounded-full p-2 fixed bottom-5"><IconSmartHome className="h-10 w-10" /></div> },
+    { name: 'Analysis', href: '/Research', icon: <IconNews className="h-6 w-6" /> },
+    { name: 'Trade', href: '/Dashboard', icon: <IconSmartHome className="h-6 w-6" /> },
     { name: 'Signals', href: '/signals', icon: <Compass className="h-6 w-6" /> },
     { name: 'Explore', href: '/vault', icon: <Settings2 className="h-6 w-6" /> },
   ]
@@ -29,14 +29,17 @@ const BottomTabs = () => {
             <Link 
               key={item.href} 
               href={item.href}
-              className={`flex flex-col items-center justify-center flex-1 h-full ${
+              className={`flex flex-col items-center justify-between flex-1  h-12 ${
                 isActive 
-                  ? 'text-[#00ffc2] ' 
+                  ? 'dark:text-[#00ffc2] text-[#0E76FD] ' 
                   : 'text-muted-foreground hover:text-foreground'
               }`}
             >
               <div className="flex flex-col items-center">
                 {item.icon}
+              </div>
+              <div className="flex flex-col items-center text-xs">
+                {item.name}
               </div>
             </Link>
           )

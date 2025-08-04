@@ -31,7 +31,7 @@ export default function SearchBar({
       <Input
         type="search"
         placeholder={placeholder}
-        className="pl-10 rounded-4xl shadow-none border-none bg-blue-100/70"
+        className="pl-10 rounded-4xl shadow-none border-none dark:bg-zinc-800 bg-blue-100/70"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
       />

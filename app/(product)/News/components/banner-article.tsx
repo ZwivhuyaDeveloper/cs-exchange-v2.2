@@ -11,7 +11,7 @@ import { formatDate, isRecent } from "@/app/lib/dateUtils";
 
 export default function BannerArticle({ post }: { post: simpleNewsCard }) {
   return (
-    <div className="w-full p-4 bg-blue-50 border-none dark:bg-blue-200/20 shadow-xs shadow-zinc-200 dark:shadow-zinc-900 rounded-lg mb-4">
+    <div className="w-full p-4 bg-blue-50 border-none dark:bg-[#00FFC2]/10 shadow-xs shadow-zinc-200 dark:shadow-zinc-900 rounded-lg mb-4">
       <div className="flex flex-col md:flex-row gap-6">
         <div className="md:w-1/2">
           <div className='absolute p-3'>
@@ -28,7 +28,7 @@ export default function BannerArticle({ post }: { post: simpleNewsCard }) {
           />
         </div>
         <div className="md:w-1/2 flex flex-col justify-center">
-          <Badge className="w-fit mb-2 bg-blue-500 text-white hover:bg-blue-600">
+          <Badge className="w-fit mb-2 bg-[#0E76FD] dark:bg-[#00FFC2] text-white dark:text-black ">
             Featured Story
           </Badge>
           <Link href={`/article/${post.currentSlug}`} className="hover:text-blue-600 transition-colors">

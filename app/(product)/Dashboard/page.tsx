@@ -16,6 +16,8 @@ import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/
 import "@rainbow-me/rainbowkit/styles.css";
 import NewsCards from "./components/news-cards"
 import NewsCardsWrapper from "./components/news-cards-wrapper"
+import VolumeChart from "./components/ui/VolumeChart"
+import Networks from "./components/ui/Networks"
 
 export default function Page() {
   const [fromToken, setFromToken] = useState("link");

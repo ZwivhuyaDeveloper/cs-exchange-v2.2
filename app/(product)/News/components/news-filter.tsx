@@ -44,12 +44,12 @@ export default function NewsFilter({
 
   if (isMobile) {
     return (
-      <div className="w-full px-4 py-2">
+      <div className="w-full pb-4">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button 
               variant="outline" 
-              className="w-full justify-between"
+              className="w-full text-[#0E76FD] dark:text-[#00FFC2] justify-between border-none dark:bg-zinc-800 "
             >
               {selectedCategory || "All Categories"}
               <ChevronDown className="ml-2 h-4 w-4" />
@@ -58,7 +58,7 @@ export default function NewsFilter({
           <DropdownMenuContent className="w-[calc(100vw-2rem)] lg:w-[200px] space-y-2 z-50  rounded-2xl bg-accent p-3 gap-2 max-h-60 overflow-y-auto">
             <DropdownMenuItem 
               onClick={() => onFilterChange(null)}
-              className={!selectedCategory ? "bg-background rounded-2xl px-2" : ""}
+              className={!selectedCategory ? "bg-background text-[#0E76FD] rounded-2xl px-2" : ""}
             >
               All Categories
             </DropdownMenuItem>
@@ -66,7 +66,7 @@ export default function NewsFilter({
               <DropdownMenuItem
                 key={category}
                 onClick={() => onFilterChange(category)}
-                className={selectedCategory === category ? "bg-zinc-600 rounded-2xl px-2" : ""}
+                className={selectedCategory === category ? "bg-zinc-600 text-[#0E76FD] rounded-2xl px-2" : ""}
               >
                 {category}
               </DropdownMenuItem>
@@ -88,7 +88,7 @@ export default function NewsFilter({
             variant="ghost"
             size="icon"
             onClick={() => scroll('left')}
-            className="p-1 text-gray-500 hover:text-gray-700 "
+            className="p-1 hover:text-gray-700 "
             aria-label="Scroll left"
           >
             <ChevronLeft size={20} />

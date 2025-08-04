@@ -42,12 +42,14 @@ export default async function News() {
 
   return (
     <div className="bg-zinc-100 dark:bg-black w-full h-full">
-      {/* <Ticker/> */}
-      <div className="h-fit w-full  justify-center dark:bg-[#0F0F0F] bg-zinc-100 items-center flex mt-1 ">
-        <TickerTape/>
-      </div> 
+      {/* Ticker */}
+      <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
+        <div className="border border-px dark:border-zinc-700 border-zinc-200 w-full">
+          <TickerTape />
+        </div>
+      </div>
 
-      <div className="flex-col-reverse flex md:flex-row lg:flex-row justify-center mt-1 gap-2 w-full">
+      <div className="flex-col-reverse flex md:flex-row lg:flex-row justify-center  sm:mt-1 gap-2 w-full">
 
         {/*Left-Section*/}
         <div className="lg:w-[460px] w-full gap-2  flex-col h-full">
@@ -57,7 +59,7 @@ export default async function News() {
         </div>
 
         {/*middle-Section*/}
-        <div className="bg-white w-full lg:w-full">
+        <div className="w-full px-1 lg:w-full">
           <div>
             <NewsSection data={data} />
           </div>
