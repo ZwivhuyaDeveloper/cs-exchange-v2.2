@@ -22,6 +22,7 @@ import {
   PaginationPrevious,
   PaginationNext,
 } from "@/components/ui/pagination"; 
+import author from "@/sanity/schemaTypes/author";
 
 
 interface NewsSectionProps {
@@ -62,7 +63,8 @@ export default function NewsSection({ data }: NewsSectionProps) {
         (post.title && post.title.toLowerCase().includes(query)) || 
         (post.categoryName && post.categoryName.toLowerCase().includes(query)) ||
         (post.tags && post.tags.some(tag => tag.name && tag.name.toLowerCase().includes(query))) ||
-        (post.impacts && post.impacts.some(impact => impact.name && impact.name.toLowerCase().includes(query)))
+        (post.impacts && post.impacts.some(impact => impact.name && impact.name.toLowerCase().includes(query))) ||
+        (post.author && post.impacts.some(author => author.name && author.name.toLowerCase().includes(query)))
       );
     }
 
@@ -169,15 +171,31 @@ export default function NewsSection({ data }: NewsSectionProps) {
                 {isRecent(post.publishedAt) && (
                   <span className="ml-1 animate-pulse">🆕</span>
                 )}
-                <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    {post.author?.avatar && (
+                      <div className="w-6 h-6 rounded-full overflow-hidden">
+                        <Image
+                          src={urlFor(post.author.avatar).url()}
+                          width={24}
+                          height={24}
+                          alt={post.author.name || 'Author'}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <p className="text-xs font-medium text-zinc-900 dark:text-zinc-100">
+                      {post.author?.name || 'Anonymous'}
+                    </p>
+                  </div>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     {formatDate(post.publishedAt, {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
+                      year: 'numeric',
+                      month: 'short',
+                      day: 'numeric',
                     })}
-                </span>
+                  </p>
+                </div>
               </div>
                   {/* impact display */}
                   <div className="flex flex-row items-center gap-1">

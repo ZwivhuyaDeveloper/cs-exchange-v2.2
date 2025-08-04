@@ -37,7 +37,23 @@ export default function BannerArticle({ post }: { post: simpleNewsCard }) {
           <p className="text-gray-600 dark:text-zinc-300 mb-4">{post.smallDescription}</p>
           <div className='gap-2 flex flex-col'>
 
-            <div className='flex flex-row justify-between w-full h-fit'>
+            <div className='flex flex-row justify-between w-full h-fit items-center'>
+              <div className="flex items-center gap-2">
+                {post.author?.avatar && (
+                  <div className="w-6 h-6 rounded-full overflow-hidden">
+                    <Image
+                      src={urlFor(post.author.avatar).url()}
+                      width={24}
+                      height={24}
+                      alt={post.author.name || 'Author'}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  {post.author?.name || 'Anonymous'}
+                </span>
+              </div>
 
               <div className="flex items-center justify-between gap-4">
                 {isRecent(post.publishedAt) && (

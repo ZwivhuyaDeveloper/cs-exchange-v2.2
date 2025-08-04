@@ -13,7 +13,7 @@ export const revalidate = 30; // revalidate at most 30 seconds
 
 async function getData() {
   const query = `
-  *[_type == 'news'] | order(_createdAt desc) {
+  *[_type == 'news'] | order(publishedAt desc) {
     title,
       smallDescription,
       "currentSlug": slug.current,
@@ -28,7 +28,13 @@ async function getData() {
       "impacts": impacts[]->{
         name,
         color
-      }
+      },
+      "author": author->{
+        name,
+        avatar,
+        role
+      },
+      
   }`;
 
   const data = await client.fetch(query);

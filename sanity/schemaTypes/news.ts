@@ -1,3 +1,5 @@
+import { Rule } from 'sanity';
+
 export default {
   name: 'news',
   type: 'document',
@@ -90,6 +92,14 @@ export default {
       options: {
         layout: 'tags'
       }
+    },
+    {
+      name: 'author',
+      title: 'Author',
+      type: 'reference',
+      to: [{ type: 'author' }],
+      description: 'The author who wrote this news article',
+      validation: (rule: Rule) => rule.required().error('Please select an author for this article')
     },
         {
       name: 'impacts',

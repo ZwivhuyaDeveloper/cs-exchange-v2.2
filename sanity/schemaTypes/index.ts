@@ -9,7 +9,7 @@ import signal from './signal'
 import signalCategory from './signalCategory'
 import tag from './tag'
 import token from './token'
-
+import author from './author'
 
 export const schemaTypes = [
   analystProfile, 
@@ -22,4 +22,5 @@ export const schemaTypes = [
   signalCategory, 
   tag, 
   token, 
+  author,
 ]

@@ -1,3 +1,29 @@
+export interface Author {
+  _id: string;
+  _type: 'author';
+  name: string;
+  slug: {
+    _type: 'slug';
+    current: string;
+  };
+  role?: string;
+  bio?: string;
+  avatar?: {
+    _type: 'image';
+    asset: {
+      _ref: string;
+      _type: 'reference';
+    };
+    alt?: string;
+  };
+  socialLinks?: Array<{
+    platform: string;
+    url: string;
+  }>;
+  isStaff?: boolean;
+  email?: string;
+}
+
 export interface Tag {
   name: string;
   color: string;
@@ -18,7 +44,7 @@ export interface simpleNewsCard {
   category: any;
   impacts: Impact[];
   tags: Tag[];
-
+  author: Author | null;
 }
 
 export interface fullNews {
@@ -34,6 +60,7 @@ export interface fullNews {
   category: any;
   impacts: Impact[];
   tags: Tag[];
+  author: Author | null;
 }
 
 export interface simpleResearchCard {
