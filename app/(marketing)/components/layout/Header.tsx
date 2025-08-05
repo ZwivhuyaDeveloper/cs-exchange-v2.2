@@ -16,6 +16,7 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs'
+import PermissionsForm from '@/app/components/access-control/PermissionsForm'
 
 const tourney = Tourney({
   subsets: ['latin'],
@@ -170,8 +171,11 @@ export default function Header() {
               </SignUpButton>
             </SignedOut>
             <SignedIn>
-              <UserButton />
-            </SignedIn>
+          <UserButton />
+          </SignedIn>
+          <SignedIn>
+            <PermissionsForm />
+          </SignedIn>
           </div>
 
           {/* Mobile menu button */}

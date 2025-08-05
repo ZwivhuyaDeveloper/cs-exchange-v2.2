@@ -21,7 +21,6 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="antialiased">
-      <ClerkProvider>
       <ThemeProvider>
         <Providers>
           {/* Header */}
@@ -33,7 +32,7 @@ export default function DashboardLayout({
           <BottomTabs/>
         </Providers>
       </ThemeProvider>
-      </ClerkProvider>
+
     </div>
   )
 }

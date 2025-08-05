@@ -8,6 +8,7 @@ import SignalsFilters from './components/SignalsFilters';
 import { SignalsPagination } from './components/SignalPagination';
 import { LoadingCards } from './components/LoadingCard';
 import { Suspense } from 'react';
+import { currentUser } from '@clerk/nextjs/server';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -27,6 +28,21 @@ export default async function SignalsPage({
     pageSize,
   });
 
+  const user = await currentUser();
+  const metadata = user?.publicMetadata || {};
+  
+  if (!metadata.canAccessSignals) {
+    return (
+      <div className="p-6 bg-white rounded-lg shadow text-center">
+        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+        <p>You don't have permission to view the Signals page</p>
+        <p className="mt-2">
+          Contact support to request access to this feature
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
 
@@ -38,7 +54,6 @@ export default async function SignalsPage({
       </div>
 
       <div className='w-full flex flex-row gap-1'>
-
         <div className='w-[520px] hidden sm:flex bg-white'>
           <TrendingNews />
         </div>

@@ -10,6 +10,7 @@ import RelatedResearch from "./components/related-research";
 import ResearchSection from "./components/research-section";
 import ResearchDisplay from "../News/components/research-display";
 import { auth } from '@clerk/nextjs/server';
+import { UserButton } from "@clerk/nextjs";
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
@@ -62,7 +63,7 @@ export default async function Research() {
               <h2 className="text-xl font-semibold mb-4">Related Research</h2>
             </div>
           </div>
-
+          <UserButton afterSignOutUrl="/Dashboard" />
           {/* Middle Section - Main Content */}
           <div className="md:col-span-2 bg-white dark:bg-gray-900 rounded-lg p-4">
             <h1 className="text-2xl font-bold mb-6">Latest Research</h1>

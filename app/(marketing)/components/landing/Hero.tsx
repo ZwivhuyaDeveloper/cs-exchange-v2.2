@@ -5,9 +5,17 @@ import Link from 'next/link'
 import { Play, TrendingUp, Shield, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { AuroraBackground } from '../../../../components/ui/aurora-background'
-import { Tourney } from 'next/font/google'
+import { Tourney } from 'next/font/google';
 import { FlipWords } from "../ui/flip-words";
 import Image from 'next/image'
+
+const tourney = Tourney({
+  subsets: ['latin'],
+  weight: ['400', '700'],
+  display: 'swap',
+  variable: '--font-tourney',
+  preload: true,
+});
 import Bitcoin from '@/public/Token-Logos/BTC.png'
 import Ethereum from '@/public/Token-Logos/ethereum-eth-logo.png'
 import {
@@ -20,10 +28,6 @@ import {
 } from '@clerk/nextjs'
 
 
-const tourney = Tourney({
-  subsets: ['latin'],
-  weight: ['400', '700'],
-})
 
 export default function Hero() {
   const [cryptoPrice, setCryptoPrice] = useState({ btc: 45234, eth: 2876 })
@@ -85,18 +89,20 @@ export default function Hero() {
           </motion.div>
 
           {/* Main Headline */}
-          <motion.h1
+          <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
             className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6"
           >
-            <span className={`${tourney.className} antialiased bg-gradient-to-r from-white via-[#00FFC2] to-[#3A86FF] bg-clip-text text-transparent`}>
-              Decode <FlipWords className='bg-gradient-to-r from-white via-[#00FFC2] to-[#3A86FF] bg-clip-text text-transparent -z-10' words={words} /> 
-            </span>
-            <br />
-            <span className={`${tourney.className} text-white`}>in Real-Time</span>
-          </motion.h1>
+            <h1 className={`${tourney.className} antialiased`}>
+              <span className="bg-gradient-to-r from-white via-[#00FFC2] to-[#3A86FF] bg-clip-text text-transparent">
+                Decode <FlipWords className='bg-gradient-to-r from-white via-[#00FFC2] to-[#3A86FF] bg-clip-text text-transparent -z-10' words={words} /> 
+              </span>
+              <br />
+              <span className="text-white">in Real-Time</span>
+            </h1>
+          </motion.div>
 
           {/* Sub-headline */}
           <motion.p
