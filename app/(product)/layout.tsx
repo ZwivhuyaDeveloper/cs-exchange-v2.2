@@ -5,6 +5,7 @@ import "@rainbow-me/rainbowkit/styles.css";
 import { Providers } from '../providers';
 import { NavMenu } from './components/layout/NavMenu';
 import BottomTabs from './components/layout/BottomTabs';
+import { ClerkProvider } from '@clerk/nextjs';
 ;
 
 export const metadata: Metadata = {
@@ -20,6 +21,7 @@ export default function DashboardLayout({
 }) {
   return (
     <div className="antialiased">
+      <ClerkProvider>
       <ThemeProvider>
         <Providers>
           {/* Header */}
@@ -31,6 +33,7 @@ export default function DashboardLayout({
           <BottomTabs/>
         </Providers>
       </ThemeProvider>
+      </ClerkProvider>
     </div>
   )
 }
