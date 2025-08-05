@@ -16,7 +16,6 @@ import {
   SignedOut,
   UserButton,
 } from '@clerk/nextjs'
-import PermissionsForm from '@/app/components/access-control/PermissionsForm'
 
 const tourney = Tourney({
   subsets: ['latin'],
@@ -29,7 +28,7 @@ export default function Header() {
   const [resourcesOpen, setResourcesOpen] = useState(false)
 
   return (
-    <header className="sticky top-0 z-50 bg-[#00FFC2]/5 backdrop-blur-lg border-b border-gray-100">
+    <header className="sticky top-0 z-50 bg-[#00FFC2]/5 backdrop-blur-lg border-b border-gray-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -171,11 +170,8 @@ export default function Header() {
               </SignUpButton>
             </SignedOut>
             <SignedIn>
-          <UserButton />
-          </SignedIn>
-          <SignedIn>
-            <PermissionsForm />
-          </SignedIn>
+              <UserButton />
+            </SignedIn>
           </div>
 
           {/* Mobile menu button */}
@@ -228,18 +224,18 @@ export default function Header() {
                   Pricing
                 </Link>
                 <div className="pt-4 border-t border-gray-700">
-                  <Link
-                    href="/login"
-                    className="block text-gray-300 hover:text-white transition-colors mb-3"
-                  >
-                    Login
-                  </Link>
-                  <Link
-                    href="/trial"
-                    className="block bg-[#00FFC2] hover:bg-[#00E6B0] text-[#0A0E17] px-4 py-2 rounded-lg font-semibold text-center transition-colors"
-                  >
-                    Start Free Trial
-                  </Link>
+                  <div className="flex flex-col space-y-3 mt-4">
+                    <SignInButton mode="modal">
+                      <button className="w-full text-left px-4 py-2 text-sm text-gray-300 hover:text-white transition-colors">
+                        Sign In
+                      </button>
+                    </SignInButton>
+                    <SignUpButton mode="modal">
+                      <button className="w-full bg-[#00FFC2] hover:bg-[#00E6B0] text-[#0A0E17] px-4 py-2 rounded-lg font-semibold text-center transition-colors">
+                        Create Account
+                      </button>
+                    </SignUpButton>
+                  </div>
                 </div>
               </div>
             </motion.div>

@@ -217,7 +217,7 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
         <div className="flex items-center gap-2">
           <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
             <Image 
-              src={tokenInfo.logoURL || ""}
+              src={tokenInfo.logoURL || "/placeholder-token.png"}
               alt={tokenInfo.name}
               className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
               width={40}

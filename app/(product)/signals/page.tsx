@@ -1,7 +1,6 @@
 import { SignalCard } from './components/SignalsCard';
 import { fetchSignals } from '@/app/actions/signals';
 import { Signal } from '@/app/lib/types/signal';
-import { NavMenu } from '../components/layout/NavMenu';
 import TickerTape from '../Dashboard/components/ui/TickerTape';
 import TrendingNews from '../News/components/related-news';
 import SignalsFilters from './components/SignalsFilters';

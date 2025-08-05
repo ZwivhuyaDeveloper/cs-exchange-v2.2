@@ -141,11 +141,16 @@ export function TradingChart({
       <CardHeader className="flex-row hidden sm:flex items-center justify-between h-22 py-4 dark:bg-[#0F0F0F] bg-white rounded-none border border-px dark:border-zinc-700 border-zinc-200">
         <div className="flex items-center gap-2 flex-row justify-start">
           <Image 
-            src={tokenInfo.logoURL || ""}
+            src={tokenInfo.logoURL || "/placeholder-token.png"}
             alt={tokenInfo.name}
-            className="h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
+            className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
             width={40}
             height={40}
+            onError={(e) => {
+              // Fallback to a placeholder if the image fails to load
+              const target = e.target as HTMLImageElement;
+              target.src = '/placeholder-token.png';
+            }}
           />
           <div className="flex flex-col justify-between h-full gap-1">
             <div className="flex flex-row items-center gap-3 w-full justify-between">
@@ -193,7 +198,7 @@ export function TradingChart({
               </span>
               {otherTokenInfo && (
                 <Image 
-                  src={otherTokenInfo.logoURL || ""}
+                  src={otherTokenInfo.logoURL || "/placeholder-token.png"}
                   alt={otherTokenInfo.name}
                   className="h-5 w-5 rounded-full"
                   width={20}
@@ -263,7 +268,7 @@ export function TradingChart({
                   </span>
                   {otherTokenInfo && (
                     <Image 
-                      src={otherTokenInfo.logoURL || ""}
+                      src={otherTokenInfo.logoURL || "/placeholder-token.png"}
                       alt={otherTokenInfo.name}
                       className="h-5 w-5 rounded-full"
                       width={20}
@@ -297,7 +302,7 @@ export function TradingChart({
                   </span>
                   {otherTokenInfo && (
                     <Image 
-                      src={otherTokenInfo.logoURL || ""}
+                      src={otherTokenInfo.logoURL || "/placeholder-token.png"}
                       alt={otherTokenInfo.name}
                       className="h-5 w-5 rounded-full"
                       width={20}

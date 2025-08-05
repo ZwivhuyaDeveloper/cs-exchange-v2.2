@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Inter, Manrope, Space_Mono } from 'next/font/google'
-import '@/app/colors.css';
+import '@/app/globals.css';
 import {
   ClerkProvider
 } from '@clerk/nextjs'

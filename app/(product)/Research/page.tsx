@@ -1,16 +1,10 @@
-import { Card, CardContent } from "@/components/ui/card";
 import { simpleResearchCard } from "@/app/lib/interface";
-import { client, urlFor } from "@/app/lib/sanity";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { client } from "@/app/lib/sanity";
 import { NavMenu } from "../components/layout/NavMenu";
 import TickerTape from "../Dashboard/components/ui/TickerTape";
-import RelatedResearch from "./components/related-research";
 import ResearchSection from "./components/research-section";
 import ResearchDisplay from "../News/components/research-display";
-import { auth } from '@clerk/nextjs/server';
-import { UserButton } from "@clerk/nextjs";
+import { currentUser } from '@clerk/nextjs/server';
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
@@ -40,9 +34,22 @@ async function getData() {
 
 export default async function Research() {
   const data: simpleResearchCard[] = await getData();
-  const { userId } = await auth();
-
   console.log('Research data loaded:', data.length, 'items');
+
+  const user = await currentUser();
+  const metadata = user?.publicMetadata || {};
+  
+  if (!metadata.canAccessResearch) {
+    return (
+      <div className="p-6 bg-white rounded-lg shadow text-center">
+        <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+        <p>You don't have permission to view the Research page</p>
+        <p className="mt-2">
+          Contact support to request access to this feature
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="bg-zinc-100 dark:bg-black">
@@ -63,7 +70,6 @@ export default async function Research() {
               <h2 className="text-xl font-semibold mb-4">Related Research</h2>
             </div>
           </div>
-          <UserButton afterSignOutUrl="/Dashboard" />
           {/* Middle Section - Main Content */}
           <div className="md:col-span-2 bg-white dark:bg-gray-900 rounded-lg p-4">
             <h1 className="text-2xl font-bold mb-6">Latest Research</h1>
