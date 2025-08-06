@@ -1,3 +1,6 @@
+@import 'tailwindcss';
+@import '@clerk/themes/shadcn.css';
+
 /* Custom Colors for Header and Landing Page Components */
 
 /* Color Variables */

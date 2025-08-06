@@ -15,7 +15,7 @@ const BottomTabs = () => {
     { name: 'Analysis', href: '/Research', icon: <IconNews className="h-6 w-6" /> },
     { name: 'Trade', href: '/Dashboard', icon: <IconSmartHome className="h-6 w-6" /> },
     { name: 'Signals', href: '/signals', icon: <Compass className="h-6 w-6" /> },
-    { name: 'Explore', href: '/vault', icon: <Settings2 className="h-6 w-6" /> },
+    { name: 'Settings', href: '/settings', icon: <Settings2 className="h-6 w-6" /> },
   ]
 
   return (
