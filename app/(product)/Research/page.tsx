@@ -5,6 +5,7 @@ import TickerTape from "../Dashboard/components/ui/TickerTape";
 import ResearchSection from "./components/research-section";
 import ResearchDisplay from "../News/components/research-display";
 import { currentUser } from '@clerk/nextjs/server';
+import PaymentGuard from "@/app/components/PaymentGuard";
 
 export const revalidate = 30; // revalidate at most 30 seconds
 
@@ -52,6 +53,7 @@ export default async function Research() {
   }
 
   return (
+    <PaymentGuard>
     <div className="bg-zinc-100 dark:bg-black">
       {/* Navigation */}
       <div>
@@ -87,5 +89,6 @@ export default async function Research() {
         </div>
       </div>
     </div>
+    </PaymentGuard>
   );
 }

@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "apis": [
+    {
+      "identifier": "boomfi",
+      "source": "@boomfi/v2.0#c8b7g13mclzbj29",
+      "integrity": "sha512-egPjwDyF79SmGtI803eLA9cvvDk8b+G88fLmP9X8Dh4zCgdfd92LpJbRyehOCrastxf4KxLdjzWuVM6KU7QoGA==",
+      "installerVersion": "6.1.3"
+    }
+  ]
+}

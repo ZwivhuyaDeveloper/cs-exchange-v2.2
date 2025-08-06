@@ -8,6 +8,7 @@ import { SignalsPagination } from './components/SignalPagination';
 import { LoadingCards } from './components/LoadingCard';
 import { Suspense } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
+import PaymentGuard from '@/app/components/PaymentGuard';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -43,6 +44,7 @@ export default async function SignalsPage({
   }
 
   return (
+  <PaymentGuard>
     <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
 
       {/* Ticker */}
@@ -103,5 +105,6 @@ export default async function SignalsPage({
 
       </div>
     </div>
+    </PaymentGuard>
   );
 }

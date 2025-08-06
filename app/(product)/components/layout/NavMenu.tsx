@@ -19,7 +19,7 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Button } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
-import { Drawer, DrawerContent, DrawerTrigger, DrawerClose } from '@/components/ui/drawer';
+import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerTitle } from '@/components/ui/drawer';
 import "@rainbow-me/rainbowkit/styles.css";
 
 
