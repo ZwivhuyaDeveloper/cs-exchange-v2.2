@@ -13,12 +13,26 @@ export async function POST(req: NextRequest) {
 
   // Handle payment success
   if (event.type === 'payment.succeeded') {
-    const { customer, amount, currency, id: paymentId } = event.data
+    const { customer, amount, currency, id: paymentId, metadata } = event.data
+
+    // Extract clerkUserId from metadata
+    const clerkUserId = metadata?.clerkUserId
+
+    // Find user by clerkUserId if customer ID not available
+    let userProfile = null;
+
+    if (clerkUserId) {
+      userProfile = await prisma.userProfile.findUnique({
+        where: { clerkUserId }
+      })
+    }
     
-    // Find user by BoomFi customer ID
-    const userProfile = await prisma.userProfile.findUnique({
-      where: { boomFiCustomerId: customer }
-    })
+    // Fallback to customer ID if clerkUserId not found
+    if (!userProfile && customer) {
+      userProfile = await prisma.userProfile.findUnique({
+        where: { boomFiCustomerId: customer }
+      })
+    }
 
     if (userProfile) {
       // Update user status - fixed type safety
@@ -31,13 +45,18 @@ export async function POST(req: NextRequest) {
         }
       })
 
-      // Update Clerk metadata
-      await clerkClient.users.updateUserMetadata(userProfile.clerkUserId, {
-        publicMetadata: { 
-          ...userProfile.publicMetadata,
-          isPremium: true 
-        }
-      })
+      // Update Clerk metadata with proper typing
+      try {
+        await clerkClient.users.updateUserMetadata(userProfile.clerkUserId, {
+          publicMetadata: { 
+            isPremium: true,
+            lastUpdated: new Date().toISOString()
+          }
+        });
+      } catch (error) {
+        console.error('Failed to update Clerk metadata:', error);
+        // Continue even if Clerk update fails, as we've updated our database
+      }
     }
   }
 

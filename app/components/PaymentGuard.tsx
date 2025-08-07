@@ -12,37 +12,80 @@ export default function PaymentGuard({ children }: { children: React.ReactNode }
 
 
   useEffect(() => {
-    if (!isLoaded) return
+    if (!isLoaded) return;
 
     const verifyPayment = async () => {
-      if (user) {
-        // Check Clerk metadata first
-        const isPremium = user.publicMetadata.isPremium as boolean
-        
-        if (isPremium) {
-          setAccessGranted(true)
-        } else {
-          // Check server for payment status
-          try {
-            const res = await fetch('/api/payment/status')
-            if (res.ok) {
-              const data = await res.json()
-              setAccessGranted(data.isPremium)
-              if (data.isPremium) {
-                // Refresh to update Clerk metadata
-                router.refresh();
-              }
-            }
-          } catch (error) {
-            console.error('Payment status check failed:', error)
-          }
-        }
+      if (!user) {
+        setLoading(false);
+        return;
       }
-      setLoading(false)
-    }
 
-    verifyPayment()
-  }, [user, isLoaded, router])
+      try {
+        // Type-safe access to public metadata
+        const publicMetadata = user.publicMetadata as {
+          isPremium?: boolean;
+          boomFiCustomerId?: string;
+        };
+
+        // Check Clerk metadata first
+        if (publicMetadata.isPremium) {
+          setAccessGranted(true);
+          setLoading(false);
+          return;
+        }
+
+        // Check if user has a BoomFi customer ID
+        const customerId = publicMetadata.boomFiCustomerId;
+        if (!customerId) {
+          setLoading(false);
+          return;
+        }
+
+        // Check for recent payments (last 5 minutes)
+        const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+        
+        // Use absolute URL to ensure proper resolution
+        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 
+          (typeof window !== 'undefined' ? window.location.origin : '');
+        
+        if (!baseUrl) {
+          console.error('Failed to determine base URL');
+          setLoading(false);
+          return;
+        }
+
+        const url = new URL('/api/check-payments', baseUrl);
+        url.searchParams.append('customerId', customerId);
+        url.searchParams.append('since', fiveMinutesAgo);
+        
+        const res = await fetch(url.toString(), {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+        
+        if (!res.ok) {
+          throw new Error(`HTTP error! status: ${res.status}`);
+        }
+
+        const { hasRecentPayments } = await res.json();
+        setAccessGranted(hasRecentPayments);
+        
+        if (hasRecentPayments) {
+          // Refresh to update Clerk metadata
+          router.refresh();
+        }
+      } catch (error) {
+        console.error('Payment status check failed:', error);
+        // If there's an error, we'll deny access to be safe
+        setAccessGranted(false);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    verifyPayment();
+  }, [user, isLoaded, router]);
 
   if (loading) {
     return (

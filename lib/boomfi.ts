@@ -131,7 +131,7 @@ export async function getUserActiveSubscription(customerId: string) {
   return data?.length > 0 ? data[0] : null;
 }
 
-export async function getUserSuccessfulPayments(customerId: string) {
+export async function getUserSuccessfulPayments(customerId: string, since?: string) {
   const BOOMFI_API_KEY = process.env.BOOMFI_API_KEY;
   const BASE_URL = 'https://api.boomfi.xyz';
   
@@ -139,7 +139,40 @@ export async function getUserSuccessfulPayments(customerId: string) {
     throw new Error('BOOMFI_API_KEY not configured');
   }
 
-  const response = await fetch(`${BASE_URL}/payments?customer=${customerId}&status=success`, {
+  let url = `${BASE_URL}/payments?customer=${customerId}&status=success`;
+  if (since) {
+    url += `&createdAt[gt]=${since}`;
+  }
+
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${BOOMFI_API_KEY}`
+    }
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`Failed to fetch payments: ${error}`);
+  }
+
+  const { data } = await response.json();
+  return data || [];
+}
+
+export async function getUserSuccessfulPayment(customerId: string, since?: string) {
+  const BOOMFI_API_KEY = process.env.BOOMFI_API_KEY;
+  const BASE_URL = 'https://api.boomfi.xyz';
+  
+  if (!BOOMFI_API_KEY) {
+    throw new Error('BOOMFI_API_KEY not configured');
+  }
+
+  let url = `${BASE_URL}/payments?customer=${customerId}&status=success`;
+  if (since) {
+    url += `&createdAt[gt]=${since}`;
+  }
+
+  const response = await fetch(url, {
     headers: {
       'Authorization': `Bearer ${BOOMFI_API_KEY}`
     }

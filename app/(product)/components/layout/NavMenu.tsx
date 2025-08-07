@@ -155,6 +155,7 @@ export const NavMenu = React.memo(() => {
       <Drawer open={isOpen} onOpenChange={handleOpenChange}>
         <DrawerContent className="h-[100dvh] mt-0 rounded-t-2xl">
           <div className="p-4 flex flex-col h-full">
+            <DrawerTitle className="sr-only">Mobile Navigation Menu</DrawerTitle>
             {/* Header with close button */}
             <div className="flex justify-between items-center mb-6">
               <div className="flex items-center gap-2">

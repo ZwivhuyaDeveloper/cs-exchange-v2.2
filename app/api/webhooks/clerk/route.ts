@@ -46,19 +46,56 @@ export async function POST(req: Request) {
       const firstName = (evt.data as any).first_name || ''
       const lastName = (evt.data as any).last_name || ''
       
-      // Create user in Prisma and BoomFi
-      const userProfile = await (prisma.userProfile as any).createWithBoomFi({
-        clerkUserId: userId,
-        email,
-        firstName,
-        lastName
+      // Create user in Prisma
+      const userProfile = await prisma.userProfile.create({
+        data: {
+          clerkUserId: userId,
+          email: email,
+          role: 'user',
+          isPremium: false,
+          paymentStatus: 'inactive'
+        }
       });
+      
+      // Create customer in BoomFi
+      try {
+        const customer = await createBoomFiCustomer({
+          email: email,
+          name: `${firstName} ${lastName}`.trim(),
+          metadata: { clerkUserId: userId }
+        });
+        
+        // Update user with BoomFi customer ID
+        await prisma.userProfile.update({
+          where: { id: userProfile.id },
+          data: { boomFiCustomerId: customer.id }
+        });
+      } catch (error: any) {
+        console.error('Failed to create BoomFi customer:', error);
+        // Continue even if BoomFi customer creation fails
+      }
 
       console.log('User created with BoomFi ID:', userProfile.boomFiCustomerId);
       
+      // Update Clerk metadata with user's premium status
+      try {
+        const clerkClientInstance = await clerkClient();
+        await clerkClientInstance.users.updateUserMetadata(userId, {
+          publicMetadata: {
+            isPremium: true,
+            lastUpdated: new Date().toISOString()
+          }
+        });
+      } catch (error) {
+        console.error('Failed to update Clerk metadata:', error);
+        // Continue even if Clerk update fails
+      }
+
       // Update Clerk metadata with default values
       await clerkClient.users.updateUser(userId, {
         publicMetadata: {
+          ...(userProfile.publicMetadata || {}),
+          boomFiCustomerId: userProfile.boomFiCustomerId,
           canAccessProducts: false,
           canAccessResearch: false,
           isPremium: false
