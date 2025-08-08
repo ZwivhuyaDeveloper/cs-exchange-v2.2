@@ -219,7 +219,7 @@ function StatItem({ title, value, isCurrency }: { title: string; value: number |
   return (
     <div className="w-full h-12 rounded-2xl justify-between hidden md:flex lg:flex-col text-start items-center">
       <h1 className="text-xs md:text-sm lg:text-sm w-full font-medium text-zinc-400">{title}</h1>
-      <h2 className="text-xs  md:text-sm lg:text-md text-start font-semibold w-full">
+      <h2 className="text-xs  md:text-sm lg:text-[15px] text-start font-semibold w-full">
         {value !== undefined
           ? isCurrency
             ? `$${value.toLocaleString()}`

@@ -58,6 +58,8 @@ const navItems = [
   { name: 'Sentiment', href: '/News' },
   { name: 'Analysis', href: '/Research' },
   { name: 'Explore', href: '/vault' },
+  { name: 'Signals', href: '/signals'}
+
 ] as const;
 
 export const NavMenu = React.memo(() => {

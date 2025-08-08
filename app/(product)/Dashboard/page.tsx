@@ -18,6 +18,13 @@ import NewsCards from "./components/news-cards"
 import NewsCardsWrapper from "./components/news-cards-wrapper"
 import VolumeChart from "./components/ui/VolumeChart"
 import Networks from "./components/ui/Networks"
+import dynamic from 'next/dynamic';
+
+// Dynamically import the client component with SSR disabled
+const TrendingNewsClient = dynamic(
+  () => import('./components/TrendingNewsClient'),
+  { ssr: false }
+);
 
 export default function Page() {
   const [fromToken, setFromToken] = useState("link");
@@ -103,6 +110,9 @@ export default function Page() {
                       }}
                       chainId={chainId}
                     />
+                  </div>
+                  <div className="mt-1 w-[380px] dark:border-zinc-700 border-zinc-100 border-px border">
+                    <TrendingNewsClient />
                   </div>
                 </div>
               </div>

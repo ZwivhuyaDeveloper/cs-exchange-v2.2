@@ -166,7 +166,7 @@ export function TradingChart({
               </div>
             ) : marketData ? (
               <div className="flex flex-row items-center gap-2">
-                <p className="lg:text-md md:text-md text-xs font-semibold ">
+                <p className="sm:text-[16px] text-xs font-semibold ">
                   ${marketData.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
                 </p>
                 <p className={`text-xs font-medium w-fit rounded-2xl px-2 py-1 ${

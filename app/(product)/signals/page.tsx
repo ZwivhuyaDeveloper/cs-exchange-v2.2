@@ -13,18 +13,39 @@ import { UpgradeButton } from './components/UpgradeButton';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
+interface SearchParams {
+  status?: string;
+  category?: string;
+  direction?: string;
+  sort?: string;
+  page?: string;
+}
+
 export default async function SignalsPage({
   searchParams,
 }: {
-  searchParams: { status: string; category: string; direction: string; sort: string; page: string; };
+  searchParams: SearchParams;
 }) {
-  // Parse page number
-  const page = parseInt(searchParams.page) || 1;
+  // Ensure searchParams is properly awaited and provide defaults
+  const params = await searchParams;
+  
+  // Parse page number with proper type safety
+  const page = params.page ? parseInt(params.page) : 1;
   const pageSize = 12;
 
-  // Fetch signals with pagination
+  // Prepare filters object with only defined values
+  const filters = Object.fromEntries(
+    Object.entries({
+      status: params.status,
+      category: params.category,
+      direction: params.direction,
+      sort: params.sort,
+    }).filter(([_, value]) => value !== undefined)
+  );
+
+  // Fetch signals with pagination and filters
   const { data: signals, total, page: currentPage, totalPages } = await fetchSignals({
-    ...searchParams,
+    ...filters,
     page,
     pageSize,
   });

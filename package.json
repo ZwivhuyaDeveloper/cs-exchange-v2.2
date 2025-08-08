@@ -36,7 +36,6 @@
     "@neondatabase/serverless": "^1.0.1",
     "@portabletext/react": "^3.2.1",
     "@prisma/adapter-pg": "^6.10.1",
-    "@prisma/client": "^6.12.0",
     "@prisma/extension-accelerate": "^2.0.2",
     "@radix-ui/react-avatar": "^1.1.7",
     "@radix-ui/react-checkbox": "^1.1.4",
@@ -156,6 +155,7 @@
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.4.5",
+    "@prisma/client": "^6.13.0",
     "@types/axios": "^0.9.36",
     "@types/ioredis": "^4.28.10",
     "@types/lru-cache": "^7.10.9",
