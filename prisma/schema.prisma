@@ -17,6 +17,11 @@ model user {
   id    Int @id @default(autoincrement())
   email String @unique
   name  String?
+  password String?
+  imageUrl String?
+  clerkUserId String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   posts Post[]
 
 }
