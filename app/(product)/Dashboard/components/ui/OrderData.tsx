@@ -199,17 +199,17 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
     const width1 = (value1 / total) * 100;
     const width2 = (value2 / total) * 100;
     return (
-      <Card className="h-fit gap-2 mx-4 px-0 py-3 border-none dark:bg-zinc-900/80 bg-zinc-100 shadow-none">
+      <Card className="h-fit gap-3 mx-4 px-0 py-4 border-none dark:bg-zinc-900 bg-zinc-200/50 shadow-none">
         <CardDescription className="flex justify-between text-xs font-medium px-5 text-zinc-400">
           <p>{label1}</p>
           <p>{label2}</p>
         </CardDescription>
-        <CardDescription className="flex justify-between px-5 text-md font-semibold dark:text-white text-black">
+        <CardDescription className="flex justify-between px-5 text-sm/2 font-semibold dark:text-white text-black">
           <p>{value1.toLocaleString()}</p>
           <p>{value2.toLocaleString()}</p>
         </CardDescription>
         <CardContent className="flex flex-row gap-1 p-0">
-          <div className="flex w-full h-2 gap-1 px-5">
+          <div className="flex w-full h-1 gap-1 px-5">
             <div className="bg-[#00FFC2]  rounded-3xl" style={{ width: `${width1}%` }} />
             <div className="bg-[#0E76FD] rounded-3xl" style={{ width: `${width2}%` }} />
           </div>
@@ -303,15 +303,15 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
 
   return (
     <Card className="h-full w-full rounded-none border-none dark:bg-[#0F0F0F] bg-white flex flex-col gap-2 ">
-      <CardTitle className="px-5 gap-3 flex justify-between items-center">
+      <CardTitle className="px-4 gap-3 flex justify-between items-center mb-3">
         <div className="flex flex-row items-center gap-2">
-        <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+          <div className="h-6 w-6 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
             <Image 
               src={tokenInfo.logoURL || "/placeholder-token.png"}
               alt={tokenInfo.name}
-              className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
-              width={40}
-              height={40}
+              className="h-6 w-6 rounded-full dark:bg-zinc-800 bg-white"
+              width={24}
+              height={24}
               onError={(e) => {
                 // Fallback to a placeholder if the image fails to load
                 const target = e.target as HTMLImageElement;

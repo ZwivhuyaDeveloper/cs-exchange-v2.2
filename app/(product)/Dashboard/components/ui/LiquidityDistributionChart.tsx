@@ -234,15 +234,15 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
 
   return (
     <Card className="rounded-none border-none bg-white dark:bg-[#0F0F0F]">
-      <CardHeader className="flex flex-row items-center px-3 gap-2 justify-between">
+      <CardHeader className="px-4 gap-3 flex justify-between items-center">
         <div className="flex flex-row items-center gap-2">
-          <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+          <div className="h-6 w-6 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
             <Image 
               src={tokenInfo.logoURL || "/placeholder-token.png"}
               alt={tokenInfo.name}
-              className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
-              width={40}
-              height={40}
+              className="h-6 w-6 rounded-full dark:bg-zinc-800 bg-white"
+              width={24}
+              height={24}
             />
           </div>
           <CardTitle className="flex items-center gap-2">
@@ -252,8 +252,8 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
           <InfoCard {...getLiquidityDistributionInfo()} />
         </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
+      <CardContent className="p-0 w-full">
+        <ChartContainer className='w-full px-2' config={chartConfig}>
           <BarChart
             accessibilityLayer
             data={liquidityData}
@@ -265,10 +265,10 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
               bottom: 10
             }}
             barCategoryGap={8}
-            barGap={4}
+            barGap={8}
             height={600}
             width={500}
-            barSize={20}
+            barSize={10}
           >
             <XAxis 
               type="number" 
@@ -277,19 +277,20 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
               height={600}
               width={500}
               tickMargin={2}
+              tickLine={true}
               axisLine={true}
-              scale='sequential'
+              scale='linear'
               tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
             />
             <YAxis
               dataKey="exchange"
               type="category"
-              tickLine={false}
+              tickLine={true}
               tickMargin={2}
-              axisLine={false}
+              axisLine={true}
               width={80}
               height={80}
-              tick={{ fontSize: 11, fill: 'var(--muted-foreground)' }}
+              tick={{ fontSize: 11, width: 20, fill: 'var(--muted-foreground)' }}
               tickFormatter={(value) => value}
               interval={0}
             />
@@ -320,7 +321,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
               dataKey="liquidity" 
               fill="#0E76FD"
               className="fill-[#0E76FD] dark:fill-[#00FFC2]"
-              radius={[0, 4, 4, 0]}
+              radius={[4, 4, 4, 4]}
             />
           </BarChart>
         </ChartContainer>

@@ -57,7 +57,6 @@ const navItems = [
   { name: 'Trade', href: '/Dashboard' },
   { name: 'Sentiment', href: '/News' },
   { name: 'Analysis', href: '/Research' },
-  { name: 'Explore', href: '/vault' },
   { name: 'Signals', href: '/signals'}
 
 ] as const;
@@ -103,9 +102,9 @@ export const NavMenu = React.memo(() => {
 
         {/* Desktop Navigation */}
         <NavigationMenuList className="hidden md:flex h-full items-center font-normal text-foreground ml-6">
-          <NavigationMenuItem className="font-light flex gap-0">
+          <NavigationMenuItem className="font-light flex gap-2">
             {navItems.map((item) => (
-              <NavLink key={item.href} href={item.href}>
+              <NavLink className='bg-zinc-200/50 dark:bg-zinc-900' key={item.href} href={item.href}>
                 {item.name}
               </NavLink>
             ))}
