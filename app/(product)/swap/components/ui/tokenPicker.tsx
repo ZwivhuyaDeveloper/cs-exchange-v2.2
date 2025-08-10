@@ -42,6 +42,7 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
   const [selectedChain, setSelectedChain] = useState<number | null>(chainId || null);
   const [page, setPage] = useState(1);
   const pageSize = 20;
+  
 
   // Ref for the viewport inside ScrollArea
   const viewportRef = useRef<HTMLDivElement>(null);
@@ -82,17 +83,17 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
         }
       } catch (error) {
         console.error('Failed to fetch chains:', error);
-        // Fallback to some default chains if the API fails
+        // Default to Ethereum chain only, show Coming Soon for others
         const defaultChains = [
           { id: 1, name: 'Ethereum', symbol: 'ETH', logoURL: 'https://cryptoicons.org/api/icon/eth/200', isActive: true },
-          { id: 56, name: 'BNB Chain', symbol: 'BSC', logoURL: 'https://cryptoicons.org/api/icon/bnb/200', isActive: true },
-          { id: 137, name: 'Polygon', symbol: 'MATIC', logoURL: 'https://cryptoicons.org/api/icon/matic/200', isActive: true },
+          { id: 137, name: 'Polygon (Coming Soon)', symbol: 'MATIC', logoURL: 'https://cryptoicons.org/api/icon/matic/200', isActive: false },
         ];
         console.log('Using fallback chains:', defaultChains);
         setChains(defaultChains);
         if (!selectedChain) {
           setSelectedChain(defaultChains[0].id);
         }
+        
       }
     };
     
@@ -102,32 +103,62 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
   // Fetch tokens from DB
   useEffect(() => {
     const fetchTokens = async () => {
+      if (!selectedChain) return;
+      
       try {
-        const url = selectedChain 
-          ? `/api/tokens?chainId=${selectedChain}&limit=10000` 
-          : "/api/tokens?limit=10000";
-        const res = await fetch(url);
+        console.log(`Fetching tokens for chain ${selectedChain}...`);
+        const res = await fetch(`/api/tokens?chainId=${selectedChain}&limit=10000`);
+        if (!res.ok) {
+          throw new Error(`Failed to fetch tokens: ${res.status} ${res.statusText}`);
+        }
         const data = await res.json();
-        // Extract tokens array from the response object
+        
+        // Log the response to debug
+        console.log(`Tokens for chain ${selectedChain}:`, data.tokens?.length || 0);
+        
         if (data && Array.isArray(data.tokens)) {
-          setTokens(data.tokens);
+          // Ensure each token has the correct chainId
+          const tokensWithChain = data.tokens.map((token: any) => ({
+            ...token,
+            chainId: token.chainId || selectedChain // Ensure chainId is set
+          }));
+          setTokens(tokensWithChain);
         } else {
+          console.warn('No tokens array in response:', data);
           setTokens([]);
         }
-      } catch {
+      } catch (error) {
+        console.error('Error fetching tokens:', error);
         setTokens([]);
       }
     };
+    
     fetchTokens();
   }, [selectedChain]);
 
   // Handle chain selection
   const handleChainSelect = (chainId: number) => {
+    // Prevent selection of disabled chains
+    const selectedChain = chains.find(chain => chain.id === chainId);
+    if (selectedChain && !selectedChain.isActive) {
+      return; // Don't change selection for disabled chains
+    }
+    
+    console.log('Chain selected:', chainId);
     setSelectedChain(chainId);
     setPage(1); // Reset to first page when changing chains
+    setSearchQuery(''); // Reset search query
+    setTokens([]); // Clear tokens while loading new ones
+    
+    // Notify parent component about chain change
     if (onChainChange) {
       onChainChange(chainId);
     }
+    
+    // Also update the URL to reflect the selected chain
+    const url = new URL(window.location.href);
+    url.searchParams.set('chainId', chainId.toString());
+    window.history.pushState({}, '', url.toString());
   };
 
   // Reset page when search changes

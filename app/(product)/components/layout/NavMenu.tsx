@@ -4,7 +4,7 @@ import * as React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { cn } from '@/lib/utils';
-import { Menu, X } from 'lucide-react';
+import { Menu, X, ChevronDown } from 'lucide-react';
 import { Tourney } from 'next/font/google';
 import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
@@ -112,8 +112,11 @@ export const NavMenu = React.memo(() => {
         </NavigationMenuList>
       </div>
 
+      {/* Mobile Menu Button */}
+      <div className="flex items-center gap-2">
+
       {/* Desktop Right side controls */}
-      <div className="hidden md:flex items-center gap-2">
+      <div className="hidden w-full md:flex items-center gap-2">
         <div className="flex items-center gap-2">
           <SignedOut>
             <SignInButton>
@@ -131,23 +134,34 @@ export const NavMenu = React.memo(() => {
             <UserButton />
           </SignedIn>
         </div>
+        <div className="hidden md:block">
+            <ConnectButton.Custom>
+              {({ chain, openChainModal }) => (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={openChainModal}
+                  className="flex items-center gap-1"
+                >
+                  {chain?.name || 'Select Network'}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              )}
+            </ConnectButton.Custom>
+          </div>
         <div className="text-xs h-fit py-1">
           <ConnectButton />
         </div>
-        <div className="ml-2">
-          <ThemeToggle />
-        </div>
       </div>
-
-      {/* Mobile Menu Button */}
-      <div className="md:hidden">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          className="text-foreground"
+        <ThemeToggle />
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => setIsOpen(true)}
+          className="md:hidden"
+          aria-label="Toggle menu"
         >
-          <Menu className="h-6 w-6" />
+          <Menu className="h-5 w-5" />
           <span className="sr-only">Open menu</span>
         </Button>
       </div>
