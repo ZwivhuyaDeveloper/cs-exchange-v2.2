@@ -14,6 +14,19 @@ export const DEFAULT_SLIPPAGE_BPS = 50; // 0.5% default slippage
 export const MAINNET_EXCHANGE_PROXY ="0xdef1c0ded9bec7f1a1670819833240f027b25eff";
 export const POLYGON_EXCHANGE_PROXY = "0xDef1C0ded9bec7F1a1670819833240f027b25EfF";
 
+// In src/constants.ts
+export const EXCHANGE_PROXY_ADDRESS: Record<number, string> = {
+  1: '0xdef1c0ded9bec7f1a1670819833240f027b25eff', // Mainnet
+  137: '0xdef1c0ded9bec7f1a1670819833240f027b25eff', // Polygon
+  // Add new chain here
+};
+
+export const RPC_URLS: Record<number, string> = {
+  1: `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
+  137: `https://polygon-rpc.com`,
+  // Add new chain RPC URL
+};
+
 export interface Token {
   symbol: string;
   name: string;
