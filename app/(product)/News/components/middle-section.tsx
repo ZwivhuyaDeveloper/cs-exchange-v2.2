@@ -28,11 +28,11 @@ interface NewsSectionProps {
   data: simpleNewsCard[];
 }
 
-export default function NewsSection({ data }: NewsSectionProps) {
+export default function MiddleSection({ data }: NewsSectionProps) {
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6; // Articles per page
+  const itemsPerPage = 3; // Articles per page
 
     // Reset to first page when filters change
   useEffect(() => {
@@ -101,36 +101,15 @@ export default function NewsSection({ data }: NewsSectionProps) {
 
   return (
     <div className="bg-white dark:bg-[#0F0F0F] border border-px dark:border-zinc-700  ">
-      <div className="flex flex-col justify-between items-start sm:items-center px-5 pt-4 gap-4">
-        <div className="justify-between space-y-2 lg:space-y-0 flex flex-col lg:flex-row w-full">
-          <h1 className="text-lg py-1 sm:py-1 flex flex-row justify-between text-start text-zinc-500 font-semibold tracking-wide">
-            <span className="flex flex-row gap-1 text-xl sm:text-3xl text-black dark:text-white font-bold">
-              <p className="text-[#0E76FD] dark:text-[#00FFC2]">Latest</p>Headlines
-            </span>
-          </h1>
 
-          <SearchBar 
-            onSearch={setSearchQuery} 
-            placeholder="Search by title, category, or tags..." 
-          />
-        </div>
-        <div className="w-full ">
-          <NewsFilter 
-            categories={categories} 
-            onFilterChange={handleFilterChange} 
-            selectedCategory={selectedCategory}
-          />
-        </div>
-        
-      </div>
-      
-      {/* Banner for latest article - only show when no category and no search */}
-      {showBanner && (
-        <div className="px-5">
-          <BannerArticle post={latestArticle} />
-        </div>
-      )}
-      
+    <div className="p-3 px-5">
+        <h1 className="text-lg py-1 sm:py-1 flex flex-row justify-between text-start text-zinc-500 font-semibold tracking-wide">
+            <span className="flex flex-row gap-1 text-md sm:text-3xl text-black dark:text-white font-bold">
+              <p className="text-[#0E76FD] dark:text-[#00FFC2]">Markets</p>Trends
+            </span>
+        </h1>
+    </div>
+
       {filteredData.length === 0 ? (
         <div className="py-10 px-5 text-center">
           <h3 className="text-xl font-medium">No articles found</h3>

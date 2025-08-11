@@ -7,6 +7,7 @@ import NewsSection from "./components/news-section";
 import ResearchDisplay from "./components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';
 import BottomPanel from "../components/layout/BottomPanel";
+import MiddleSection from "./components/middle-section";
 
 
 export const revalidate = 30; // revalidate at most 30 seconds
@@ -65,9 +66,12 @@ export default async function News() {
         </div>
 
         {/*middle-Section*/}
-        <div className="w-full px-1 overflow-hidden sm:w-full">
+        <div className="w-full flex flex-col px-1 gap-1 mb-10 overflow-hidden sm:w-full">
           <div>
             <NewsSection data={data} />
+          </div>
+          <div>
+            <MiddleSection data={data}  />
           </div>
         </div>
 
