@@ -104,7 +104,7 @@ export default function NewsSection({ data }: NewsSectionProps) {
       <div className="flex flex-col justify-between items-start sm:items-center px-5 pt-4 gap-4">
         <div className="justify-between space-y-2 lg:space-y-0 flex flex-col lg:flex-row w-full">
           <h1 className="text-lg py-1 sm:py-1 flex flex-row justify-between text-start text-zinc-500 font-semibold tracking-wide">
-            <span className="flex flex-row gap-1 text-xl sm:text-3xl text-black dark:text-white font-bold">
+            <span className="flex flex-row gap-2 text-xl sm:text-3xl text-black dark:text-white font-bold">
               <p className="text-[#0E76FD] dark:text-[#00FFC2]">Latest</p>Headlines
             </span>
           </h1>
