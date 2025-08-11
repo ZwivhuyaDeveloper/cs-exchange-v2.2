@@ -325,9 +325,16 @@ useEffect(() => {
         <div className="flex items-center gap-2 flex-row">
 
           <Image 
-            src={tokenInfo.logoURI} 
+            src={tokenInfo.logoURL || "/placeholder-token.png"} 
             alt={tokenInfo.name}
             className="h-6 w-6 rounded-full bg-zinc-800"
+            width={24}
+            height={24}
+            onError={(e) => {
+              // Fallback to a placeholder if the image fails to load
+              const target = e.target as HTMLImageElement;
+              target.src = '/placeholder-token.png';
+            }}
           />
 
           <div className="flex flex-col gap-1">

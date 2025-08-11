@@ -1,5 +1,5 @@
 import { ConnectButton } from "@rainbow-me/rainbowkit";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef, ReactElement } from "react";
 import { formatUnits, parseUnits } from "ethers";
 import {
   useReadContract,
@@ -64,13 +64,166 @@ export default function PriceView({
   const [tokenMap, setTokenMap] = useState<Record<string, any>>({});
   const [tokenLoading, setTokenLoading] = useState(false);
   const [tokenError, setTokenError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
+  const [isValidAmount, setIsValidAmount] = useState<boolean>(true);
+  const [slippageTolerance, setSlippageTolerance] = useState<number>(0.5); // Default 0.5% slippage
+  
+  // Debouncing refs
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
 
   const sanitizeDecimalPlaces = (value: string, decimals: number): string => {
     const [integerPart, decimalPart] = value.split('.');
     if (!decimalPart) return value;
     return `${integerPart}.${decimalPart.slice(0, decimals)}`;
-  }
+  };
+
+  // Enhanced validation function for amounts
+  const validateSwapAmount = useCallback((amount: string, token: any, balance?: bigint): { isValid: boolean; error: string | null } => {
+    if (!amount || amount === "0" || amount === "0.") {
+      return { isValid: true, error: null };
+    }
+
+    // Check for invalid characters
+    if (!/^\d*\.?\d*$/.test(amount)) {
+      return { isValid: false, error: "Invalid characters in amount" };
+    }
+
+    const numValue = parseFloat(amount);
+    
+    // Check for negative or zero values
+    if (numValue <= 0) {
+      return { isValid: false, error: "Amount must be greater than 0" };
+    }
+
+    // Check against balance if provided
+    if (balance && token?.decimals) {
+      try {
+        const amountInWei = parseUnits(amount, token.decimals);
+        if (amountInWei > balance) {
+          return { isValid: false, error: `Insufficient ${token.symbol?.toUpperCase()} balance` };
+        }
+      } catch {
+        return { isValid: false, error: "Invalid amount format" };
+      }
+    }
+
+    // Check for very small amounts (dust)
+    const minAmount = 1 / Math.pow(10, (token?.decimals || 18) - 2);
+    if (numValue < minAmount) {
+      return { isValid: false, error: `Amount too small (min: ${minAmount})` };
+    }
+
+    return { isValid: true, error: null };
+  }, []);
+
+  // Debounced price fetching function
+  const debouncedFetchPrice = useCallback(async (
+    sellTokenObj: any,
+    buyTokenObj: any,
+    amount: string,
+    direction: string,
+    balance?: bigint,
+    slippage?: number
+  ) => {
+    // Cancel previous request
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+
+    // Clear previous timeout
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    // Validate amount before making API call
+    const validation = validateSwapAmount(amount, sellTokenObj, balance);
+    setValidationError(validation.error);
+    setIsValidAmount(validation.isValid);
+
+    if (!validation.isValid || !amount || amount === "0") {
+      setBuyAmount("");
+      setPrice(null);
+      setLoading(false);
+      return;
+    }
+
+    return new Promise<void>((resolve) => {
+      debounceTimeoutRef.current = setTimeout(async () => {
+        if (!sellTokenObj || !buyTokenObj) {
+          resolve();
+          return;
+        }
+
+        setApiError(null);
+        setLoading(true);
+
+        // Create new abort controller for this request
+        abortControllerRef.current = new AbortController();
+
+        try {
+          const parsedAmount = direction === "sell" 
+            ? parseUnits(amount, sellTokenObj.decimals).toString()
+            : parseUnits(amount, buyTokenObj.decimals).toString();
+
+          const params = {
+            chainId: chainId,
+            sellToken: sellTokenObj.address,
+            buyToken: buyTokenObj.address,
+            [direction === "sell" ? "sellAmount" : "buyAmount"]: parsedAmount,
+            taker,
+            swapFeeRecipient: FEE_RECIPIENT,
+            swapFeeBps: AFFILIATE_FEE,
+            swapFeeToken: buyTokenObj.address,
+            tradeSurplusRecipient: FEE_RECIPIENT,
+            slippagePercentage: slippage || 0.5, // Include slippage tolerance
+          };
+
+          const response = await fetch(`/api/price?${qs.stringify(params)}`, {
+            signal: abortControllerRef.current.signal
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+          
+          if (data?.validationErrors?.length > 0) {
+            setError(data.validationErrors);
+            setApiError("Validation error: " + data.validationErrors.join(", "));
+          } else if (data?.error) {
+            setApiError(data.error);
+          } else if (data?.message === "Invalid authentication credentials") {
+            setApiError("Authentication error: Invalid API key or credentials.");
+          } else {
+            setError([]);
+            setApiError(null);
+            
+            if (data.buyAmount) {
+              const formattedBuyAmount = formatUnits(data.buyAmount, buyTokenObj.decimals);
+              setBuyAmount(formattedBuyAmount);
+              setPrice(data);
+            }
+            
+            if (data?.tokenMetadata) {
+              setBuyTokenTax(data.tokenMetadata.buyToken);
+              setSellTokenTax(data.tokenMetadata.sellToken);
+            }
+          }
+        } catch (err: any) {
+          if (err.name !== 'AbortError') {
+            console.error('Price fetch error:', err);
+            setApiError("Network or server error. Please try again later.");
+          }
+        } finally {
+          setLoading(false);
+          resolve();
+        }
+      }, 500); // 500ms debounce delay
+    });
+  }, [chainId, taker, validateSwapAmount]);
 
   // Fetch tokens and chains from the database
   useEffect(() => {
@@ -80,12 +233,20 @@ export default function PriceView({
           fetch(`/api/tokens?chainId=${chainId}`),
           fetch(`/api/chains`),
         ]);
-        const tokens = await tokensRes.json();
+        const tokensData = await tokensRes.json();
         const chains = await chainsRes.json();
-        setDbTokens(tokens);
+        
+        // Extract tokens array from the response object
+        if (tokensData && Array.isArray(tokensData.tokens)) {
+          setDbTokens(tokensData.tokens);
+        } else {
+          setDbTokens([]);
+        }
         setDbChains(chains);
       } catch (err) {
         // fallback: do nothing, keep using constants
+        setDbTokens([]);
+        setDbChains([]);
       }
     }
     fetchTokensAndChains();
@@ -140,6 +301,12 @@ export default function PriceView({
   const buyTokenDecimals = buyTokenObject?.decimals || 18;
   const sellTokenAddress = sellTokenObject?.address;
 
+  // Hook for fetching balance information - moved here after token object declarations
+  const { data: balanceData } = useBalance({
+    address: taker,
+    token: sellTokenObject?.address,
+  });
+
   const parsedSellAmount =
     sellAmount && tradeDirection === "sell" && sellTokenDecimals
       ? parseUnits(sellAmount, sellTokenDecimals).toString()
@@ -150,78 +317,57 @@ export default function PriceView({
       ? parseUnits(buyAmount, buyTokenDecimals).toString()
       : undefined;
 
-  // Fetch price data and set the buyAmount whenever the sellAmount changes
+  // Fetch price data using debounced approach whenever relevant parameters change
   useEffect(() => {
-    if (!sellTokenObject || !buyTokenObject) return;
-    setApiError(null);
-    setLoading(true);
-    const params = {
-      chainId: chainId,
-      sellToken: sellTokenObject.address,
-      buyToken: buyTokenObject.address,
-      sellAmount: parsedSellAmount,
-      buyAmount: parsedBuyAmount,
-      taker,
-      swapFeeRecipient: FEE_RECIPIENT,
-      swapFeeBps: AFFILIATE_FEE,
-      swapFeeToken: buyTokenObject.address,
-      tradeSurplusRecipient: FEE_RECIPIENT,
-    };
-    async function main() {
-      if (sellAmount === "") {
-        setBuyAmount("");
-        setPrice(null);
-        setLoading(false);
-        return;
-      }
-      try {
-        const response = await fetch(`/api/price?${qs.stringify(params)}`);
-        const data = await response.json();
-        if (data?.validationErrors?.length > 0) {
-          setError(data.validationErrors);
-          setApiError("Validation error: " + data.validationErrors.join(", "));
-        } else if (data?.error) {
-          setApiError(data.error);
-        } else if (data?.message === "Invalid authentication credentials") {
-          setApiError("Authentication error: Invalid API key or credentials.");
-        } else {
-          setError([]);
-          setApiError(null);
-        }
-        if (data.buyAmount) {
-          const formattedBuyAmount = formatUnits(data.buyAmount, buyTokenDecimals);
-          setBuyAmount(formattedBuyAmount);
-          setPrice(data);
-        }
-        if (data?.tokenMetadata) {
-          setBuyTokenTax(data.tokenMetadata.buyToken);
-          setSellTokenTax(data.tokenMetadata.sellToken);
-        }
-      } catch (err) {
-        setApiError("Network or server error. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
+    if (!sellTokenObject || !buyTokenObject) {
+      setBuyAmount("");
+      setPrice(null);
+      setValidationError(null);
+      setIsValidAmount(true);
+      return;
     }
-    main();
+
+    if (sellAmount === "") {
+      setBuyAmount("");
+      setPrice(null);
+      setValidationError(null);
+      setIsValidAmount(true);
+      setLoading(false);
+      return;
+    }
+
+    // Use debounced price fetching with validation
+    debouncedFetchPrice(
+      sellTokenObject,
+      buyTokenObject,
+      sellAmount,
+      tradeDirection,
+      balanceData?.value,
+      slippageTolerance
+    );
+
+    // Cleanup function to cancel pending requests
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [
     sellTokenObject?.address,
     buyTokenObject?.address,
-    parsedSellAmount,
-    parsedBuyAmount,
     chainId,
     tradeDirection,
     sellAmount,
-    setPrice,
-    taker,
-    buyTokenDecimals
+    balanceData?.value,
+    slippageTolerance,
+    setSlippageTolerance,
+    debouncedFetchPrice
   ]);
 
-  // Hook for fetching balance information
-  const { data: balanceData } = useBalance({
-    address: taker,
-    token: sellTokenObject?.address,
-  });
+
 
   const inSufficientBalance =
     balanceData && sellAmount && sellTokenDecimals
@@ -346,7 +492,7 @@ export default function PriceView({
       buyTokenDecimals={buyTokenDecimals}
       chainId={chainId}
       tokenList={tokenList}
-      tokenMap={tokenMap}
+      tokenMap={tokenMapForPicker}
       price={price}
       setPrice={setPrice}
       setFinalize={setFinalize}
@@ -357,6 +503,11 @@ export default function PriceView({
       setTradeDirection={setTradeDirection}
       inSufficientBalance={inSufficientBalance}
       ApproveOrReviewButton={ApproveOrReviewButtonNode}
+      validationError={validationError}
+      isValidAmount={isValidAmount}
+      balanceData={balanceData}
+      slippageTolerance={slippageTolerance}
+      setSlippageTolerance={setSlippageTolerance}
     />
   );
 
@@ -364,7 +515,7 @@ export default function PriceView({
     taker,
     onClick,
     sellTokenAddress,
-    disabled,
+    disabled = false,
     price,
   }: {
     taker: Address;
@@ -372,32 +523,55 @@ export default function PriceView({
     sellTokenAddress: Address;
     disabled?: boolean;
     price: any;
-  }) {
+  }): ReactElement {
     // If price.issues.allowance is null, show the Review Trade button
     if (price?.issues.allowance === null) {
       return (
-        <div className="w-full px-3 justify-start">
+        <div className="w-full px-3 justify-start space-y-2">
           <button
             type="button"
             disabled={disabled}
-            onClick={() => {
-              // fetch data, when finished, show quote view
-              onClick();
-            }}
-            className="w-full bg-blue-500 text-white p-2 hover:bg-blue-700 disabled:opacity-25 rounded-3xl"
+            onClick={onClick}
+            className={`w-full text-white p-3 rounded-xl font-medium transition-all duration-200 ${
+              disabled 
+                ? 'bg-gradient-to-r from-gray-400 to-gray-500 cursor-not-allowed shadow-inner' 
+                : 'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 shadow-md hover:shadow-lg transform hover:-translate-y-0.5'
+            }`}
           >
-            {disabled ? "Insufficient Balance" : "Review Trade"}
+            {disabled ? (
+              <div className="flex items-center justify-center space-x-2">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>Insufficient Balance</span>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center space-x-2">
+                <span>Review Trade</span>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </div>
+            )}
           </button>
+          {disabled && (
+            <div className="text-center">
+              <p className="text-sm text-gray-600 dark:text-gray-300">
+                Add funds to your wallet to continue
+              </p>
+            </div>
+          )}
         </div>
       );
     }
 
     // Determine the spender from price.issues.allowance
     const spender = price?.issues.allowance.spender;
+    const MAX_ALLOWANCE = BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639935'); // 2^256 - 1
 
     // 1. Read from erc20, check approval for the determined spender to spend sellToken
     const { data: allowance, refetch } = useReadContract({
-      address: sellTokenAddress,
+      address: sellTokenAddress as Address,
       abi: erc20Abi,
       functionName: "allowance",
       args: [taker, spender],
@@ -406,7 +580,7 @@ export default function PriceView({
 
     // 2. (only if no allowance): write to erc20, approve token allowance for the determined spender
     const { data } = useSimulateContract({
-      address: sellTokenAddress,
+      address: sellTokenAddress as Address,
       abi: erc20Abi,
       functionName: "approve",
       args: [spender, MAX_ALLOWANCE],

@@ -36,7 +36,7 @@ const LiveChart = ({
       script.innerHTML = JSON.stringify({
         autosize: true,
         symbol,
-        hide_side_toolbar: false,
+        hide_side_toolbar: true,
         interval,
         timezone: "Etc/UTC",
         theme,
@@ -60,7 +60,7 @@ const LiveChart = ({
   
   return (
     <div 
-      className="tradingview-widget-container" 
+      className="tradingview-widget-container h-full w-full" 
       ref={containerRef}
       style={{ height: '100%', width: '100%', border: '0%' }}
     />

@@ -219,14 +219,15 @@ function ChainCard({ chain, price, formattedPrice }: {
         <div className="flex items-center gap-3">
           <div className="bg-white dark:bg-zinc-900 rounded-full p-1 border dark:border-zinc-800 border-zinc-200">
             <Image 
-              src={chain.logoURL}
+              src={chain.logoURL || "/placeholder-token.png"}
               alt={`${chain.name} logo`}
               width={32}
               height={32}
               className="w-8 h-8 object-contain"
               onError={(e) => {
-                // Fallback to chain name if logo fails to load
-                (e.target as HTMLImageElement).style.display = 'none';
+                // Fallback to a placeholder if the image fails to load
+                const target = e.target as HTMLImageElement;
+                target.src = '/placeholder-token.png';
               }}
             />
           </div>

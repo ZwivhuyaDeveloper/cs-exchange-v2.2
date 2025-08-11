@@ -1,7 +1,6 @@
 "use client"
 
 import { useState } from "react"
-import { NavMenu } from "@/app/(product)/components/layout/NavMenu"
 import MarketStats from "@/app/(product)/Dashboard/components/ui/MarketStats"
 import TechnicalSpecs from "@/app/(product)/Dashboard/components/ui/TechnicalSpecs"
 import { TradingChart } from "@/app/(product)/Dashboard/components/chart/trading-chart"
@@ -14,9 +13,18 @@ import NewList from "@/app/(product)/Dashboard/components/tokenList/new-list"
 import LoadingIntro from "@/src/components/ui/loading-intro"
 import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Chart-radar"
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
-import { ChartAreaLinear} from "@/app/(product)/Dashboard/components/ui/Linear-Chart"
-import VolumeChart from './components/ui/VolumeChart';
-import TrendingNews from "../News/components/related-news"
+import "@rainbow-me/rainbowkit/styles.css";
+import NewsCards from "./components/news-cards"
+import NewsCardsWrapper from "./components/news-cards-wrapper"
+import VolumeChart from "./components/ui/VolumeChart"
+import Networks from "./components/ui/Networks"
+import dynamic from 'next/dynamic';
+
+// Dynamically import the client component with SSR disabled
+const TrendingNewsClient = dynamic(
+  () => import('./components/TrendingNewsClient'),
+  { ssr: false }
+);
 
 export default function Page() {
   const [fromToken, setFromToken] = useState("link");
@@ -30,11 +38,7 @@ export default function Page() {
   const chainId = 1;
   return (
     <div className="w-full  h-full dark:bg-black bg-zinc-200 flex flex-col">
-      {/* Header */}
-      <header className="sticky top-0 z-50 flex h-fit bg-white items-center border-none rounded-b-3xl backdrop-filter backdrop-blur-2xl dark:bg-zinc-900/90 ">
-        <NavMenu />
-      </header>
-
+      
       {/* Ticker */}
       <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
         <div className="border border-px dark:border-zinc-700 border-zinc-200 w-full">
@@ -44,9 +48,9 @@ export default function Page() {
 
       {/* Main 3-column layout */}
       <main className="flex-1 flex flex-col items-center w-full h-full px-1 md:px-1">
-        <div className="flex flex-col lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
+        <div className="flex flex-col-reverse lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
           {/* Indicators (Left) */}
-          <div className="lg:w-[400px] w-full flex flex-col gap-2 h-full">
+          <div className="lg:w-[390px] flex w-full md:flex lg:flex-col gap-2 h-full">
             <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip gap-y-2" type="auto">
               <ScrollArea.Viewport className="w-full overflow-clip h-full flex flex-col gap-y-2">
                 <div className="border border-px dark:border-zinc-700 border-zinc-2000">
@@ -73,38 +77,43 @@ export default function Page() {
           </div>
 
           {/* Chart (Middle) */}
-          <div className="flex flex-row gap-1 w-full">
+          <div className="flex flex-col lg:flex-row md:flex-row gap-1 w-full">
 
 
-              <div className="flex-1 flex flex-col gap-1 w-full h-full">
+              <div className="flex-1 flex flex-col gap-1 mt-0 sm:mt-1 md:mt-0 lg:mt-0 w-full h-full">
                 <TradingChart
                   buyTokenSymbol={toToken}
                   sellTokenSymbol={fromToken}
                   setCurrentChartToken={setCurrentChartToken}
                 />
-                <div className="flex flex-col mb-5 md:flex-row gap-1 w-full h-fit items-stretch ">
+                <div className=" lg:flex hidden mb-5 md:flex gap-1 w-full h-fit items-stretch ">
                   <NewList value={toToken} onValueChange={setToToken} label="To Token" />
                 </div>
               </div>
 
               {/* Swap (Right) */}
-              <div className="lg:w-fit w-full flex flex-col gap-1 h-full">
-                <div className="border border-px dark:border-zinc-700 border-zinc-200">
-                  <Swap
-                    fromToken={fromToken}
-                    setFromToken={setFromToken}
-                    toToken={toToken}
-                    setToToken={setToToken}
-                    setCurrentChartToken={setCurrentChartToken}
-                    price={undefined}
-                    setPrice={function (price: any): void {
-                      throw new Error("Function not implemented.")
-                    }}
-                    setFinalize={function (finalize: boolean): void {
-                      throw new Error("Function not implemented.")
-                    }}
-                    chainId={chainId}
-                  />
+              <div className="lg:w-fit w-full flex flex-col lg:flex-col  gap-1 h-full">
+                <div className="mt-0">
+                  <div className="flex dark:border-zinc-700 bg-white border border-zinc-100 border-px">
+                    <Swap
+                      fromToken={fromToken}
+                      setFromToken={setFromToken}
+                      toToken={toToken}
+                      setToToken={setToToken}
+                      setCurrentChartToken={setCurrentChartToken}
+                      price={undefined}
+                      setPrice={function (price: any): void {
+                        throw new Error("Function not implemented.")
+                      }}
+                      setFinalize={function (finalize: boolean): void {
+                        throw new Error("Function not implemented.")
+                      }}
+                      chainId={chainId}
+                    />
+                  </div>
+                  <div className="mt-1 w-[380px] dark:border-zinc-700 border-zinc-100 border-px border">
+                    <TrendingNewsClient />
+                  </div>
                 </div>
               </div>
             </div>

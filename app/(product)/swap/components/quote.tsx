@@ -179,7 +179,7 @@ export default function QuoteView({
             <Image
               alt={sellTokenInfo?.symbol}
               className="h-9 w-9 mr-2 rounded-md"
-              src={sellTokenInfo?.logoURL || ""}
+              src={sellTokenInfo?.logoURL || "/placeholder-token.png"}
               width={9}
               height={9}
             />
@@ -200,7 +200,7 @@ export default function QuoteView({
                 buyTokenInfo?.symbol
               }
               className="h-9 w-9 mr-2 rounded-md"
-              src={buyTokenInfo?.logoURL || ""}
+              src={buyTokenInfo?.logoURL || "/placeholder-token.png"}
             />
             <span>
               {formatUnits(quote.buyAmount, buyTokenInfo?.decimals)}

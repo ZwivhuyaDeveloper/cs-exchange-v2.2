@@ -1,10 +1,13 @@
 "use client"
 
-import * as React from "react"
-import Link from "next/link"
-
-import { cn } from "@/lib/utils"
-
+import * as React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { cn } from '@/lib/utils';
+import { Menu, X, ChevronDown } from 'lucide-react';
+import { Tourney } from 'next/font/google';
+import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from '@clerk/nextjs';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,125 +16,242 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import { ConnectButton } from "@rainbow-me/rainbowkit"
-import { ThemeToggle } from "../../../../components/ui/ThemeToggle"
-import { Tourney } from "next/font/google"
-import Image from "next/image"
-import Light from "@/public/Cyclespace-logo/CS logo color.png"
-import {
-  ClerkProvider,
-  SignInButton,
-  SignUpButton,
-  SignedIn,
-  SignedOut,
-  UserButton,
-} from '@clerk/nextjs'
+} from '@/components/ui/navigation-menu';
+import { Button } from '@/components/ui/button';
+import { ThemeToggle } from '@/components/ui/ThemeToggle';
+import { Drawer, DrawerContent, DrawerTrigger, DrawerClose, DrawerTitle } from '@/components/ui/drawer';
+import "@rainbow-me/rainbowkit/styles.css";
 
 
+import DarkLogo from "@/public/Cyclespace-logo/CS logo color.png";
+import LightLogo from "@/public/Cyclespace-logo/CSblue.png";
 
+const _tourney = Tourney({ 
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  variable: '--font-tourney'
+});
 
-const _tourney = Tourney({ subsets: ['latin'] })
+// Memoized components
+const NavLink = React.memo(({ href, children, className = '' }: { 
+  href: string; 
+  children: React.ReactNode;
+  className?: string;
+}) => (
+  <Link 
+    href={href} 
+    className={cn(
+      navigationMenuTriggerStyle(),
+      'text-sm font-medium',
+      className
+    )}
+  >
+    {children}
+  </Link>
+));
 
-export function NavMenu() {
+NavLink.displayName = 'NavLink';
 
+const navItems = [
+  { name: 'Trade', href: '/Dashboard' },
+  { name: 'Sentiment', href: '/News' },
+  { name: 'Analysis', href: '/Research' },
+  { name: 'Signals', href: '/signals'}
+
+] as const;
+
+export const NavMenu = React.memo(() => {
+  const [isOpen, setIsOpen] = React.useState(false);
   
-
+  // Memoize handlers
+  const handleOpenChange = React.useCallback((open: boolean) => {
+    setIsOpen(open);
+  }, []);
+  
+  const handleNavClick = React.useCallback(() => {
+    setIsOpen(false);
+  }, []);
 
   return (
-    <NavigationMenu className="w-full flex justify-between items-center gap-8 h-14 px-4 backdrop-filter backdrop-blur-2xl dark:bg-[#0F0F0F] bg-white border-b border-px dark:border-zinc-700 border-zinc-200   backdrop-brightness-200 ">
+    <NavigationMenu 
+      className="w-full flex justify-between items-center gap-4 sm:gap-8 h-14 px-4 backdrop-filter backdrop-blur-2xl dark:bg-[#0F0F0F] bg-white border-b border-px dark:border-zinc-700 border-zinc-200 backdrop-brightness-200"
+      data-testid="nav-menu"
+    >
+      {/* Logo and Desktop Navigation */}
+      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
+          <Image 
+            src={DarkLogo} 
+            width={25} 
+            height={25} 
+            alt="Cyclespace Logo"
+            className="hidden dark:block"
+          />
+          <Image 
+            src={LightLogo} 
+            width={25} 
+            height={25} 
+            alt="Cyclespace Logo"
+            className="block dark:hidden"
+          />
+          <Link href="/" className={`${_tourney.className} antialiased text-xl  sm:flex md:text-2xl font-semibold bg-black dark:bg-white text-transparent bg-clip-text`}>
+            CYCLESPACE
+          </Link>
+        </div>
 
-      <NavigationMenuList className="w-full justify-between h-full items-center font-normal text-foreground">
-          <NavigationMenuItem className="flex flex-row items-center gap-2">
-            <div>
-              <Image 
-                src={Light} 
-                width={25} 
-                height={25} 
-                alt={""}
-                className=""
-              />
-            </div>
-            <Link href="/" className={`${_tourney.className} antialiased text-xl md:text-2xl font-semibold bg-black dark:bg-white text-transparent bg-clip-text`}>
-              CYCLESPACE
-            </Link>
+        {/* Desktop Navigation */}
+        <NavigationMenuList className="hidden md:flex h-full items-center font-normal text-foreground ml-6">
+          <NavigationMenuItem className="font-light flex gap-2">
+            {navItems.map((item) => (
+              <NavLink className='bg-zinc-200/50 dark:bg-zinc-900' key={item.href} href={item.href}>
+                {item.name}
+              </NavLink>
+            ))}
           </NavigationMenuItem>
-          <NavigationMenuItem className="font-light flex gap-0">
-              <NavigationMenuLink href="/Dashboard" className={navigationMenuTriggerStyle()}>
-                <p className="text-sm font-medium">
-                  Trade
-                </p>
-              </NavigationMenuLink>
-              <NavigationMenuLink href="/News" className={navigationMenuTriggerStyle()}>
-                <p className="text-sm font-medium">
-                  Sentiment
-                </p>
-              </NavigationMenuLink>
-              <NavigationMenuLink  href="/Research" className={navigationMenuTriggerStyle()}>
-                <p className="text-sm font-medium flex flex-row gap-1">
-                  Analysis
-                </p>
-              </NavigationMenuLink>
-              <NavigationMenuLink href="/vault" className={navigationMenuTriggerStyle()}>
-                <p className="text-sm font-medium flex flex-row gap-1">
-                  Explore
-                </p>
-              </NavigationMenuLink>
-          </NavigationMenuItem>
-      </NavigationMenuList>
-      <NavigationMenuList className="w-full gap-3">
-        <div className="flex flex-row items-center gap-2">
+        </NavigationMenuList>
+      </div>
+
+      {/* Mobile Menu Button */}
+      <div className="flex items-center gap-2">
+
+      {/* Desktop Right side controls */}
+      <div className="hidden w-full md:flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <SignedOut>
             <SignInButton>
-              <button className="bg-[#6c47ff] text-white rounded-full font-medium text-xs sm:text-xs h-9 sm:h-9 px-4 sm:px-5 cursor-pointer">
+              <Button size="sm" className="bg-[#6c47ff] hover:bg-[#5a3bd8] text-white">
                 Sign In
-              </button>
+              </Button>
             </SignInButton>
             <SignUpButton>
-              <button className="bg-[#6c47ff] text-white rounded-full font-medium text-xs sm:text-xs h-9 sm:h-9 px-4 sm:px-5 cursor-pointer">
+              <Button variant="outline" size="sm">
                 Sign Up
-              </button>
+              </Button>
             </SignUpButton>
           </SignedOut>
           <SignedIn>
             <UserButton />
           </SignedIn>
         </div>
-        <div>
-          <ThemeToggle/>
+        <div className="hidden md:block">
+            <ConnectButton.Custom>
+              {({ chain, openChainModal }) => (
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={openChainModal}
+                  className="flex items-center gap-1"
+                >
+                  {chain?.name || 'Select Network'}
+                  <ChevronDown className="h-4 w-4" />
+                </Button>
+              )}
+            </ConnectButton.Custom>
+          </div>
+        <div className="text-xs h-fit py-1">
+          <ConnectButton />
         </div>
-        <div className="text-xs h-fit py-1" >
-          <ConnectButton/>
-        </div>
+      </div>
+        <ThemeToggle />
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setIsOpen(true)}
+          className="md:hidden"
+          aria-label="Toggle menu"
+        >
+          <Menu className="h-5 w-5" />
+          <span className="sr-only">Open menu</span>
+        </Button>
+      </div>
 
-      </NavigationMenuList>
+      {/* Mobile Menu Drawer */}
+      <Drawer open={isOpen} onOpenChange={handleOpenChange}>
+        <DrawerContent className="h-[100dvh] mt-0 rounded-t-2xl">
+          <div className="p-4 flex flex-col h-full">
+            <DrawerTitle className="sr-only">Mobile Navigation Menu</DrawerTitle>
+            {/* Header with close button */}
+            <div className="flex justify-between items-center mb-6">
+              <div className="flex items-center gap-2">
+                <Image 
+                  src={DarkLogo} 
+                  width={25} 
+                  height={25} 
+                  alt="Cyclespace Logo"
+                  className="hidden dark:block"
+                />
+                <Image 
+                  src={LightLogo} 
+                  width={25} 
+                  height={25} 
+                  alt="Cyclespace Logo"
+                  className="block dark:hidden"
+                />
+                <span className={`${_tourney.className} text-xl font-semibold bg-black dark:bg-white text-transparent bg-clip-text`}>
+                  CYCLESPACE
+                </span>
+              </div>
+              <DrawerClose asChild>
+                <Button variant="ghost" size="icon">
+                  <X className="h-5 w-5" />
+                  <span className="sr-only">Close menu</span>
+                </Button>
+              </DrawerClose>
+            </div>
 
+            {/* Navigation Links */}
+            <nav className="flex-1 space-y-2">
+              {navItems.map((item) => (
+                <Link 
+                  key={item.href} 
+                  href={item.href}
+                  className="block px-4 py-3 text-lg font-medium rounded-lg hover:bg-accent transition-colors duration-200"
+                  onClick={handleNavClick}
+                  prefetch={false}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Auth and Theme Controls */}
+            <div className="mt-auto pt-6 space-y-4 border-t border-border">
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium">Theme</span>
+                <ThemeToggle />
+              </div>
+              
+              <div className="space-y-2">
+                <SignedOut>
+                  <SignInButton>
+                    <Button className="w-full bg-[#6c47ff] hover:bg-[#5a3bd8] text-white">
+                      Sign In
+                    </Button>
+                  </SignInButton>
+                  <SignUpButton>
+                    <Button variant="outline" className="w-full">
+                      Create Account
+                    </Button>
+                  </SignUpButton>
+                </SignedOut>
+                <SignedIn>
+                  <div className="flex items-center justify-between p-2 rounded-lg bg-accent">
+                    <span className="text-sm font-medium">Account</span>
+                    <UserButton />
+                  </div>
+                </SignedIn>
+                
+                <div className="pt-2 flex">
+                  <ConnectButton  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </DrawerContent>
+      </Drawer>
     </NavigationMenu>
   )
-}
+});
 
-const ListItem = React.forwardRef<
-  React.ElementRef<"a">,
-  React.ComponentPropsWithoutRef<"a">
->(({ className, title, children, ...props }, ref) => {
-  return (
-    <li>
-      <NavigationMenuLink asChild>
-        <a
-          ref={ref}
-          className={cn(
-            "block select-none space-y-1 text-zinc-100 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground",
-            className
-          )}
-          {...props}
-        >
-          <p className="text-sm font-normal leading-none text-zinc-100">{title}</p>
-          <p className="line-clamp-2 text-sm leading-snug text-zinc-100 font-light">
-            {children}
-          </p>
-        </a>
-      </NavigationMenuLink>
-    </li>
-  )
-})
-ListItem.displayName = "ListItem"
+NavMenu.displayName = 'NavMenu';

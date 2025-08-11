@@ -11,7 +11,7 @@ import { formatDate, isRecent } from "@/app/lib/dateUtils";
 
 export default function BannerArticle({ post }: { post: simpleNewsCard }) {
   return (
-    <div className="w-full p-4 bg-blue-50 dark:bg-zinc-800 rounded-lg mb-4">
+    <div className="w-full p-4 bg-blue-50 border-none dark:bg-[#00FFC2]/10 shadow-xs shadow-zinc-200 dark:shadow-zinc-900 rounded-lg mb-4">
       <div className="flex flex-col md:flex-row gap-6">
         <div className="md:w-1/2">
           <div className='absolute p-3'>
@@ -28,7 +28,7 @@ export default function BannerArticle({ post }: { post: simpleNewsCard }) {
           />
         </div>
         <div className="md:w-1/2 flex flex-col justify-center">
-          <Badge className="w-fit mb-2 bg-blue-500 text-white hover:bg-blue-600">
+          <Badge className="w-fit mb-2 bg-[#0E76FD] dark:bg-[#00FFC2] text-white dark:text-black ">
             Featured Story
           </Badge>
           <Link href={`/article/${post.currentSlug}`} className="hover:text-blue-600 transition-colors">
@@ -37,7 +37,23 @@ export default function BannerArticle({ post }: { post: simpleNewsCard }) {
           <p className="text-gray-600 dark:text-zinc-300 mb-4">{post.smallDescription}</p>
           <div className='gap-2 flex flex-col'>
 
-            <div className='flex flex-row justify-between w-full h-fit'>
+            <div className='flex flex-row justify-between w-full h-fit items-center'>
+              <div className="flex items-center gap-2">
+                {post.author?.avatar && (
+                  <div className="w-6 h-6 rounded-full overflow-hidden">
+                    <Image
+                      src={urlFor(post.author.avatar).url()}
+                      width={24}
+                      height={24}
+                      alt={post.author.name || 'Author'}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+                <span className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                  {post.author?.name || 'Anonymous'}
+                </span>
+              </div>
 
               <div className="flex items-center justify-between gap-4">
                 {isRecent(post.publishedAt) && (
@@ -64,11 +80,11 @@ export default function BannerArticle({ post }: { post: simpleNewsCard }) {
                         key={idx}
                         className={cn(
                             "text-sm",
-                            impact.color === 'blue' && "bg-blue-100 text-blue-800 border-blue-200",
-                            impact.color === 'green' && "bg-green-100 text-green-800 border-green-200",
-                            impact.color === 'red' && "bg-red-100 text-red-800 border-red-200",
-                            impact.color === 'yellow' && "bg-yellow-100 text-yellow-800 border-yellow-200",
-                            impact.color === 'purple' && "bg-purple-100 text-purple-800 border-purple-200"
+                            impact.color === 'blue' && "bg-blue-300 text-blue-950 border-blue-200",
+                            impact.color === 'green' && "bg-green-300 text-green-950 border-green-200",
+                            impact.color === 'red' && "bg-red-300 text-red-950 border-red-200",
+                            impact.color === 'yellow' && "bg-yellow-300 text-yellow-950 border-yellow-200",
+                            impact.color === 'purple' && "bg-purple-300 text-purple-950 border-purple-200"
                         )}
                         >
                             <Globe width={10} height={10} strokeWidth={3} className="w-10 h-10"/>
@@ -90,11 +106,11 @@ export default function BannerArticle({ post }: { post: simpleNewsCard }) {
                         key={idx}
                         className={cn(
                             "text-sm",
-                            tag.color === 'blue' && "bg-blue-100 text-blue-800 border-blue-200",
-                            tag.color === 'green' && "bg-green-100 text-green-800 border-green-200",
-                            tag.color === 'red' && "bg-red-100 text-red-800 border-red-200",
-                            tag.color === 'yellow' && "bg-yellow-100 text-yellow-800 border-yellow-200",
-                            tag.color === 'purple' && "bg-purple-100 text-purple-800 border-purple-200"
+                            tag.color === 'blue' && "bg-blue-300 text-blue-950 border-blue-200",
+                            tag.color === 'green' && "bg-green-300 text-green-950 border-green-200",
+                            tag.color === 'red' && "bg-red-300 text-red-950 border-red-200",
+                            tag.color === 'yellow' && "bg-yellow-300 text-yellow-950 border-yellow-200",
+                            tag.color === 'purple' && "bg-purple-300 text-purple-950 border-purple-200"
                         )}
                         >
                             <Tag width={10} height={10} strokeWidth={3} className="w-10 h-10"/>

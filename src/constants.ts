@@ -7,9 +7,25 @@ export const PERMIT2_ADDRESS = "0x000000000022D473030F116dDEE9F6B43aC78BA3";
 export const MAGIC_CALLDATA_STRING = "f".repeat(130); // used when signing the eip712 message
 export const AFFILIATE_FEE = 100; // 1% affiliate fee. Denoted in Bps.
 export const FEE_RECIPIENT = "0xc591aDD1A42A2D746D145E157f37F99728231F4e"; // The ETH address that should receive affiliate fees
-export const MAINNET_EXCHANGE_PROXY ="0xdef1c0ded9bec7f1a1670819833240f027b25eff";
 export const MAX_ALLOWANCE =Number(115792089237316195423570985008687907853269984665640564039457584007913129639935);
 export const DEFAULT_SLIPPAGE_BPS = 50; // 0.5% default slippage
+
+//Proxies
+export const MAINNET_EXCHANGE_PROXY ="0xdef1c0ded9bec7f1a1670819833240f027b25eff";
+export const POLYGON_EXCHANGE_PROXY = "0xDef1C0ded9bec7F1a1670819833240f027b25EfF";
+
+// In src/constants.ts
+export const EXCHANGE_PROXY_ADDRESS: Record<number, string> = {
+  1: '0xdef1c0ded9bec7f1a1670819833240f027b25eff', // Mainnet
+  137: '0xdef1c0ded9bec7f1a1670819833240f027b25eff', // Polygon
+  // Add new chain here
+};
+
+export const RPC_URLS: Record<number, string> = {
+  1: `https://mainnet.infura.io/v3/${process.env.NEXT_PUBLIC_INFURA_ID}`,
+  137: `https://polygon-rpc.com`,
+  // Add new chain RPC URL
+};
 
 export interface Token {
   symbol: string;

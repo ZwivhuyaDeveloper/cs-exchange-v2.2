@@ -46,6 +46,21 @@ export default {
       description: 'Reference to the cryptocurrency token for this signal'
     },
     {
+      name: 'analyst',
+      title: 'Analyst',
+      type: 'reference',
+      to: [{ type: 'analystProfile' }],
+      validation: (Rule: Rule) => Rule.required().error('Analyst selection is required'),
+      description: 'Reference to the analyst who created this signal'
+    },
+    {
+      name: 'category',
+      title: 'Signal Category',
+      type: 'reference',
+      to: [{ type: 'signalCategory' }],
+      description: 'Category for organizing and filtering signals'
+    },
+    {
       name: 'direction',
       title: 'Direction',
       type: 'string',
@@ -312,11 +327,50 @@ export default {
       ]
     },
     {
+      name: 'accessLevel',
+      title: 'Access Level',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Public', value: 'public' },
+          { title: 'Premium', value: 'premium' },
+          { title: 'Pro', value: 'pro' },
+          { title: 'Analyst Tier', value: 'analyst' },
+          { title: 'Admin Only', value: 'admin' }
+        ]
+      },
+      initialValue: 'public',
+      description: 'Who can access this signal'
+    },
+    {
       name: 'isPremium',
-      title: 'Premium Signal',
+      title: 'Premium Signal (Legacy)',
       type: 'boolean',
       initialValue: false,
-      description: 'Whether this is a premium signal for paid subscribers'
+      hidden: true,
+      description: 'Legacy field - use accessLevel instead'
+    },
+    {
+      name: 'priority',
+      title: 'Signal Priority',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Low', value: 'low' },
+          { title: 'Medium', value: 'medium' },
+          { title: 'High', value: 'high' },
+          { title: 'Critical', value: 'critical' }
+        ]
+      },
+      initialValue: 'medium',
+      description: 'Priority level for signal notifications'
+    },
+    {
+      name: 'featured',
+      title: 'Featured Signal',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Whether to feature this signal prominently'
     },
     {
       name: 'lastUpdated',

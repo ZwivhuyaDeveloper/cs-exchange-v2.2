@@ -4,15 +4,20 @@ interface TokenSelectorIconListProps {
   tokens: any[];
   selectedToken: string;
   onSelect: (symbol: string) => void;
+  excludedToken?: string;
 }
 
 export function TokenSelectorIconList({
   tokens,
   selectedToken,
   onSelect,
+  excludedToken,
 }: TokenSelectorIconListProps) {
-  // Only show the first 4 tokens
-  const topTokens = tokens.slice(0, 4);
+  // Filter out excluded token, then show the first 4 tokens
+  const filteredTokens = tokens.filter(token => 
+    !excludedToken || token.symbol.toLowerCase() !== excludedToken.toLowerCase()
+  );
+  const topTokens = filteredTokens.slice(0, 4);
   return (
     <div className="flex gap-2 overflow-x-auto py-1">
       {topTokens.map((token) => (
@@ -27,7 +32,7 @@ export function TokenSelectorIconList({
           `}
           onClick={() => onSelect(token.symbol.toLowerCase())}
         >
-          <Avatar className="h-6 w-6">
+          <Avatar className="h-8 w-8 sm:h-6 sm:w-6">
             <AvatarImage src={token.logoURL || token.logoURI} />
           </Avatar>
         </button>

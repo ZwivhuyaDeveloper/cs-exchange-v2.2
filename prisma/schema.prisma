@@ -13,13 +13,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model user {
+  id    Int @id @default(autoincrement())
+  email String @unique
+  name  String?
+  password String?
+  imageUrl String?
+  clerkUserId String @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Chain {
   id          Int      @id @default(autoincrement())
   chainId     Int      @unique
   name        String
+  logoURL     String?
   nativeToken String
   rpcUrl      String
   explorerUrl String
+  isActive    Boolean  @default(true)
   tokens      Token[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -39,6 +52,7 @@ model Token {
   type              TokenType? @default(CRYPTO)
   exchange          Exchange?
   isDefault         Boolean  @default(false)
+  isActive          Boolean  @default(true)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -83,3 +97,4 @@ enum Exchange {
   FOREXCOM
   TRADENATION
 }
+

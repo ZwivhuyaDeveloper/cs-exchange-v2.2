@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 
 interface TaxInfoProps {
   buyTokenTax: {
@@ -11,27 +12,48 @@ interface TaxInfoProps {
   };
   buyToken: string;
   sellToken: string;
+  tokenMap: Record<string, { symbol?: string }>;
 }
 
-export function TaxInfo({ buyTokenTax, sellTokenTax, buyToken, sellToken, tokenMap }: any) {
+export function TaxInfo({ buyTokenTax, sellTokenTax, buyToken, sellToken, tokenMap }: TaxInfoProps) {
   const formatTax = (taxBps: string) => (parseFloat(taxBps) / 100).toFixed(2);
-
+  
+  const hasBuyTax = buyTokenTax?.buyTaxBps !== "0";
+  const hasSellTax = sellTokenTax?.sellTaxBps !== "0";
+  
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
+  if (!hasBuyTax && !hasSellTax) return null;
+
   return (
-    <div className="text-slate-400 w-26 h-6 " title="Tax Info">
-      {buyTokenTax.buyTaxBps !== "0" && (
-        <p>
-          {(tokenMap?.[buyToken]?.symbol || buyToken) +
-            ` Buy Tax: ${formatTax(buyTokenTax.buyTaxBps)}%`}
-        </p>
+    <div className="w-full">
+      {hasBuyTax && (
+        <Badge 
+          variant="outline"
+          className="justify-end w-full items-end h-fit bg-transparent border-transparent gap-1 m-0 p-0"
+        >
+          <div className="flex w-full justify-end">
+            <div className="text-muted-foreground text-sm font-medium">
+              {(tokenMap?.[buyToken]?.symbol || buyToken)} Buy Tax: {formatTax(buyTokenTax.buyTaxBps)}%
+            </div>
+          </div>
+        </Badge>
       )}
-      {sellTokenTax.sellTaxBps !== "0" && (
-        <p>
-          {(tokenMap?.[sellToken]?.symbol || sellToken) +
-            ` Sell Tax: ${formatTax(sellTokenTax.sellTaxBps)}%`}
-        </p>
+      {hasSellTax && (
+        <Badge 
+          variant="outline"
+          className="justify-end w-full items-end h-fit bg-transparent border-transparent gap-1 m-0 p-0"
+        >
+          <div className="flex w-full justify-end">
+            <div className="text-muted-foreground text-sm font-medium">
+              <span className="text-sm">
+                {(tokenMap?.[sellToken]?.symbol || sellToken)} Sell Tax:
+              </span>
+              <span className="text-sm"> {formatTax(sellTokenTax.sellTaxBps)}%</span>
+            </div>
+          </div>
+        </Badge>
       )}
     </div>
   );

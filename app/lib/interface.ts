@@ -1,3 +1,29 @@
+export interface Author {
+  _id: string;
+  _type: 'author';
+  name: string;
+  slug: {
+    _type: 'slug';
+    current: string;
+  };
+  role?: string;
+  bio?: string;
+  avatar?: {
+    _type: 'image';
+    asset: {
+      _ref: string;
+      _type: 'reference';
+    };
+    alt?: string;
+  };
+  socialLinks?: Array<{
+    platform: string;
+    url: string;
+  }>;
+  isStaff?: boolean;
+  email?: string;
+}
+
 export interface Tag {
   name: string;
   color: string;
@@ -18,7 +44,12 @@ export interface simpleNewsCard {
   category: any;
   impacts: Impact[];
   tags: Tag[];
-
+  author: Author | null;
+  keyPoints?: Array<{
+    _key: string;
+    point: string;
+    description?: string;
+  }>;
 }
 
 export interface fullNews {
@@ -34,6 +65,12 @@ export interface fullNews {
   category: any;
   impacts: Impact[];
   tags: Tag[];
+  author: Author | null;
+  keyPoints?: Array<{
+    _key: string;
+    point: string;
+    description?: string;
+  }>;
 }
 
 export interface simpleResearchCard {
@@ -72,45 +109,3 @@ export type DateFormatOptions = {
   minute?: 'numeric' | '2-digit';
   second?: 'numeric' | '2-digit';
 };
-
-/**
- * Token interface: minimal, robust, URL-safe
- */
-export interface Token {
-  _id: string;
-  _type: 'token';
-  symbol: string;
-  name: string;
-  slug: string;
-  coingeckoId: string;
-  logo: string;
-  contractAddress?: string;
-  blockchain?: string;
-}
-
-/**
- * Represents a crypto trading signal document.
- */
-export interface CryptoSignal {
-  _id: string;
-  _type: 'signal';
-  name: string;
-  slug: string;
-  token: Token;
-  direction: 'buy' | 'sell';
-  entryPrice: number;
-  targetPrices: number[];
-  stopLoss?: number;
-  publishedAt: string;
-  status: 'active' | 'completed' | 'canceled';
-  exitPrice?: number;
-  notes?: string;
-  timeframe?: 'short' | 'medium' | 'long';
-  riskLevel?: 'low' | 'medium' | 'high';
-  associatedContent?: {
-    _id: string;
-    title: string;
-    slug: string;
-    _type: string;
-  };
-}

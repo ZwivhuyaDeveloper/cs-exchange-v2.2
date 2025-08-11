@@ -71,7 +71,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (!tokenInfo && !tokenError) {
     return (
-      <div className="grid grid-row-2 gap-1 w-full h-full overflow-hidden rounded-2xl items-center">
+      <div className="  hidden lg:flex sm:grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
         <div className="w-full h-full rounded-2xl gap-1 flex flex-row justify-between items-center">
           <Skeleton className="h-6 w-32" />
         </div>
@@ -95,7 +95,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (tokenError) {
     return (
-      <div className="p-4 w-full dark:bg-zinc-950 bg-white rounded gap-5 h-fit">
+      <div className="p-4 w-full hidden lg:flex sm:flex dark:bg-zinc-950 bg-white rounded gap-5 h-22">
         <div className='grid grid-col-2 gap-3 w-full'>
           <div className='grid grid-cols-2 gap-3 w-full'>
             <div className='gap-2 flex flex-col'>
@@ -134,22 +134,22 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (isLoading) {
     return (
-      <div className="grid grid-row-2 gap-1 w-full h-full overflow-hidden rounded-2xl items-center">
+      <div className=" hidden lg:flex sm:grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
         <div className="w-full h-full rounded-2xl gap-1 flex flex-row justify-between items-center">
           <Skeleton className="h-6 w-32" />
         </div>
-        <div className="w-full gap-1 h-full justify-center items-center flex flex-row">
+        <div className="w-full gap-1 h-60 justify-center items-center flex flex-row">
           <div className="flex flex-col gap-1 w-full h-full">
-            <Skeleton className="h-20 w-full rounded-2xl" />
-            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
           </div>
           <div className="flex flex-col gap-1 w-full h-full">
-            <Skeleton className="h-20 w-full rounded-2xl" />
-            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
           </div>
           <div className="flex flex-col gap-1 w-full h-full">
-            <Skeleton className="h-20 w-full rounded-2xl" />
-            <Skeleton className="h-20 w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
+            <Skeleton className="h-full w-full rounded-2xl" />
           </div>
         </div>
       </div>
@@ -158,7 +158,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (isError) {
     return (
-      <div className="p-4 w-full dark:bg-zinc-950 bg-white rounded gap-5 h-fit">
+      <div className="p-4 w-full hidden lg:flex sm:grid-row-2 gap-1 dark:bg-zinc-950 bg-white rounded gap-5 h-22">
         <div className='grid grid-col-2 gap-3 w-full'>
           <div className='grid grid-cols-2 gap-3 w-full'>
             <div className='gap-2 flex flex-col'>
@@ -197,7 +197,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (!marketData) {
     return (
-      <div className="grid grid-row-2 gap-1 p-3 px-5 py-5 w-full h-full overflow-hidden dark:bg-[#0E76FD] bg-zinc-100 rounded-2xl">
+      <div className="hidden lg:flex sm:grid-row-2 gap-1 p-3 px-5 py-5 w-full h-full overflow-hidden dark:bg-[#0E76FD] bg-zinc-100 rounded-2xl">
         <p className="text-zinc-500 text-sm">No market data available for {tokenSymbol.toUpperCase()}</p>
       </div>
     );
@@ -217,9 +217,9 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
 function StatItem({ title, value, isCurrency }: { title: string; value: number | undefined; isCurrency: boolean }) {
   return (
-    <div className="w-full h-12 rounded-2xl justify-between flex flex-col text-start items-center">
-      <h1 className="text-sm sm:text-xs md:text-xs lg:text-sm w-full font-medium text-zinc-400">{title}</h1>
-      <h2 className="text-md sm:text-md md:text-md lg:text-md text-start font-semibold w-full">
+    <div className="w-full h-12 rounded-2xl justify-between hidden md:flex lg:flex-col text-start items-center">
+      <h1 className="text-xs md:text-sm lg:text-sm w-full font-medium text-zinc-400">{title}</h1>
+      <h2 className="text-xs  md:text-sm lg:text-[15px] text-start font-semibold w-full">
         {value !== undefined
           ? isCurrency
             ? `$${value.toLocaleString()}`

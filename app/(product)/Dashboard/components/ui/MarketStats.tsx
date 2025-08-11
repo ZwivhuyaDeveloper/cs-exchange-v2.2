@@ -2,9 +2,12 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from "@/components/ui/skeleton";
-import { PercentDiamond } from 'lucide-react';
+import { PercentDiamond, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
+import Image from 'next/image';
+import { InfoCard } from './InfoCard';
+import { getMarketStatsInfo } from './componentData';
 
 interface MarketStatsProps {
   tokenSymbol: string;
@@ -191,20 +194,24 @@ export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsPro
   return (
     <div className="flex flex-col gap-3 p-4 w-full  rounded-none dark:bg-[#0F0F0F] bg-white">
 
-      <div className='flex flex-row justify-between items-center'>
+      <div className='flex flex-row justify-between items-center mb-2'>
         <div className="items-center w-full flex flex-row gap-3">
-          <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
-            <span className="text-[#00FFC2] text-[8px] font-bold"><PercentDiamond width={16} height={16}/></span>
+          <div className="h-6 w-6 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+            <Image 
+              src={tokenInfo.logoURL || "/placeholder-token.png"}
+              alt={tokenInfo.name}
+              className="h-6 w-6  rounded-full dark:bg-zinc-800 bg-white"
+              width={24}
+              height={24}
+            />
           </div>
           <h1 className="dark:text-white text-black font-semibold text-md sm:text-md">
-            Market stats for <span className="dark:text-[#00FFC2] text-[#00FFC2]">{tokenSymbol.toUpperCase()}</span>
+            Market stats for <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
           </h1>
         </div>
 
-        <div className='flex flex-row items-center justify-center h-fit w-fit'>
-          <div className=' w-3 h-3 bg-green-300 rounded-full translate-x-3 '/>
-          <div className=' w-3 h-3 bg-green-500 rounded-full translate-x-2 '/>
-          <div className=' w-3 h-3 bg-green-700 rounded-full translate-x-1 '/>
+        <div className='flex items-center gap-2'>
+          <InfoCard {...getMarketStatsInfo()} />
         </div>
       </div>
       
@@ -249,22 +256,37 @@ function StatItem({ title, value, change = 0, isCurrency }: {
   isCurrency: boolean; 
 }) {
   const formattedChange = Math.abs(change) > 0.01 ? change.toFixed(2) : change?.toFixed(2);
-  const formattedValue = value ? 
-    isCurrency
-      ? `$${value.toLocaleString(undefined, { 
-          maximumFractionDigits: value > 1000 ? 0 : 2,
-          notation: value > 1e6 ? 'compact' : 'standard'
-        })}`
-      : value.toLocaleString(undefined, {
-          notation: value > 1e6 ? 'compact' : 'standard',
-          maximumFractionDigits: 0
-        })
-    : 'N/A';
+  const formattedValue = value ? (
+    <>
+      {/* Mobile: Full number */}
+      <span className="md:hidden">
+        {isCurrency 
+          ? `$${value.toLocaleString(undefined, { 
+              maximumFractionDigits: 2
+            })}`
+          : value.toLocaleString(undefined, {
+              maximumFractionDigits: 0
+            })}
+      </span>
+      {/* Desktop: Compact format */}
+      <span className="hidden md:inline">
+        {isCurrency
+          ? `$${value.toLocaleString(undefined, { 
+              maximumFractionDigits: value > 1000 ? 0 : 2,
+              notation: value > 1e6 ? 'compact' : 'standard'
+            })}`
+          : value.toLocaleString(undefined, {
+              notation: value > 1e6 ? 'compact' : 'standard',
+              maximumFractionDigits: 0
+            })}
+      </span>
+    </>
+  ) : 'N/A';
 
   return (
-    <div className="w-full h-23 p-3 rounded-2xl dark:bg-zinc-900/80 bg-zinc-100 backdrop-blur-sm">
+    <div className="w-full h-23 p-3 rounded-2xl dark:bg-zinc-900 bg-zinc-200/50 backdrop-blur-sm">
       <div className="flex items-center justify-between gap-2">
-        <h1 className="text-sm sm:text-xs md:text-xs lg:text-xs font-semibold text-zinc-400">{title}</h1>
+        <h1 className="text-sm sm:text-xs md:text-xs lg:text-xs font-medium text-zinc-400">{title}</h1>
         {change !== undefined && (
           <span className={`text-xs font-medium text-[11px] px-2 py-1 rounded-full flex flex-row ${
             change >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
@@ -273,7 +295,7 @@ function StatItem({ title, value, change = 0, isCurrency }: {
           </span>
         )}
       </div>
-      <h2 className="text-md font-semibold mt-1 truncate">
+      <h2 className="text-sm font-semibold mt-1 truncate">
         {formattedValue}
       </h2>
     </div>

@@ -62,7 +62,8 @@ export default function NewsSection({ data }: NewsSectionProps) {
         (post.title && post.title.toLowerCase().includes(query)) || 
         (post.categoryName && post.categoryName.toLowerCase().includes(query)) ||
         (post.tags && post.tags.some(tag => tag.name && tag.name.toLowerCase().includes(query))) ||
-        (post.impacts && post.impacts.some(impact => impact.name && impact.name.toLowerCase().includes(query)))
+        (post.impacts && post.impacts.some(impact => impact.name && impact.name.toLowerCase().includes(query))) ||
+        (post.author && post.impacts.some(author => author.name && author.name.toLowerCase().includes(query)))
       );
     }
 
@@ -99,12 +100,12 @@ export default function NewsSection({ data }: NewsSectionProps) {
   const skipLatestArticle = !selectedCategory && !searchQuery;
 
   return (
-    <div className="bg-white dark:bg-[#0F0F0F]">
-      <div className="flex flex-col  justify-between items-start sm:items-center px-5 pt-4 gap-4">
-        <div className="justify-between flex flex-row w-full">
-          <h1 className="text-lg flex flex-row justify-between text-start text-zinc-500 font-semibold tracking-wide">
-            <span className="flex flex-row gap-1 text-3xl text-black dark:text-white font-bold">
-              <p className="text-blue-500">Latest</p>Headlines
+    <div className="bg-white dark:bg-[#0F0F0F] border border-px dark:border-zinc-700  ">
+      <div className="flex flex-col justify-between items-start sm:items-center px-5 pt-4 gap-4">
+        <div className="justify-between space-y-2 lg:space-y-0 flex flex-col lg:flex-row w-full">
+          <h1 className="text-lg py-1 sm:py-1 flex flex-row justify-between text-start text-zinc-500 font-semibold tracking-wide">
+            <span className="flex flex-row gap-1 text-xl sm:text-3xl text-black dark:text-white font-bold">
+              <p className="text-[#0E76FD] dark:text-[#00FFC2]">Latest</p>Headlines
             </span>
           </h1>
 
@@ -113,12 +114,13 @@ export default function NewsSection({ data }: NewsSectionProps) {
             placeholder="Search by title, category, or tags..." 
           />
         </div>
-
-        <NewsFilter 
-          categories={categories} 
-          onFilterChange={handleFilterChange} 
-          selectedCategory={selectedCategory}
-        />
+        <div className="w-full ">
+          <NewsFilter 
+            categories={categories} 
+            onFilterChange={handleFilterChange} 
+            selectedCategory={selectedCategory}
+          />
+        </div>
         
       </div>
       
@@ -138,9 +140,9 @@ export default function NewsSection({ data }: NewsSectionProps) {
         </div>
       ) : (
         <>
-        <div className="grid grid-cols-3 gap-2 justify-center py-2 px-5">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-2 justify-center py-2 px-5">
           {currentArticles.map((post, idx) => (
-            <Card key={idx} className="w-fit p-3 m-0 shadow-none border-none h-full gap-2 bg-zinc-100 dark:bg-zinc-800 ">
+            <Card key={idx} className="w-fit p-3 m-0 shadow border-none shadow-zinc-200 dark:shadow-zinc-900 h-full gap-2 bg-white dark:bg-zinc-800 ">
               <div>
                 <div className="absolute p-3">
                   <Badge className="w-fit bg-blue-100 text-blue-700 border-px border-none ">
@@ -164,20 +166,36 @@ export default function NewsSection({ data }: NewsSectionProps) {
                 </p>
 
               <div className="justify-between flex flex-row items-center mt-2 w-full">
-                <div className="flex flex-row justify-between ">
-                  {isRecent(post.publishedAt) && (
-                      <span className="animate-pulse"><Badge>New</Badge></span>
+              <div className="flex items-center justify-between gap-4">
+                {isRecent(post.publishedAt) && (
+                  <span className="ml-1 animate-pulse">🆕</span>
+                )}
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    {post.author?.avatar && (
+                      <div className="w-6 h-6 rounded-full overflow-hidden">
+                        <Image
+                          src={urlFor(post.author.avatar).url()}
+                          width={24}
+                          height={24}
+                          alt={post.author.name || 'Author'}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
                     )}
-                  <span className="text-sm text-zinc-800">
+                    <p className="text-xs font-medium text-zinc-900 dark:text-zinc-100">
+                      {post.author?.name || 'Anonymous'}
+                    </p>
+                  </div>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">
                     {formatDate(post.publishedAt, {
                       year: 'numeric',
                       month: 'short',
                       day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
                     })}
-                  </span>
+                  </p>
                 </div>
+              </div>
                   {/* impact display */}
                   <div className="flex flex-row items-center gap-1">
                     <h3 className="text-xs font-medium">Impact:</h3>
@@ -188,11 +206,11 @@ export default function NewsSection({ data }: NewsSectionProps) {
                             key={impactIdx}
                             className={cn(
                               "text-xs",
-                              impact.color === 'blue' && "bg-blue-100 text-blue-800 border-blue-200",
-                              impact.color === 'green' && "bg-green-100 text-green-800 border-green-200",
-                              impact.color === 'red' && "bg-red-100 text-red-800 border-red-200",
-                              impact.color === 'yellow' && "bg-yellow-100 text-yellow-800 border-yellow-200",
-                              impact.color === 'purple' && "bg-purple-100 text-purple-800 border-purple-200",
+                              impact.color === 'blue' && "bg-blue-300 text-blue-950 border-blue-200",
+                              impact.color === 'green' && "bg-green-300 text-green-950 border-green-200",
+                              impact.color === 'red' && "bg-red-300 text-red-950 border-red-200",
+                              impact.color === 'yellow' && "bg-yellow-300 text-yellow-950 border-yellow-200",
+                              impact.color === 'purple' && "bg-purple-300 text-purple-950 border-purple-200",
                             )}
                           >
                             <Globe width={8} height={8} strokeWidth={3} className="w-8 h-8"/>
@@ -213,11 +231,11 @@ export default function NewsSection({ data }: NewsSectionProps) {
                         key={tagIdx}
                         className={cn(
                           "text-xs",
-                          tag.color === 'blue' && "bg-blue-100 text-blue-800 border-blue-200",
-                          tag.color === 'green' && "bg-green-100 text-green-800 border-green-200",
-                          tag.color === 'red' && "bg-red-100 text-red-800 border-red-200",
-                          tag.color === 'yellow' && "bg-yellow-100 text-yellow-800 border-yellow-200",
-                          tag.color === 'purple' && "bg-purple-100 text-purple-800 border-purple-200",
+                          tag.color === 'blue' && "bg-blue-300 text-blue-950 border-blue-200",
+                          tag.color === 'green' && "bg-green-300 text-green-950 border-green-200",
+                          tag.color === 'red' && "bg-red-300 text-red-950 border-red-200",
+                          tag.color === 'yellow' && "bg-yellow-300 text-yellow-950 border-yellow-200",
+                          tag.color === 'purple' && "bg-purple-300 text-purple-950 border-purple-200",
                         )}
                       >
                         <Tag width={10} height={10} strokeWidth={3} className="w-10 h-10"/>

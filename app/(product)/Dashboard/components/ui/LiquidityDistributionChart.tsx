@@ -8,6 +8,10 @@ import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent } from "
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
 import { useEffect, useState } from 'react';
+import { size } from 'viem';
+import Image from 'next/image';
+import { InfoCard } from './InfoCard';
+import { getLiquidityDistributionInfo } from './componentData';
 
 interface LiquidityDistributionProps {
   tokenSymbol: string;
@@ -230,44 +234,65 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
 
   return (
     <Card className="rounded-none border-none bg-white dark:bg-[#0F0F0F]">
-      <CardHeader className="flex flex-row items-center px-3 gap-2 justify-between">
+      <CardHeader className="px-4 gap-3 flex justify-between items-center">
         <div className="flex flex-row items-center gap-2">
-          <div className="rounded-full p-1 bg-[#00FFC2]/30 text-[#00FFC2]">
-            <BarChart3 strokeWidth={3} width={18} height={18}/>
+          <div className="h-6 w-6 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+            <Image 
+              src={tokenInfo.logoURL || "/placeholder-token.png"}
+              alt={tokenInfo.name}
+              className="h-6 w-6 rounded-full dark:bg-zinc-800 bg-white"
+              width={24}
+              height={24}
+            />
           </div>
-          <CardTitle>Liquidity Distribution - {tokenSymbol.toUpperCase()}</CardTitle>
-        </div>
-        <div className='flex flex-row items-center justify-center h-fit w-fit'>
-          <div className=' w-3 h-3 bg-green-300 rounded-full translate-x-3 '/>
-          <div className=' w-3 h-3 bg-green-500 rounded-full translate-x-2 '/>
-          <div className=' w-3 h-3 bg-green-700 rounded-full translate-x-1 '/>
+          <CardTitle className="flex items-center gap-2">
+            Liquidity Distribution  
+            <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
+          </CardTitle>
+          <InfoCard {...getLiquidityDistributionInfo()} />
         </div>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
+      <CardContent className="p-0 w-full">
+        <ChartContainer className='w-full px-2' config={chartConfig}>
           <BarChart
             accessibilityLayer
             data={liquidityData}
             layout="vertical"
             margin={{
-              left: -20,
+              left: 1,
+              right: 1,
+              top: 10,
+              bottom: 10
             }}
-            height={300}
+            barCategoryGap={8}
+            barGap={8}
+            height={600}
+            width={500}
+            barSize={10}
           >
             <XAxis 
               type="number" 
               dataKey="liquidity" 
               hide 
+              height={600}
+              width={500}
+              tickMargin={2}
+              tickLine={true}
+              axisLine={true}
+              scale='linear'
               tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
             />
             <YAxis
               dataKey="exchange"
               type="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
+              tickLine={true}
+              tickMargin={2}
+              axisLine={true}
               width={80}
-              tickFormatter={(value) => value.length > 12 ? value.slice(0, 12) + '...' : value}
+              height={80}
+              tick={{ fontSize: 11, width: 20, fill: 'var(--muted-foreground)' }}
+              tickFormatter={(value) => value}
+              interval={0}
             />
             <ChartTooltip
               cursor={false}
@@ -294,8 +319,9 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
             />
             <Bar 
               dataKey="liquidity" 
-              fill="#00FFC2" 
-              radius={[0, 4, 4, 0]}
+              fill="#0E76FD"
+              className="fill-[#0E76FD] dark:fill-[#00FFC2]"
+              radius={[4, 4, 4, 4]}
             />
           </BarChart>
         </ChartContainer>
