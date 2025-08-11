@@ -16,7 +16,7 @@ export const revalidate = 30; // revalidate at most 30 seconds
 
 async function getData() {
   const query = `
-  *[_type == 'news' && category->name == "Trending"] | order(_createdAt desc) {
+  *[_type == 'news' && category->name == "Economic News"] | order(_createdAt desc) {
     title,
       smallDescription,
       "currentSlug": slug.current,
@@ -41,7 +41,7 @@ async function getData() {
 }
 
 
-export default async function TrendingNews() {
+export default async function EconomicSection() {
   const data: simpleNewsCard[] = await getData()
   console.log(data);
 
@@ -52,12 +52,11 @@ export default async function TrendingNews() {
             <div className="h-6 w-6 bg-orange-500/20 rounded-full flex items-center justify-center">
               <PercentDiamond className="text-orange-500" size={16} />
             </div>
-            <span>Trending News</span>
+            <span>Economic News</span>
           </h1>
           <span className='text-zinc-500 text-md px-2'>See All</span>
         </header>
-        <ScrollArea.Root className="h-[calc(100vh-200px)] w-full rounded-none" type="auto">
-          <ScrollArea.Viewport className="w-full h-full">
+
             <div className='p-3 flex flex-col gap-2 mt-0 pt-0'>
           {data.map((post, idx) => (
             <Card key={idx} className='p-3 shadow-none dark:bg-zinc-900/90 bg-zinc-100 gap-2  border-none'>
@@ -154,15 +153,6 @@ export default async function TrendingNews() {
             </Card>
           ))}
           </div>
-        </ScrollArea.Viewport>
-        <ScrollArea.Scrollbar 
-          className="flex w-1.5 p-0.5 bg-zinc-100 dark:bg-zinc-900 transition-colors duration-150 ease-out hover:bg-zinc-200 dark:hover:bg-zinc-800" 
-          orientation="vertical"
-        >
-          <ScrollArea.Thumb className="flex-1 bg-zinc-300 dark:bg-zinc-600 rounded-full relative" />
-        </ScrollArea.Scrollbar>
-        <ScrollArea.Corner />
-      </ScrollArea.Root>
     </div>
   )
 }
