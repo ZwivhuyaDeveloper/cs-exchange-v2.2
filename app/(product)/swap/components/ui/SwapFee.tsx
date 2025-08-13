@@ -19,7 +19,7 @@ interface FeeBadgeProps {
   tokenMap: Record<string, TokenInfo>;
 }
 
-export function AffiliateFeeBadge({ price, buyToken, tokenMap }: FeeBadgeProps) {
+export function SwapFeeBadge({ price, buyToken, tokenMap }: FeeBadgeProps) {
   const getFormattedFee = (): { amount: string; symbol: string } | null => {
     if (!price?.fees) {
       console.debug('No fees object in price data');

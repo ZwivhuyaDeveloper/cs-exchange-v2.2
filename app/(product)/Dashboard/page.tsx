@@ -14,10 +14,7 @@ import LoadingIntro from "@/src/components/ui/loading-intro"
 import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Chart-radar"
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
 import "@rainbow-me/rainbowkit/styles.css";
-import NewsCards from "./components/news-cards"
-import NewsCardsWrapper from "./components/news-cards-wrapper"
-import VolumeChart from "./components/ui/VolumeChart"
-import Networks from "./components/ui/Networks"
+
 import dynamic from 'next/dynamic';
 
 // Dynamically import the client component with SSR disabled
@@ -68,6 +65,9 @@ export default function Page() {
                 <div className="mt-1 border border-px dark:border-zinc-700 border-zinc-200">
                   <TechnicalSpecs tokenSymbol={currentChartToken} />
                 </div>
+                <div className="mt-1 w-full dark:border-zinc-700 flex sm:hidden h-full border-zinc-100 mb-10 border-px border">
+                  <TrendingNewsClient />
+                </div>
               </ScrollArea.Viewport>
               <ScrollArea.Scrollbar className="flex w-0 bg-transparent touch-none select-none transition-colors duration-150 ease-out hover:bg-transparent" orientation="vertical">
                 <ScrollArea.Thumb className="flex-1 rounded-full bg-zinc-600" />
@@ -111,7 +111,7 @@ export default function Page() {
                       chainId={chainId}
                     />
                   </div>
-                  <div className="mt-1 w-[380px] dark:border-zinc-700 border-zinc-100 border-px border">
+                  <div className="mt-1 w-[380px] dark:border-zinc-700 hidden sm:flex h-full border-zinc-100 border-px border">
                     <TrendingNewsClient />
                   </div>
                 </div>

@@ -95,12 +95,29 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
 
   const impact = getSlippageImpact(value);
 
+  if (!value && value !== 0) {
+    return (
+      <div className="w-full">
+        <div className="flex items-center justify-between mb-1">
+          <span className="text-sm font-medium text-muted-foreground">Slippage Tolerance</span>
+          <div className="h-4 w-20 rounded-md bg-muted animate-pulse" />
+        </div>
+        <div className="h-9 rounded-md bg-muted/30 animate-pulse" />
+      </div>
+    );
+  }
+
   return (
-    <Card className={`w-full bg-zinc-900 border-none ${className}`}>
-      <CardHeader className="pb-3">
+    <Card className={`w-full bg-transparent border-none shadow-none p-0 ${className}`}>
+      <CardHeader className="p-0 pb-2">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
-          <Info className="h-4 w-4" />
           Slippage Tolerance
+          <div className="group relative">
+            <Info className="h-3.5 w-3.5 text-muted-foreground" />
+            <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-2 hidden group-hover:block w-48 p-2 text-xs bg-popover text-popover-foreground rounded shadow-lg z-10">
+              Your transaction will revert if the price changes unfavorably by more than this percentage.
+            </div>
+          </div>
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -121,7 +138,7 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
             variant={"default"}
             size="sm"
             onClick={handleCustomToggle}
-            className="flex-1 bg-[#00FFC2]"
+            className="flex-1  bg-[#00FFC2]"
           >
             Custom
           </Button>

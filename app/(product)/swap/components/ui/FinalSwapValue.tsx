@@ -182,30 +182,45 @@ export const FinalSwapValue = ({
   // Don't render anything if there's no amount to display
   if (!buyAmount || buyAmount === "0" || buyAmount === "0." || parseFloat(buyAmount) <= 0) return null;
 
+  if (loading) {
+    return <Skeleton className="h-6 w-32" />;
+  }
+
+  if (error) {
+    return (
+      <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/30">
+        <span className="text-xs font-medium text-red-600 dark:text-red-400">Error loading amount</span>
+      </div>
+    );
+  }
+
+  if (!formattedNetAmount) {
+    return (
+      <div className="flex items-center gap-1">
+        <span className="font-medium text-foreground">0.0</span>
+        <span className="text-muted-foreground">
+          {tokenInfo?.symbol || buyTokenSymbol}
+        </span>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col w-full">
       <div className="text-sm text-gray-400 font-normal">
-        {loading ? (
-          <Skeleton className="h-4 w-32" />
-        ) : error ? (
-          <span className="text-sm text-muted-foreground">
-            Could not calculate amount
+        <div className="flex items-center gap-1">
+          <span className="font-medium text-foreground">
+            {formattedNetAmount}
           </span>
-        ) : formattedNetAmount ? (
-          <div className="flex items-center gap-1">
-            <span className="font-medium text-foreground">
-              {formattedNetAmount}
+          <span className="text-muted-foreground">
+            {tokenInfo?.symbol || buyTokenSymbol}
+          </span>
+          {feeAmount && parseFloat(feeAmount) > 0 && (
+            <span className="text-sm text-muted-foreground ml-1">
+              (incl. {AFFILIATE_FEE/100}% fee)
             </span>
-            <span className="text-muted-foreground">
-              {displaySymbol}
-            </span>
-            {feeAmount && parseFloat(feeAmount) > 0 && (
-              <span className="text-sm text-muted-foreground ml-1">
-                (incl. {AFFILIATE_FEE/100}% fee)
-              </span>
-            )}
-          </div>
-        ) : null}
+          )}
+        </div>
       </div>
     </div>
   );

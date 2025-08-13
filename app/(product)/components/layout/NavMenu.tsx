@@ -160,8 +160,10 @@ export const NavMenu = React.memo(() => {
           onClick={() => setIsOpen(true)}
           className="md:hidden"
           aria-label="Toggle menu"
-        >
-          <Menu className="h-5 w-5" />
+        > 
+          <div className='dark:bg-zinc-700 p-2 rounded-md'>
+            <Menu width={10} height={10} size={50} className="h-20 w-20" />
+          </div>
           <span className="sr-only">Open menu</span>
         </Button>
       </div>
