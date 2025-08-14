@@ -14,6 +14,7 @@ import LiveChart from "./live-chart";
 import { useTheme } from "@/context/ThemeContext";
 import ChartStats from "./chart-stats";
 import { CandlestickChart, X } from "lucide-react";
+import LiveChart2 from "./live-chart2";
 
 
 interface TradingChartProps {
@@ -331,7 +332,7 @@ export function TradingChart({
 
       {/* Desktop Chart */}
       <CardContent className="h-[700px] hidden sm:h-[700px] w-full p-0 lg:flex md:flex dark:bg-[#0F0F0F] bg-white">
-        <LiveChart 
+        <LiveChart2 
           tokenSymbol={currentTokenSymbol} 
           tradingViewSymbol={tradingViewSymbol}
           theme={resolvedTheme}
