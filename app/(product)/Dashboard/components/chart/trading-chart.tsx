@@ -330,7 +330,7 @@ export function TradingChart({
       </div>
 
       {/* Desktop Chart */}
-      <CardContent className="h-[700px] hidden sm:h-[650px] w-full p-0 lg:flex md:flex dark:bg-[#0F0F0F] bg-white">
+      <CardContent className="h-[700px] hidden sm:h-[700px] w-full p-0 lg:flex md:flex dark:bg-[#0F0F0F] bg-white">
         <LiveChart 
           tokenSymbol={currentTokenSymbol} 
           tradingViewSymbol={tradingViewSymbol}

@@ -1,5 +1,4 @@
-import { useEffect, useState, useMemo, useCallback } from "react";
-import { formatUnits, parseUnits } from "ethers";
+import { useEffect, useState, useMemo } from "react";
 import { AFFILIATE_FEE } from "@/src/constants";
 import { Skeleton } from "@/components/ui/skeleton";
 
@@ -18,209 +17,137 @@ export const FinalSwapValue = ({
   feeAmount, 
   tokenMap 
 }: FinalSwapValueProps) => {
-  const [formattedNetAmount, setFormattedNetAmount] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [state, setState] = useState({
+    formattedNetAmount: "0.0",
+    loading: false,
+    error: null as string | null,
+  });
 
-  // Get token info with memoization and debug logging
+  // Get token info (if available)
   const tokenInfo = useMemo(() => {
-    if (!buyTokenSymbol) {
-      console.log('No buyTokenSymbol provided');
-      return null;
-    }
-    
-    console.log('Looking up token:', buyTokenSymbol);
-    console.log('Available tokens in map:', Object.keys(tokenMap || {}));
+    if (!buyTokenSymbol) return null;
     
     const tokenKey = Object.keys(tokenMap || {}).find(
       key => key.toLowerCase() === buyTokenSymbol.toLowerCase()
     );
     
-    const token = tokenKey ? tokenMap[tokenKey] : null;
-    console.log('Found token:', token);
-    
-    return token;
+    return tokenKey ? tokenMap[tokenKey] : null;
   }, [buyTokenSymbol, tokenMap]);
 
-  // Format the amount with proper decimal handling using ethers.js
-  const formatTokenAmount = useCallback((amount: string, decimals: number = 18) => {
-    try {
-      console.log(`Formatting amount: ${amount} with ${decimals} decimals`);
-      
-      if (!amount || amount === '0' || amount === '0.') {
-        console.log('Empty or zero amount');
-        return { formatted: "", raw: "" };
-      }
-      
-      // Parse the amount with the correct decimals
-      let parsedAmount: number;
+  // Token display symbol (fallback to buyTokenSymbol if tokenInfo missing)
+  const displaySymbol = useMemo(() => {
+    if (!buyTokenSymbol) return '';
+    return tokenInfo?.symbol?.toUpperCase() || buyTokenSymbol.toUpperCase();
+  }, [buyTokenSymbol, tokenInfo]);
+
+  // Format token amount
+  const formatTokenAmount = useMemo(() => {
+    return (amount: string, decimals: number = 18): string => {
       try {
-        parsedAmount = parseFloat(amount);
-        if (isNaN(parsedAmount) || parsedAmount <= 0) {
-          console.log('Invalid or non-positive amount');
-          return { formatted: "", raw: "" };
-        }
-      } catch (e) {
-        console.error('Error parsing amount:', e);
-        return { formatted: "", raw: "" };
-      }
-
-      // For tokens with very small values, show more decimal places
-      const isSmallValue = parsedAmount < 0.0001;
-      const isStablecoin = ['USDC', 'USDT', 'DAI', 'BUSD'].includes(buyTokenSymbol?.toUpperCase() || '');
-      
-      let significantDecimals = Math.min(decimals, 18); // Cap at 18 decimals
-      
-      if (isStablecoin) {
-        // Always show 2 decimal places for stablecoins
-        significantDecimals = Math.max(2, significantDecimals);
-      } else if (isSmallValue) {
-        // Show more decimals for very small values
-        significantDecimals = Math.min(8, significantDecimals);
-      } else {
-        // For normal values, use 4-6 decimal places
-        significantDecimals = Math.min(6, significantDecimals);
-      }
-
-      // Format with grouping and appropriate decimal places
-      const formatOptions: Intl.NumberFormatOptions = {
-        minimumFractionDigits: isStablecoin ? 2 : 0,
-        maximumFractionDigits: significantDecimals,
-        useGrouping: true
-      };
-
-      const formatted = parsedAmount.toLocaleString(undefined, formatOptions);
-      console.log(`Formatted ${parsedAmount} as:`, formatted);
-      
-      return { 
-        formatted, 
-        raw: parsedAmount.toString() 
-      };
-    } catch (err) {
-      console.error("Error formatting amount:", err);
-      return { formatted: "", raw: "" };
-    }
-  }, [buyTokenSymbol]);
-
-  useEffect(() => {
-    let isMounted = true;
-    
-    const calculateFinalAmount = async () => {
-      if (!isMounted) return;
-      
-      try {
-        setLoading(true);
-        setError(null);
+        // Handle empty or zero amount
+        if (!amount || amount === '0' || amount === '0.' || parseFloat(amount) <= 0) return "0.0";
         
-        console.group('FinalSwapValue - calculateFinalAmount');
-        console.log('buyTokenSymbol:', buyTokenSymbol);
-        console.log('buyAmount:', buyAmount);
-        console.log('tokenInfo:', tokenInfo);
-
-        // If no token info is available, we can't proceed
-        if (!tokenInfo && buyTokenSymbol) {
-          const errorMsg = `Token not found in tokenMap: ${buyTokenSymbol}. Available tokens: ${Object.keys(tokenMap || {}).join(', ')}`;
-          console.warn(errorMsg);
-          if (isMounted) setError("Token not found");
-          return;
-        }
-
-        // If no buy amount, reset
-        if (!buyAmount || buyAmount === "0" || buyAmount === "0." || parseFloat(buyAmount) <= 0) {
-          console.log('No valid buy amount provided');
-          if (isMounted) setFormattedNetAmount("");
-          return;
-        }
-
-        // Get token decimals with fallback to 18
-        const decimals = tokenInfo?.decimals ?? 18;
-        console.log('Using decimals:', decimals, 'for token:', buyTokenSymbol);
+        const parsedAmount = parseFloat(amount);
+        if (isNaN(parsedAmount)) return "0.0";
         
-        // Format the amount with proper decimal handling
-        const { formatted, raw } = formatTokenAmount(buyAmount, decimals);
-        console.log('Formatted amount:', { formatted, raw });
+        const isStablecoin = ['USDC', 'USDT', 'DAI', 'BUSD'].includes(
+          buyTokenSymbol?.toUpperCase() || ''
+        );
         
-        if (!formatted) {
-          const errorMsg = `Invalid amount format for ${buyAmount} ${buyTokenSymbol} (${decimals} decimals)`;
-          console.error(errorMsg);
-          if (isMounted) setError("Invalid amount format");
-          return;
-        }
+        // Determine decimal places
+        let maxDecimals = decimals > 18 ? 18 : decimals;
+        if (isStablecoin) maxDecimals = Math.max(2, maxDecimals);
+        else if (parsedAmount < 0.0001) maxDecimals = Math.min(8, maxDecimals);
+        else maxDecimals = Math.min(6, maxDecimals);
         
-        if (isMounted) {
-          setFormattedNetAmount(formatted);
-          console.log('Successfully set formatted amount:', formatted);
-        }
-        
-      } catch (err) {
-        console.error("Failed to calculate final amount:", err);
-        if (isMounted) setError(`Error: ${err instanceof Error ? err.message : 'Unknown error'}`);
-      } finally {
-        console.groupEnd();
-        if (isMounted) setLoading(false);
+        // Format the number
+        return parsedAmount.toLocaleString(undefined, {
+          minimumFractionDigits: isStablecoin ? 2 : 0,
+          maximumFractionDigits: maxDecimals,
+          useGrouping: true
+        });
+      } catch {
+        return "0.0";
       }
     };
+  }, [buyTokenSymbol]);
 
-    // Add a small debounce to prevent rapid recalculations
+  // Calculate final amount
+  useEffect(() => {
+    let isMounted = true;
     const timer = setTimeout(() => {
-      calculateFinalAmount();
+      // show loader briefly if you like
+      setState(prev => ({ ...prev, loading: true }));
+
+      try {
+        // If there's no buyTokenSymbol (nothing selected) -> show 0.0
+        if (!buyTokenSymbol) {
+          if (isMounted) {
+            setState({
+              formattedNetAmount: "0.0",
+              loading: false,
+              error: null
+            });
+          }
+          return;
+        }
+
+        // If tokenInfo missing, we *don't* treat it as an error.
+        // Instead fallback to default decimals (18) and fallback display symbol.
+        const decimals = tokenInfo?.decimals ?? 18;
+        const formatted = formatTokenAmount(buyAmount || "0", decimals);
+        
+        if (isMounted) {
+          setState({
+            formattedNetAmount: formatted,
+            loading: false,
+            error: null
+          });
+        }
+      } catch (err) {
+        if (isMounted) {
+          setState({
+            formattedNetAmount: "0.0",
+            loading: false,
+            error: "Formatting error"
+          });
+        }
+      }
     }, 50);
 
-    // Cleanup function
     return () => {
       isMounted = false;
       clearTimeout(timer);
     };
   }, [buyAmount, buyTokenSymbol, tokenInfo, tokenMap, formatTokenAmount]);
 
-  // Get token display symbol with fallback
-  const displaySymbol = useMemo(() => {
-    if (!buyTokenSymbol) return '';
-    return tokenInfo?.symbol?.toUpperCase() || buyTokenSymbol.toUpperCase();
-  }, [buyTokenSymbol, tokenInfo]);
-
-  // Don't render anything if there's no amount to display
-  if (!buyAmount || buyAmount === "0" || buyAmount === "0." || parseFloat(buyAmount) <= 0) return null;
-
-  if (loading) {
-    return <Skeleton className="h-6 w-32" />;
-  }
-
-  if (error) {
-    return (
-      <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-red-50 dark:bg-red-900/20 border border-red-100 dark:border-red-800/30">
-        <span className="text-xs font-medium text-red-600 dark:text-red-400">Error loading amount</span>
-      </div>
-    );
-  }
-
-  if (!formattedNetAmount) {
-    return (
-      <div className="flex items-center gap-1">
-        <span className="font-medium text-foreground">0.0</span>
-        <span className="text-muted-foreground">
-          {tokenInfo?.symbol || buyTokenSymbol}
-        </span>
-      </div>
-    );
-  }
-
   return (
     <div className="flex flex-col w-full">
       <div className="text-sm text-gray-400 font-normal">
-        <div className="flex items-center gap-1">
-          <span className="font-medium text-foreground">
-            {formattedNetAmount}
+        {state.loading ? (
+          <Skeleton className="h-4 w-32" />
+        ) : state.error ? (
+          // Only show the generic message when we had an *actual* formatting error
+          <span className="text-sm text-muted-foreground">
+            Could not calculate amount
           </span>
-          <span className="text-muted-foreground">
-            {tokenInfo?.symbol || buyTokenSymbol}
-          </span>
-          {feeAmount && parseFloat(feeAmount) > 0 && (
-            <span className="text-sm text-muted-foreground ml-1">
-              (incl. {AFFILIATE_FEE/100}% fee)
+        ) : (
+          <div className="flex items-center gap-1">
+            <span className="font-medium text-foreground">
+              {state.formattedNetAmount}
             </span>
-          )}
-        </div>
+            {displaySymbol && (
+              <span className="text-muted-foreground">
+                {displaySymbol}
+              </span>
+            )}
+            {feeAmount && parseFloat(feeAmount || "0") > 0 && (
+              <span className="text-sm text-muted-foreground ml-1">
+                (incl. {AFFILIATE_FEE/100}% fee)
+              </span>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

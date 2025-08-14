@@ -61,7 +61,7 @@ model Token {
   @@index([symbol])
   @@index([address])
   @@index([coingeckoId])
-  TokenList TokenList[]
+  TokenList TokenList[] @relation("TokenList")
 }
 
 model TokenList {
@@ -70,7 +70,7 @@ model TokenList {
   name        String
   description String
   isDefault   Boolean  @default(false)
-  tokens      Token[]
+  tokens      Token[] @relation("TokenList")
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
@@ -92,9 +92,6 @@ enum Exchange {
   COINBASE
   BINANCE
   GEMINI
-  NASDAQ
-  NYSE
   FOREXCOM
   TRADENATION
 }
-

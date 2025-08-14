@@ -100,10 +100,9 @@ export function SwapFeeBadge({ price, buyToken, tokenMap }: FeeBadgeProps) {
     }
   };
 
-  const feeData = getFormattedFee();
-  if (!feeData) return null;
+  const feeData = getFormattedFee() || { amount: "0.0", symbol: "" };
 
-  return (
+  return (  
     <Badge 
       variant="outline"
       className="justify-end w-full items-end h-fit bg-transparent border-transparent gap-1 m-0 p-0"
