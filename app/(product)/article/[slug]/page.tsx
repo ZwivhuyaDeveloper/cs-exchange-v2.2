@@ -9,8 +9,7 @@ import { KeyPoints } from "@/app/(product)/components/KeyPoints";
 import ResearchDisplay from "../../News/components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';
 import { formatDate } from "@/app/lib/dateUtils";
-import type { AppProps } from "next/app"; // Add this import
-import { PageProps } from '../../../lib/interface';
+
 
 async function getData(slug: string) {
   const query = `
@@ -40,14 +39,18 @@ async function getData(slug: string) {
 }
 
 export const revalidate = 30;
+
 export const dynamic = 'force-dynamic';
 
-// Fix: Use PageProps from Next.js
-export default async function ArticlePage({ params }: PageProps) {
-  const data: fullNews = await getData(params.slug as string);
+export default async function ArticlePage({
+  params,
+}: {
+  params: { slug: string }
+  searchParams?: { [key: string]: string | string[] | undefined }
+}) {
+  const data: fullNews = await getData(params.slug);
 
   return (
-    // ... rest of your JSX remains unchanged ...
     <div className="bg-zinc-100 dark:bg-black">
       {/* Ticker */}
       <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
