@@ -166,7 +166,7 @@ export default async function Page({
           </div>
         </div>
         {/*Right-Section*/}
-        <div className="bg-white hidden sm:block w-[340px]">
+        <div className="bg-white hidden w-[340px]">
           <div>
             <ResearchDisplay/>
           </div>
