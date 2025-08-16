@@ -12,9 +12,6 @@ import ResearchDisplay from "../../News/components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';
 import { formatDate } from "@/app/lib/dateUtils";
 
-
-
-
 export const revalidate = 30; // revalidate at most 30 seconds
 
 async function getData(slug: string) {
@@ -42,16 +39,13 @@ async function getData(slug: string) {
       }[0]`;
 
   const data = await client.fetch(query);
-  console.log('Fetched article data:', JSON.stringify(data, null, 2));
-  console.log('Key points data:', data?.keyPoints);
   return data;
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export const dynamic = 'force-dynamic';
+
+// Fix: Use simplified props type
+export default async function Page({ params }: { params: { slug: string } }) {
   const data: fullNews = await getData(params.slug);
 
   return (
@@ -63,17 +57,15 @@ export default async function Page({
         </div>
       </div>
 
-
       <div className=" flex-col-reverse flex md:flex-row lg:flex-row justify-center  sm:mt-1 gap-2 w-full ">
-
-        {/*Left-Section*/}
+        {/* Left-Section */}
         <div className=" hidden w-full sm:w-[340px] ">
           <div>
             <RelatedNews/>
           </div>
         </div>
 
-        {/*Middle-Section*/}
+        {/* Middle-Section */}
         <div className="w-full flex flex-col justify-center items-center mb-20 sm:mb-5 bg-white dark:bg-[#0f0f0f]">
           <div className="w-full px-4 sm:px-8 mt-6">
             <BackButton />
@@ -165,13 +157,12 @@ export default async function Page({
             />
           </div>
         </div>
-        {/*Right-Section*/}
+        {/* Right-Section */}
         <div className="bg-white hidden w-[340px]">
           <div>
             <ResearchDisplay/>
           </div>
         </div>
-
       </div>
     </div>
   );
