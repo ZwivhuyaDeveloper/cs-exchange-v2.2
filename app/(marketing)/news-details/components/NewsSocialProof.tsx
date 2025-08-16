@@ -7,7 +7,7 @@ import { motion } from 'framer-motion'
 
 export default function NewsSocialProof() {
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-primary">
+    <section className="py-20 bg-gradient-to-b from-gray-950 to-[#0A0E17]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -15,9 +15,9 @@ export default function NewsSocialProof() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Join <span className="text-accent">5,000+ Traders</span> Saving Time
+            Join <span className="text-[#00FFC2]">5,000+ Traders</span> Saving Time
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Don&apos;t spend hours scrolling through crypto Twitter and news sites
           </p>
         </motion.div>
@@ -33,7 +33,7 @@ export default function NewsSocialProof() {
               <Clock className="h-8 w-8 text-[#00FFC2]" color='#00FFC2' />
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">10+ Hours Saved</h3>
-            <p className="text-gray-500">Per week on average, according to user surveys</p>
+            <p className="text-gray-400">Per week on average, according to user surveys</p>
           </motion.div>
 
           <motion.div
@@ -46,7 +46,7 @@ export default function NewsSocialProof() {
               <Users className="h-8 w-8 text-[#00FFC2]" color='#00FFC2' />
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">5,000+ Traders</h3>
-            <p className="text-gray-500">Active users relying on our news dashboard daily</p>
+            <p className="text-gray-400">Active users relying on our news dashboard daily</p>
           </motion.div>
 
           <motion.div
@@ -59,7 +59,7 @@ export default function NewsSocialProof() {
               <Trophy className="h-8 w-8 text-[#00FFC2]" color='#00FFC2' />
             </div>
             <h3 className="text-2xl font-bold text-white mb-2">95% Accuracy</h3>
-            <p className="text-gray-500">Market impact predictions verified by outcomes</p>
+            <p className="text-gray-400">Market impact predictions verified by outcomes</p>
           </motion.div>
         </div>
 
@@ -69,7 +69,7 @@ export default function NewsSocialProof() {
           whileInView={{ opacity: 1, y: 0 }}
           className="max-w-3xl mx-auto text-center mb-12"
         >
-          <div className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-100">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700">
             <p className="text-xl text-gray-400 italic mb-6">
               &ldquo;AlphaChain&apos;s news dashboard is a game-changer. I used to spend hours every morning catching up on crypto news. Now I get the most important updates delivered instantly with clear sentiment analysis. It&apos;s like having a research team working 24/7.&rdquo;
             </p>
@@ -99,7 +99,7 @@ export default function NewsSocialProof() {
         >
           <Link
             href="/trial"
-            className="inline-block bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-primary px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
+            className="inline-block bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-[#0A0E17] px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
           >
             Get Real-Time Alerts Now
           </Link>

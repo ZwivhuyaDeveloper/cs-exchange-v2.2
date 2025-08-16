@@ -34,7 +34,7 @@ const testimonials = [
 
 export default function TradingTestimonials() {
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-[#0A0E17]">
+    <section className="py-20 bg-gradient-to-b from-gray-950 to-[#0A0E17]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -42,9 +42,9 @@ export default function TradingTestimonials() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Trusted by <span className="text-accent">Professional Traders</span>
+            Trusted by <span className="text-[#00FFC2]">Professional Traders</span>
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             See how our trading bots are helping traders achieve consistent profits
           </p>
         </motion.div>
@@ -56,12 +56,12 @@ export default function TradingTestimonials() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
-              className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-100"
+              className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700"
             >
               {/* Rating */}
               <div className="flex items-center space-x-1 mb-4">
                 {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="h-4 w-4 text-accent fill-current" />
+                  <Star key={i} className="h-4 w-4 text-[#00FFC2] fill-current" />
                 ))}
               </div>
 
@@ -105,19 +105,19 @@ export default function TradingTestimonials() {
           className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center mb-12"
         >
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">$50M+</div>
+            <div className="text-3xl font-bold text-[#00FFC2] mb-2">$50M+</div>
             <div className="text-gray-400">Trading Volume</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">85%</div>
+            <div className="text-3xl font-bold text-[#00FFC2] mb-2">85%</div>
             <div className="text-gray-400">Average Win Rate</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">2,500+</div>
+            <div className="text-3xl font-bold text-[#00FFC2] mb-2">2,500+</div>
             <div className="text-gray-400">Active Bots</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">24/7</div>
+            <div className="text-3xl font-bold text-[#00FFC2] mb-2">24/7</div>
             <div className="text-gray-400">Uptime</div>
           </div>
         </motion.div>
@@ -130,7 +130,7 @@ export default function TradingTestimonials() {
         >
           <Link
             href="/trial"
-            className="inline-block bg-accent hover:bg-accent-hover text-primary px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
+            className="inline-block bg-[#00FFC2]/20 hover:bg-[#00FFC2]/30 text-[#00FFC2] px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
           >
             Start Your Trading Bot
           </Link>

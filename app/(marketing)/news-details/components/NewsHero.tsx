@@ -54,11 +54,11 @@ export default function NewsHero() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 inline-flex items-center space-x-6 bg-gray-100/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-100"
+            className="mb-8 inline-flex items-center space-x-6 bg-gray-800/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-700"
           >
             <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-              <span className="text-sm font-mono text-gray-400">LIVE PRICES</span>
+              <div className="w-2 h-2 bg-[#00FFC2] rounded-full animate-pulse" />
+              <span className="text-sm font-mono text-gray-00">LIVE PRICES</span>
             </div>
             <div className="text-sm font-mono">
               <Image
@@ -107,7 +107,7 @@ export default function NewsHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-500 mb-12 max-w-3xl mx-auto"
+            className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto"
           >
             AI-powered crypto news aggregation from 200+ sources with real-time sentiment analysis and instant alerts
           </motion.p>
@@ -120,19 +120,19 @@ export default function NewsHero() {
             className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12"
           >
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent mb-2">200+</div>
+              <div className="text-3xl font-bold text-[#00FFC2] mb-2">200+</div>
               <div className="text-sm text-gray-400">News Sources</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent mb-2">10K+</div>
+              <div className="text-3xl font-bold text-[#00FFC2] mb-2">10K+</div>
               <div className="text-sm text-gray-400">Articles Daily</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent mb-2">95%</div>
+              <div className="text-3xl font-bold text-[#00FFC2] mb-2">95%</div>
               <div className="text-sm text-gray-400">Accuracy Rate</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent mb-2">&lt;30s</div>
+              <div className="text-3xl font-bold text-[#00FFC2] mb-2">&lt;30s</div>
               <div className="text-sm text-gray-400">Alert Speed</div>
             </div>
           </motion.div>
@@ -149,7 +149,7 @@ export default function NewsHero() {
               className="bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-[#0A0E17] px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect flex items-center space-x-2"
             >
               <Bell className="h-5 w-5" color='BLACK' />
-              <span className='text-gray-200'>Get Real-Time Alerts</span>
+              <span className='text-gray-800'>Get Real-Time Alerts</span>
             </Link>
             <div className="flex items-center space-x-2 text-gray-400">
               <AlertCircle className="h-4 w-4" />

@@ -44,7 +44,7 @@ const features = [
 
 export default function TradingFeatures() {
   return (
-    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-50">
+    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -52,7 +52,7 @@ export default function TradingFeatures() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Complete <span className="text-accent">Trading Suite</span>
+            Complete <span className="text-[#00FFC2]">Trading Suite</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Everything you need to automate your crypto trading with confidence
@@ -68,7 +68,7 @@ export default function TradingFeatures() {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-100 hover:border-accent/50 transition-all duration-300 group"
+                className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 hover:border-[#00FFC2]/50 transition-all duration-300 group"
               >
                 <div className="flex items-start space-x-4">
                   <div className="p-3 bg-gradient-to-br from-[#00FFC2] to-[#3A86FF] rounded-xl group-hover:scale-110 transition-transform duration-300">
@@ -78,14 +78,14 @@ export default function TradingFeatures() {
                     <h3 className="text-xl font-bold text-white mb-3 group-hover:text-[#00FFC2] transition-colors">
                       {feature.title}
                     </h3>
-                    <p className="text-gray-500 mb-4 leading-relaxed text-sm">
+                    <p className="text-gray-400 mb-4 leading-relaxed text-sm">
                       {feature.description}
                     </p>
                     <div className="grid grid-cols-2 gap-2">
                       {feature.features.map((item) => (
                         <div
                           key={item}
-                          className="bg-gray-200/50 rounded-lg px-2 py-1 text-xs text-gray-500 text-center border border-gray-200"
+                          className="bg-gray-700/50 rounded-lg px-2 py-1 text-xs text-gray-400 text-center border border-gray-700"
                         >
                           {item}
                         </div>

@@ -49,7 +49,7 @@ import PricingTestimonials from "@/app/(marketing)/pricing/components/PricingTes
 
 export default function PricingPage() {
   return (
-    <div className="min-h-screen bg-primary text-white">
+    <div className="min-h-screen bg-[#0A0E17] text-white">
       <Header />
       <main>
         <PricingHero />

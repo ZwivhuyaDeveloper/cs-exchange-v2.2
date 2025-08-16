@@ -69,7 +69,7 @@ const tutorials = [
 
 export default function TutorialsList() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -79,7 +79,7 @@ export default function TutorialsList() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Featured <span className="text-[#00FFC2]">Tutorials</span>
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Start with these popular tutorials to build your crypto trading foundation
           </p>
         </motion.div>
@@ -91,7 +91,7 @@ export default function TutorialsList() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-100/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-100 hover:border-[#00FFC2]/50 transition-all duration-300 group cursor-pointer"
+              className="bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700 hover:border-[#00FFC2]/50 transition-all duration-300 group cursor-pointer"
             >
               {/* Thumbnail */}
               <div className="relative">

@@ -21,14 +21,14 @@ export default function PricingHero() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 inline-flex items-center space-x-2 bg-gray-300/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-300"
+            className="mb-8 inline-flex items-center space-x-2 bg-gray-800/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-700"
           >
             <div className="flex items-center space-x-1">
               {[...Array(5)].map((_, i) => (
                 <Star key={i} className="h-4 w-4 text-[#00FFC2] fill-current" />
               ))}
             </div>
-            <span className="text-sm text-gray-500">Trusted by 50,000+ traders</span>
+            <span className="text-sm text-gray-400">Trusted by 50,000+ traders</span>
           </motion.div>
 
           {/* Main Headline */}
@@ -50,7 +50,7 @@ export default function PricingHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-500 mb-12 max-w-3xl mx-auto"
+            className="text-xl md:text-2xl text-gray-400 mb-12 max-w-3xl mx-auto"
           >
             Start free and scale as you grow. All plans include our 7-day money-back guarantee and 24/7 support.
           </motion.p>
@@ -60,22 +60,22 @@ export default function PricingHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6 }}
-            className="flex flex-wrap justify-center items-center space-x-8 mb-12 text-sm text-gray-500"
+            className="flex flex-wrap justify-center items-center space-x-8 mb-12 text-sm text-gray-400"
           >
             <div className="flex items-center space-x-2">
-              <Check className="h-4 w-4 text-accent" />
+              <Check className="h-4 w-4 text-[#00FFC2]" />
               <span>No setup fees</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Check className="h-4 w-4 text-accent" />
+              <Check className="h-4 w-4 text-[#00FFC2]" />
               <span>Cancel anytime</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Check className="h-4 w-4 text-accent" />
+              <Check className="h-4 w-4 text-[#00FFC2]" />
               <span>7-day free trial</span>
             </div>
             <div className="flex items-center space-x-2">
-              <Check className="h-4 w-4 text-accent" />
+              <Check className="h-4 w-4 text-[#00FFC2]" />
               <span>Money-back guarantee</span>
             </div>
           </motion.div>
@@ -88,19 +88,19 @@ export default function PricingHero() {
             className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
           >
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent">50K+</div>
+              <div className="text-3xl font-bold text-[#00FFC2]">50K+</div>
               <div className="text-sm text-gray-400">Active Users</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent">90%</div>
+              <div className="text-3xl font-bold text-[#00FFC2]">90%</div>
               <div className="text-sm text-gray-400">Signal Accuracy</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent">$2.5B+</div>
+              <div className="text-3xl font-bold text-[#00FFC2]">$2.5B+</div>
               <div className="text-sm text-gray-400">Trading Volume</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-accent">24/7</div>
+              <div className="text-3xl font-bold text-[#00FFC2]">24/7</div>
               <div className="text-sm text-gray-400">Support</div>
             </div>
           </motion.div>

@@ -43,7 +43,7 @@ export default function SwapDemo() {
   }
 
   return (
-    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-50">
+    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -51,9 +51,9 @@ export default function SwapDemo() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Try Our <span className="text-accent">Swap Interface</span>
+            Try Our <span className="text-[#00FFC2]">Swap Interface</span>
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Experience the smoothest token swapping interface in DeFi
           </p>
         </motion.div>
@@ -62,27 +62,27 @@ export default function SwapDemo() {
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-100"
+            className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700"
           >
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <h3 className="text-xl font-semibold text-white">Swap Tokens</h3>
-              <Button className="p-2 hover:bg-gray-200 rounded-lg transition-colors">
-                <Settings className="h-5 w-5 text-gray-500" />
+              <Button className="p-2 hover:bg-gray-700 rounded-lg bg-gray-700 transition-colors">
+                <Settings className="h-5 w-5 text-gray-400 " />
               </Button>
             </div>
 
             {/* From Token */}
             <div className="mb-4">
-              <div className="bg-gray-200/50 rounded-xl p-4 border border-gray-200">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-500">From</span>
-                  <span className="text-sm text-gray-500">
+                  <span className="text-sm text-gray-400">From</span>
+                  <span className="text-sm text-gray-400">
                     Balance: {fromToken.balance} {fromToken.symbol}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2 bg-gray-200 rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
+                  <div className="flex items-center space-x-2 bg-gray-700 rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-700 transition-colors">
                     <span className="text-xl">{fromToken.logo}</span>
                     <span className="font-semibold text-white">{fromToken.symbol}</span>
                   </div>
@@ -104,7 +104,7 @@ export default function SwapDemo() {
             <div className="flex justify-center mb-4">
               <Button
                 onClick={handleSwapTokens}
-                className="p-3 bg-gray-200 hover:bg-[#00FFC2] hover:text-[#0A0E17] rounded-full transition-all duration-300 transform hover:scale-110"
+                className="p-3 bg-gray-500 hover:bg-[#00FFC2] hover:text-[#0A0E17] rounded-full transition-all duration-300 transform hover:scale-110"
               >
                 <ArrowUpDown className="h-5 w-5" />
               </Button>
@@ -112,15 +112,15 @@ export default function SwapDemo() {
 
             {/* To Token */}
             <div className="mb-6">
-              <div className="bg-gray-200/50 rounded-xl p-4 border border-gray-200">
+              <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm text-gray-500">To</span>
-                  <span className="text-sm text-gray-500 ">
+                  <span className="text-sm text-gray-400">To</span>
+                  <span className="text-sm text-gray-400 ">
                     Balance: {toToken.balance} {toToken.symbol}
                   </span>
                 </div>
                 <div className="flex items-center space-x-3">
-                  <div className="flex items-center space-x-2 bg-gray-200 rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-200 transition-colors">
+                  <div className="flex items-center space-x-2 bg-gray-700 rounded-lg px-3 py-2 cursor-pointer hover:bg-gray-700 transition-colors">
                     <span className="text-xl">{toToken.logo}</span>
                     <span className="font-semibold text-white">{toToken.symbol}</span>
                   </div>
@@ -139,7 +139,7 @@ export default function SwapDemo() {
             </div>
 
             {/* Swap Details */}
-            <div className="bg-gray-200/300 rounded-lg p-4 mb-6 space-y-2 border border-gray-200/50">
+            <div className="bg-gray-200/300 rounded-lg p-4 mb-6 space-y-2 border border-gray-500/50">
               <div className="flex justify-between text-sm">
                 <span className="text-gray-400">Rate</span>
                 <span className="text-white">1 {fromToken.symbol} = {(fromToken.price / toToken.price).toFixed(6)} {toToken.symbol}</span>
@@ -165,13 +165,13 @@ export default function SwapDemo() {
             </div>
 
             {/* Swap Button */}
-            <button className="w-full bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-primary py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105">
+            <button className="w-full bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-[#0A0E17] py-4 rounded-xl font-semibold text-lg transition-all duration-300 transform hover:scale-105">
               Connect Wallet to Swap
             </button>
 
             {/* Powered By */}
             <div className="text-center mt-4">
-              <span className="text-xs text-gray-500">Powered by AlphaChain DEX Aggregator</span>
+              <span className="text-xs text-gray-400">Powered by AlphaChain DEX Aggregator</span>
             </div>
           </motion.div>
 
@@ -181,15 +181,15 @@ export default function SwapDemo() {
             whileInView={{ opacity: 1, y: 0 }}
             className="mt-8 grid grid-cols-3 gap-4 text-center"
           >
-            <div className="bg-gray-200/30 rounded-lg p-4">
+            <div className="bg-gray-500/30 rounded-lg p-4">
               <div className="text-lg font-bold text-[#00FFC2]">0.3%</div>
               <div className="text-xs text-gray-400">Avg Slippage</div>
             </div>
-            <div className="bg-gray-200/30 rounded-lg p-4">
+            <div className="bg-gray-500/30 rounded-lg p-4">
               <div className="text-lg font-bold text-[#00FFC2]">15+</div>
               <div className="text-xs text-gray-400">DEX Sources</div>
             </div>
-            <div className="bg-gray-200/30 rounded-lg p-4">
+            <div className="bg-gray-500/30 rounded-lg p-4">
               <div className="text-lg font-bold text-[#00FFC2]">99.9%</div>
               <div className="text-xs text-gray-400">Success Rate</div>
             </div>

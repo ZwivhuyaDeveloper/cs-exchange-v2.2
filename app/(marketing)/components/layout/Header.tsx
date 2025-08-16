@@ -53,7 +53,7 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setFeaturesOpen(!featuresOpen)}
-                className="flex items-center space-x-1 text-gray-600 hover:text-white transition-colors"
+                className="flex items-center space-x-1 text-gray-400 hover:text-white transition-colors"
               >
                 <span>Features</span>
                 <ChevronDown className="h-4 w-4" />
@@ -69,7 +69,7 @@ export default function Header() {
                   >
                     <Link
                       href="/news-details"
-                      className="block px-4 py-3 text-sm text-gray-600 hover:text-white hover:rounded-lg hover:bg-gray-200 transition-colors"
+                      className="block px-4 py-3 text-sm text-gray-500 hover:text-white hover:rounded-lg hover:bg-gray-200 transition-colors"
                     >
                       News Dashboard
                     </Link>
@@ -105,7 +105,7 @@ export default function Header() {
             <div className="relative">
               <button
                 onClick={() => setResourcesOpen(!resourcesOpen)}
-                className="flex items-center space-x-1 text-gray-600 hover:text-white transition-colors"
+                className="flex items-center space-x-1 text-gray-400 hover:text-white transition-colors"
               >
                 <span>Resources</span>
                 <ChevronDown className="h-4 w-4" />
@@ -142,10 +142,10 @@ export default function Header() {
               </AnimatePresence>
             </div>
 
-            <Link href="/blog" className="text-gray-800 hover:text-white transition-colors">
+            <Link href="/blog" className="text-gray-400 hover:text-white transition-colors">
               <span className="text-sm">Blog</span>
             </Link>
-            <Link href="/pricing" className="text-gray-800 hover:text-white transition-colors">
+            <Link href="/pricing" className="text-gray-400 hover:text-white transition-colors">
               <span className="text-sm">Pricing</span>
             </Link>
           </nav>
@@ -154,9 +154,9 @@ export default function Header() {
           <div className="hidden lg:flex items-center space-x-4">
             <div className="flex items-center space-x-2 text-xs text-gray-500">
               <Shield className="h-4 w-4 text-[#00FFC2]" />
-              <span>256-bit SSL</span>
+              <span className="text-[#00FFC2]">256-bit SSL</span>
             </div>
-            <div className="text-xs text-gray-500">90% Accuracy</div>
+            <div className="text-xs text-[#00FFC2]">90% Accuracy</div>
           </div>
 
           {/* CTA Button */}

@@ -87,7 +87,7 @@ const courses = [
 
 export default function EducationCourses() {
   return (
-    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-50">
+    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -109,7 +109,7 @@ export default function EducationCourses() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
-              className="bg-gray-100/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-100 hover:border-[#00FFC2]/50 transition-all duration-300 group cursor-pointer"
+              className="bg-gray-800/50 backdrop-blur-sm rounded-2xl overflow-hidden border border-gray-700 hover:border-[#00FFC2]/50 transition-all duration-300 group cursor-pointer"
             >
               {/* Thumbnail */}
               <div className="relative">
@@ -155,17 +155,17 @@ export default function EducationCourses() {
                 <h3 className="text-lg font-bold text-white mb-2 group-hover:text-[#00FFC2] transition-colors">
                   {course.title}
                 </h3>
-                <p className="text-gray-500 text-sm mb-4 leading-relaxed">
+                <p className="text-gray-400 text-sm mb-4 leading-relaxed">
                   {course.description}
                 </p>
 
                 {/* Instructor */}
-                <div className="text-sm text-gray-500 mb-4">
+                <div className="text-sm text-gray-400 mb-4">
                   by <span className="text-[#00FFC2]">{course.instructor}</span>
                 </div>
 
                 {/* Course Stats */}
-                <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                <div className="flex items-center justify-between text-sm text-gray-400 mb-4">
                   <div className="flex items-center space-x-4">
                     <div className="flex items-center space-x-1">
                       <Clock className="h-4 w-4" />
@@ -183,7 +183,7 @@ export default function EducationCourses() {
                 </div>
 
                 {/* Lessons Count */}
-                <div className="text-sm text-gray-500 mb-4">
+                <div className="text-sm text-gray-400 mb-4">
                   {course.lessons} lessons
                 </div>
 

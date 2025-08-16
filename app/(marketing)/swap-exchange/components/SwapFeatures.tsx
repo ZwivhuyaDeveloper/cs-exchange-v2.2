@@ -44,7 +44,7 @@ const features = [
 
 export default function SwapFeatures() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -68,7 +68,7 @@ export default function SwapFeatures() {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-100 hover:border-[#00FFC2]/50 transition-all duration-300 group"
+                className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 hover:border-[#00FFC2]/50 transition-all duration-300 group"
               >
                 <div className="flex items-start space-x-4">
                   <div className="p-3 bg-gradient-to-br from-[#00FFC2] to-[#3A86FF] rounded-xl group-hover:scale-110 transition-transform duration-300">
@@ -85,7 +85,7 @@ export default function SwapFeatures() {
                       {feature.features.map((item) => (
                         <div
                           key={item}
-                          className="bg-gray-200/50 rounded-lg px-2 py-1 text-xs text-gray-500 text-center border border-gray-200"
+                          className="bg-gray-800/50 rounded-lg px-2 py-1 text-xs text-gray-400 text-center border border-gray-700"
                         >
                           {item}
                         </div>
@@ -107,8 +107,8 @@ export default function SwapFeatures() {
           <h3 className="text-2xl font-bold text-white text-center mb-8">
             How We Compare
           </h3>
-          <div className="bg-gray-100/50 backdrop-blur-sm rounded-2xl border border-gray-100 overflow-hidden">
-            <div className="grid grid-cols-4 gap-4 p-6 border-b border-gray-200 bg-gray-200/30">
+          <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 overflow-hidden">
+            <div className="grid grid-cols-4 gap-4 p-6 border-b border-gray-700 bg-gray-800/30">
               <div className="font-semibold text-white">Feature</div>
               <div className="text-center font-semibold text-[#00FFC2]">AlphaChain</div>
               <div className="text-center font-semibold text-gray-400">Uniswap</div>
@@ -123,9 +123,9 @@ export default function SwapFeatures() {
               ['Multi-chain', '✓ 15+ chains', '✗ Ethereum only', '✓ 8 chains'],
               ['Analytics', '✓ Advanced', '✗ Basic', '✓ Standard']
             ].map((row, index) => (
-              <div key={index} className="grid grid-cols-4 gap-4 p-4 border-b border-gray-300/50 hover:bg-gray-300/20 transition-colors">
+              <div key={index} className="grid grid-cols-4 gap-4 p-4 border-b border-gray-700 hover:bg-gray-700/20 transition-colors">
                 <div className="text-gray-400">{row[0]}</div>
-                <div className="text-center text-accent font-semibold">{row[1]}</div>
+                <div className="text-center text-[#00FFC2] font-semibold">{row[1]}</div>
                 <div className="text-center text-gray-400">{row[2]}</div>
                 <div className="text-center text-gray-400">{row[3]}</div>
               </div>

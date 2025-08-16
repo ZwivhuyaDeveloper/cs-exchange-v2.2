@@ -49,7 +49,7 @@ import Footer from '../components/layout/Footer'
 
 export default function TradingPage() {
   return (
-    <div className="min-h-screen bg-primary text-white">
+    <div className="min-h-screen bg-[#0A0E17] text-white">
       <Header />
       <main>
         <TradingHero />
