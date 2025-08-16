@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import TermsContent from './components/Legal';
 
 export const metadata: Metadata = {
   title: 'Terms of Service | AlphaChain Platform',
@@ -36,3 +37,7 @@ export const metadata: Metadata = {
     'max-video-preview': -1,
   },
 };
+
+export default function TermsPage() {
+  return <TermsContent />;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -22,8 +22,8 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
   const [isCustom, setIsCustom] = useState<boolean>(false);
   const [validationError, setValidationError] = useState<string | null>(null);
 
-  // Predefined slippage options
-  const presetOptions = [0.1, 0.5, 1.0];
+  // Predefined slippage options - memoized to prevent recreation on each render
+  const presetOptions = useMemo(() => [0.1, 0.5, 1.0], []);
 
   useEffect(() => {
     // Check if current value is one of the presets
@@ -32,7 +32,7 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
     if (!isPreset) {
       setCustomValue(value.toString());
     }
-  }, [value]);
+  }, [value, presetOptions]);
 
   const validateSlippage = (slippageValue: number): string | null => {
     if (slippageValue < 0) {
@@ -170,7 +170,7 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
         {/* Information */}
         <div className="text-xs text-gray-500 space-y-1">
           <p>
-            Slippage tolerance is the maximum price movement you're willing to accept.
+            Slippage tolerance is the maximum price movement you&apos;re willing to accept.
           </p>
           <p>
             Current setting: <span className="font-medium">{value}%</span>

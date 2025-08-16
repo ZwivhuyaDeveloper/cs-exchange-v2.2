@@ -25,7 +25,7 @@ export interface TimeoutError extends Error {
 }
 
 export class SwapTimeoutError extends Error implements TimeoutError {
-  name: 'TimeoutError' as const;
+  name: 'TimeoutError';
   operation: string;
   duration: number;
   isRetryable: boolean;

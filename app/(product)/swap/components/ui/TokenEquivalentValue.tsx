@@ -142,7 +142,7 @@ export const TokenEquivalentValue = ({
     } finally {
       setLoading(false);
     }
-  }, [sellToken, buyToken, chainId, tokenMap, getTokenInfo, formatTokenAmount]);
+  }, [sellToken, buyToken, chainId, getTokenInfo, formatTokenAmount]);
 
   // Fetch rate from CoinGecko
   const fetchCoingeckoRate = async (sellTokenInfo: TokenInfo, buyTokenInfo: TokenInfo) => {

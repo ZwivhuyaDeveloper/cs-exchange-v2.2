@@ -223,7 +223,7 @@ export default function PriceView({
         }
       }, 500); // 500ms debounce delay
     });
-  }, [chainId, taker, validateSwapAmount]);
+  }, [chainId, taker, validateSwapAmount, setPrice]);
 
   // Fetch tokens and chains from the database
   useEffect(() => {
@@ -356,12 +356,13 @@ export default function PriceView({
       }
     };
   }, [
-    sellTokenObject?.address,
-    buyTokenObject?.address,
+    sellTokenObject,
+    buyTokenObject,
     chainId,
     tradeDirection,
     sellAmount,
     balanceData?.value,
+    setPrice,
     slippageTolerance,
     setSlippageTolerance,
     debouncedFetchPrice
@@ -524,8 +525,55 @@ export default function PriceView({
     disabled?: boolean;
     price: any;
   }): ReactElement {
-    // If price.issues.allowance is null, show the Review Trade button
-    if (price?.issues.allowance === null) {
+    // Determine the spender from price.issues.allowance
+    const spender = price?.issues?.allowance?.spender;
+    const MAX_ALLOWANCE = BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639935');
+
+    // Always define hooks at the top level
+    const { data: allowance, refetch } = useReadContract({
+      address: sellTokenAddress as Address,
+      abi: erc20Abi,
+      functionName: "allowance",
+      args: [taker, spender],
+      query: {
+        enabled: !!sellTokenAddress && !!taker && !!spender && price?.issues?.allowance !== null
+      }
+    });
+
+    const { data: simulationData } = useSimulateContract({
+      address: sellTokenAddress as Address,
+      abi: erc20Abi,
+      functionName: "approve",
+      args: [spender, MAX_ALLOWANCE],
+      query: {
+        enabled: !!sellTokenAddress && !!spender && allowance !== undefined && allowance < BigInt(1e18) && price?.issues?.allowance !== null
+      }
+    });
+
+    const {
+      data: writeContractResult,
+      writeContractAsync: writeContract,
+      error,
+    } = useWriteContract();
+
+    const { data: approvalReceiptData, isLoading: isApproving } =
+      useWaitForTransactionReceipt({
+        hash: writeContractResult,
+      });
+
+    // Handle refetching after successful approval
+    useEffect(() => {
+      if (approvalReceiptData?.status === 'success') {
+        refetch?.();
+      }
+    }, [approvalReceiptData, refetch]);
+
+    // Handle approval state
+    const needsApproval = allowance !== undefined && allowance < BigInt(1e18);
+    const showApproveButton = needsApproval && !isApproving && price?.issues?.allowance !== null;
+
+    // If price.issues.allowance is null or we don't need approval, show the Review Trade button
+    if (price?.issues.allowance === null || !showApproveButton) {
       return (
         <div className="w-full px-3 justify-start space-y-2">
           <button
@@ -565,90 +613,46 @@ export default function PriceView({
       );
     }
 
-    // Determine the spender from price.issues.allowance
-    const spender = price?.issues.allowance.spender;
-    const MAX_ALLOWANCE = BigInt('115792089237316195423570985008687907853269984665640564039457584007913129639935'); // 2^256 - 1
-
-    // 1. Read from erc20, check approval for the determined spender to spend sellToken
-    const { data: allowance, refetch } = useReadContract({
-      address: sellTokenAddress as Address,
-      abi: erc20Abi,
-      functionName: "allowance",
-      args: [taker, spender],
-    });
-    console.log("checked spender approval");
-
-    // 2. (only if no allowance): write to erc20, approve token allowance for the determined spender
-    const { data } = useSimulateContract({
-      address: sellTokenAddress as Address,
-      abi: erc20Abi,
-      functionName: "approve",
-      args: [spender, MAX_ALLOWANCE],
-    });
-
-    // Define useWriteContract for the 'approve' operation
-    const {
-      data: writeContractResult,
-      writeContractAsync: writeContract,
-      error,
-    } = useWriteContract();
-
-    // useWaitForTransactionReceipt to wait for the approval transaction to complete
-    const { data: approvalReceiptData, isLoading: isApproving } =
-      useWaitForTransactionReceipt({
-        hash: writeContractResult,
-      });
-
-    // Call `refetch` when the transaction succeeds
-    useEffect(() => {
-      if (data) {
-        refetch();
-      }
-    }, [data, refetch]);
-
-    if (error) {
-      return <div>Something went wrong: {error.message}</div>;
-    }
-
-    if (allowance === BigInt(0)) {
+    // Show approve button if needed
+    if (showApproveButton) {
       return (
-        <>
         <div className="w-full px-3 justify-start">
           <button
             type="button"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-3xl w-full"
             onClick={async () => {
-              await writeContract({
-                abi: erc20Abi,
-                address: sellTokenAddress,
-                functionName: "approve",
-                args: [spender, MAX_ALLOWANCE],
-              });
-              console.log("approving spender to spend sell token");
-
-              refetch();
+              if (!writeContract || !spender) return;
+              
+              try {
+                await writeContract({
+                  abi: erc20Abi,
+                  address: sellTokenAddress as Address,
+                  functionName: "approve",
+                  args: [spender, MAX_ALLOWANCE],
+                });
+                console.log("approving spender to spend sell token");
+              } catch (err) {
+                console.error("Approval failed:", err);
+              }
             }}
+            disabled={isApproving}
           >
             {isApproving ? "Approving…" : "Approve"}
           </button>
         </div>
-        </>
       );
     }
 
+    // Return a default button as fallback
     return (
       <div className="w-full px-3 justify-start">
-              <button
-        type="button"
-        disabled={disabled}
-        onClick={() => {
-          // fetch data, when finished, show quote view
-          onClick();
-        }}
-        className="w-full bg-blue-500 text-white p-2 rounded-3xl hover:bg-blue-700 disabled:opacity-25"
-      >
-        {disabled ? "Insufficient Balance" : "Review Trade"}
-      </button>
+        <button
+          type="button"
+          disabled={true}
+          className="w-full bg-gray-300 text-gray-500 p-3 rounded-xl font-medium cursor-not-allowed"
+        >
+          Loading...
+        </button>
       </div>
     );
   }

@@ -1,4 +1,5 @@
 import { ImageResponse } from 'next/og';
+import Image from 'next/image';
 
 // These dimensions are the default for OpenGraph images
 export const width = 1200;
@@ -32,17 +33,23 @@ export default function OpenGraphImage({
         }}
       >
         {image ? (
-          <img
-            src={image}
-            alt=""
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              position: 'absolute',
-              opacity: 0.2,
-            }}
-          />
+          <div style={{
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+            opacity: 0.2,
+            overflow: 'hidden'
+          }}>
+            <Image
+              src={image}
+              alt=""
+              fill
+              style={{
+                objectFit: 'cover',
+              }}
+              unoptimized={true} // Required for external images in ImageResponse
+            />
+          </div>
         ) : null}
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', zIndex: 1 }}>
           <h1 style={{ fontSize: '4rem', margin: 0 }}>{title}</h1>
