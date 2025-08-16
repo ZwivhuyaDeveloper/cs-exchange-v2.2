@@ -50,10 +50,13 @@ const LiveChart = ({
 
       containerRef.current.appendChild(script);
     }
+    // Capture the current ref value in the effect's closure
+    const currentContainer = containerRef.current;
+    
     // Cleanup function to prevent memory leaks
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
+      if (currentContainer) {
+        currentContainer.innerHTML = '';
       }
     };
   }, [symbol, interval, theme]);

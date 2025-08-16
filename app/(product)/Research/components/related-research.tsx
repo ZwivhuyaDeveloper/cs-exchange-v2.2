@@ -1,7 +1,7 @@
 "use client"
 
-import {simpleResearchCard } from '@/app/lib/interface';
-import React from 'react'
+import { simpleResearchCard } from '@/app/lib/interface';
+import React, { useEffect, useState } from 'react';
 import { client, urlFor } from "@/app/lib/sanity";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -11,10 +11,7 @@ import { PercentDiamond, Tag, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDate } from '@/app/lib/dateUtils';
 
-
-export const revalidate = 30; // revalidate at most 30 seconds
-
-async function getData() {
+const fetchData = async (): Promise<simpleResearchCard[]> => {
   const query = `
   *[_type == 'research' && category->name == "Trending"] | order(_createdAt desc) {
     title,
@@ -32,18 +29,39 @@ async function getData() {
         name,
         color
       }
-
   }`;
 
-  const data = await client.fetch(query);
+  return await client.fetch(query);
+};
 
-  return data;
-}
+export default function RelatedResearch() {
+  const [data, setData] = useState<simpleResearchCard[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const result = await fetchData();
+        setData(result);
+      } catch (err) {
+        console.error('Error loading research data:', err);
+        setError('Failed to load research data');
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
-export default async function RelatedResearch() {
-  const data: simpleResearchCard[] = await getData()
-  console.log(data);
+    loadData();
+  }, []);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div className="text-red-500">{error}</div>;
+  }
 
   return (
     <div className='flex flex-col bg-white dark:bg-[#0F0F0F]'>
