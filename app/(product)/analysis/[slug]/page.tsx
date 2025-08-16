@@ -34,12 +34,14 @@ async function getData(slug: string) {
 
 import { Metadata } from 'next';
 
-type Props = {
+export const dynamic = 'force-dynamic';
+
+type PageProps = {
   params: { slug: string };
   searchParams?: { [key: string]: string | string[] | undefined };
 };
 
-export default async function AnalysisPage({ params }: Props) {
+export default async function Page({ params }: PageProps) {
   const data: fullResearch = await getData(params.slug);
   const userAccess = await getUserAccess(null);
 
