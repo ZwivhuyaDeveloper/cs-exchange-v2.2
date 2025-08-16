@@ -45,12 +45,12 @@ export default function Page() {
 
       {/* Main 3-column layout */}
       <main className="flex-1 flex flex-col items-center w-full h-full px-1 md:px-1">
-        <div className="flex flex-col-reverse lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
+        <div className="flex flex-col-reverse lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(170vh-100px)]">{/* 200px header+footer approx */}
           {/* Indicators (Left) */}
           <div className="lg:w-[390px] flex w-full md:flex lg:flex-col gap-2 h-full">
             <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip gap-y-2" type="auto">
               <ScrollArea.Viewport className="w-full overflow-clip h-full flex flex-col gap-y-2">
-                <div className="border border-px dark:border-zinc-700 border-zinc-2000">
+                <div className="border border-px dark:border-zinc-700 border-zinc-200">
                   <MarketStats tokenSymbol={currentChartToken} />
                 </div>
                 <div className="mt-1 border border-px dark:border-zinc-700 border-zinc-200">
@@ -64,9 +64,6 @@ export default function Page() {
                 </div>
                 <div className="mt-1 border border-px dark:border-zinc-700 border-zinc-200">
                   <TechnicalSpecs tokenSymbol={currentChartToken} />
-                </div>
-                <div className="mt-1 w-full dark:border-zinc-700 flex sm:hidden h-full border-zinc-100 mb-10 border-px border">
-                  <TrendingNewsClient />
                 </div>
               </ScrollArea.Viewport>
               <ScrollArea.Scrollbar className="flex w-0 bg-transparent touch-none select-none transition-colors duration-150 ease-out hover:bg-transparent" orientation="vertical">
