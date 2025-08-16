@@ -1,7 +1,6 @@
-"use client"
 
-import { simpleResearchCard } from '@/app/lib/interface';
-import React, { useEffect, useState } from 'react';
+import { simpleNewsCard } from '@/app/lib/interface';
+import React from 'react'
 import { client, urlFor } from "@/app/lib/sanity";
 import Image from 'next/image';
 import Link from 'next/link';
@@ -10,10 +9,14 @@ import { Badge } from '@/components/ui/badge';
 import { PercentDiamond, Tag, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { formatDate } from '@/app/lib/dateUtils';
+import * as ScrollArea from '@radix-ui/react-scroll-area';
 
-const fetchData = async (): Promise<simpleResearchCard[]> => {
+
+export const revalidate = 30; // revalidate at most 30 seconds
+
+async function getData() {
   const query = `
-  *[_type == 'research' && category->name == "Trending"] | order(_createdAt desc) {
+  *[_type == 'news' && category->name == "Economic News"] | order(_createdAt desc) {
     title,
       smallDescription,
       "currentSlug": slug.current,
@@ -29,39 +32,18 @@ const fetchData = async (): Promise<simpleResearchCard[]> => {
         name,
         color
       }
+
   }`;
 
-  return await client.fetch(query);
-};
+  const data = await client.fetch(query);
 
-export default function RelatedResearch() {
-  const [data, setData] = useState<simpleResearchCard[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  return data;
+}
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const result = await fetchData();
-        setData(result);
-      } catch (err) {
-        console.error('Error loading research data:', err);
-        setError('Failed to load research data');
-      } finally {
-        setIsLoading(false);
-      }
-    };
 
-    loadData();
-  }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div className="text-red-500">{error}</div>;
-  }
+export default async function EconomicSection() {
+  const data: simpleNewsCard[] = await getData()
+  console.log(data);
 
   return (
     <div className='flex flex-col bg-white dark:bg-[#0F0F0F]'>
@@ -70,40 +52,39 @@ export default function RelatedResearch() {
             <div className="h-6 w-6 bg-orange-500/20 rounded-full flex items-center justify-center">
               <PercentDiamond className="text-orange-500" size={16} />
             </div>
-            <span>Perfoming Research</span>
+            <span>Economic News</span>
           </h1>
           <span className='text-zinc-500 text-md px-2'>See All</span>
         </header>
-        <div className='p-3 flex flex-col gap-2 mt-0 pt-0'>
+
+            <div className='p-3 flex flex-col gap-2 mt-0 pt-0'>
           {data.map((post, idx) => (
             <Card key={idx} className='p-3 shadow-none dark:bg-zinc-900/90 bg-zinc-100 gap-2  border-none'>
-              <div className=''>
-                <div className='absolute p-3'>
-                  <Badge className=' text-orange-700 font-medium backdrop-blur-2xl bg-orange-200 border-none'>{post.categoryName}</Badge>
+              <div className='relative'>
+                <div className='absolute top-2 left-2 z-10'>
+                  <Badge className='text-orange-700 font-medium bg-orange-200/90 dark:bg-orange-900/80 border-none backdrop-blur-sm'>
+                    {post.categoryName}
+                  </Badge>
                 </div>
                 <div>
                   <Image
                     src={urlFor(post.titleImage).url()}
-                    alt="image"
+                    alt={post.title}
                     width={500}
-                    height={500}
+                    height={280}
                     className="rounded-lg h-[200px] object-cover"
                   />   
                 </div>
               </div>
               {/* Impact and Date display */}
-              <div className="justify-between flex flex-row items-center w-full mt-1">
-                <div className="flex flex-row justify-between">
-                  <span className="text-sm text-zinc-800">
-                    {formatDate(post.publishedAt, {
-                      year: 'numeric',
-                      month: 'short',
-                      day: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit'
-                    })}
-                  </span>
-                </div>
+              <div className="flex justify-between items-center w-full mt-2">
+                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                  {formatDate(post.publishedAt, {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  })}
+                </span>
                 {/* Impact display */}
                 <div className="flex flex-row items-center gap-1 h-fit ">
                   <h3 className="text-xs font-medium">Impact:</h3>
@@ -129,29 +110,27 @@ export default function RelatedResearch() {
                   )}
                 </div>
               </div>
-               <Link href={`/article/${post.currentSlug}`}>
-                  <h3 className="text-md tracking-tight text-start mt-0  text-black dark:text-white font-semibold hover:text-blue-400 dark:hover:text-blue-400">
+               <Link href={`/article/${post.currentSlug}`} className="group">
+                  <h3 className="text-md tracking-tight text-start mt-1 text-black dark:text-white font-semibold line-clamp-2 group-hover:text-blue-500 dark:group-hover:text-blue-400 transition-colors">
                     {post.title}
                   </h3>
-              </Link>
+                </Link>
               
               {/* Description with breadcrumbs */}
-              <div className="mb-3 mt-0">
-                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">
-                  {post.smallDescription}
-                </p>
-                <div className="flex items-center gap-1 mt-1 text-xs text-zinc-500">
-                  <span>Home</span>
-                  <span>•</span>
-                  <span>News</span>
-                  <span>•</span>
-                  <span className="text-orange-600 dark:text-orange-400">{post.categoryName}</span>
-                </div>
+              <p className="mt-1 text-sm text-gray-600 dark:text-gray-300 line-clamp-2 leading-relaxed">
+                {post.smallDescription}
+              </p>
+              <div className="flex items-center gap-1 mt-2 text-xs text-zinc-500">
+                <span className="hover:text-blue-500 cursor-pointer">Home</span>
+                <span>•</span>
+                <span className="hover:text-blue-500 cursor-pointer">News</span>
+                <span>•</span>
+                <span className="text-orange-500 dark:text-orange-400 font-medium">{post.categoryName}</span>
               </div>
               
               {/* Tags display */}
               {post.tags && post.tags.length > 0 && (
-                <div className="flex flex-wrap gap-1 mb-3">
+                <div className="flex flex-wrap gap-1 mt-3">
                   {post.tags.map((tag, tagIdx) => (
                     <Badge 
                       key={tagIdx}
@@ -173,8 +152,7 @@ export default function RelatedResearch() {
 
             </Card>
           ))}
-        </div>
-
+          </div>
     </div>
   )
 }

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { TrendingUp, TrendingDown } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const testimonials = [
   {
@@ -105,7 +106,7 @@ export default function SocialProof() {
             Trusted by <span className="text-accent">50,000+</span> Traders
           </h2>
           <p className="text-xl text-gray-400">
-            Join the community that's redefining crypto trading
+            Join the community that&apos;s redefining crypto trading
           </p>
         </motion.div>
 
@@ -119,17 +120,20 @@ export default function SocialProof() {
               className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-100"
             >
               <div className="flex items-center space-x-4 mb-4">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <div className="relative w-12 h-12">
+                  <Image
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    fill
+                    className="rounded-full object-cover"
+                  />
+                </div>
                 <div>
                   <h4 className="font-semibold text-white">{testimonial.name}</h4>
                   <p className="text-sm text-gray-500">{testimonial.role}</p>
                 </div>
               </div>
-              <p className="text-gray-500 italic">"{testimonial.content}"</p>
+              <p className="text-gray-500 italic">&ldquo;{testimonial.content}&rdquo;</p>
             </motion.div>
           ))}
         </div>

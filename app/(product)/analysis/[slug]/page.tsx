@@ -8,7 +8,7 @@ import Image from "next/image";
 import React from "react";
 import { Badge } from '@/components/ui/badge';
 import Research from "@/components/News/research-display";
-import { getUserAccess } from "@/app/lib/access-control";
+import { getUserAccess } from "@/app/lib/access-control"
 import SubscriptionBanner from "@/app/components/access-control/SubscriptionBanner";
 import ContentWrapper from "@/app/components/access-control/ContentWrapper";
 
@@ -34,11 +34,14 @@ async function getData(slug: string) {
   return data;
 }
 
-export default async function Page({
-  params,
-}: {
+import type { Metadata, ResolvingMetadata } from 'next';
+
+type PageProps = {
   params: { slug: string };
-}) {
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
+
+export default async function Page({ params }: PageProps) {
   const data: fullNews = await getData(params.slug);
   const userAccess = await getUserAccess();
 

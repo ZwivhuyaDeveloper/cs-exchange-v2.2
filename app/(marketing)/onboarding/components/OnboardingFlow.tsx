@@ -404,11 +404,11 @@ export default function OnboardingFlow() {
                 <div>
                   <h2 className="text-3xl font-bold text-white mb-4">Welcome to AlphaChain!</h2>
                   <p className="text-gray-300 text-lg">
-                    Your account has been set up successfully. You're now ready to start trading smarter with our AI-powered platform.
+                    Your account has been set up successfully. You&apos;re now ready to start trading smarter with our AI-powered platform.
                   </p>
                 </div>
                 <div className="bg-gray-700/30 rounded-lg p-6">
-                  <h3 className="text-lg font-semibold text-white mb-4">What's Next?</h3>
+                  <h3 className="text-lg font-semibold text-white mb-4">What&apos;s Next?</h3>
                   <div className="space-y-3 text-left">
                     <div className="flex items-center space-x-3">
                       <Check className="h-4 w-4 text-accent" />

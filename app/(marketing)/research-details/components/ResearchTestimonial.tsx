@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Star, Building2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -22,16 +23,20 @@ export default function ResearchTestimonial() {
 
           {/* Quote */}
           <blockquote className="text-2xl md:text-3xl font-bold text-white mb-8 leading-relaxed">
-            "Found <span className="text-[#00FFC2]">3x gems</span> using their on-chain research. The fundamental analysis and whale tracking saved our fund millions in potential losses."
+            &ldquo;Found <span className="text-[#00FFC2]">3x gems</span> using their on-chain research. The fundamental analysis and whale tracking saved our fund millions in potential losses.&rdquo;
           </blockquote>
 
           {/* Attribution */}
           <div className="flex items-center justify-center space-x-4 mb-8">
-            <img
-              src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=80&h=80&fit=crop"
-              alt="Sarah Chen"
-              className="w-16 h-16 rounded-full object-cover"
-            />
+            <div className="relative w-16 h-16">
+              <Image
+                src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=80&h=80&fit=crop"
+                alt="Sarah Chen"
+                fill
+                className="rounded-full object-cover"
+                sizes="64px"
+              />
+            </div>
             <div className="text-left">
               <div className="font-semibold text-white text-lg">Sarah Chen</div>
               <div className="text-gray-400">Senior Portfolio Manager</div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
+import { CheckCircle2 } from "lucide-react";
 
 interface TaxInfoProps {
   buyTokenTax: {
@@ -24,7 +25,16 @@ export function TaxInfo({ buyTokenTax, sellTokenTax, buyToken, sellToken, tokenM
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   
-  if (!hasBuyTax && !hasSellTax) return null;
+  if (!hasBuyTax && !hasSellTax) {
+    return (
+      <div className="w-full text-right">
+        <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-green-50 dark:bg-green-900/30 border border-green-100 dark:border-green-800/50">
+          <CheckCircle2 className="w-3.5 h-3.5 text-green-500" />
+          <span className="text-xs font-medium text-green-700 dark:text-green-300">No token taxes detected</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full">

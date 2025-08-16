@@ -41,10 +41,13 @@ const TickerTape = () => {
       containerRef.current.appendChild(script);
     }
     
-    // Cleanup function to remove the script when component unmounts or theme changes
+    // Capture the current ref value in the effect's closure
+    const currentContainer = containerRef.current;
+    
+    // Cleanup function to prevent memory leaks
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
+      if (currentContainer) {
+        currentContainer.innerHTML = '';
       }
     };
   }, [resolvedTheme]);  // Re-run when theme changes

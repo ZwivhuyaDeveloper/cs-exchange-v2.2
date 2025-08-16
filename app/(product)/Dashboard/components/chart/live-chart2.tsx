@@ -36,7 +36,7 @@ const LiveChart = ({
       script.innerHTML = JSON.stringify({
         autosize: true,
         symbol,
-        hide_side_toolbar: true,
+        hide_side_toolbar: false,
         interval,
         timezone: "Etc/UTC",
         theme,

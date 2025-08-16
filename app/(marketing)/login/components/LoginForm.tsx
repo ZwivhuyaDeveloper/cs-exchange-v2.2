@@ -144,7 +144,7 @@ export default function LoginForm() {
         {/* Sign Up Link */}
         <div className="mt-8 text-center">
           <p className="text-gray-400">
-            Don't have an account?{' '}
+            Don&apos;t have an account?{' '}
             <Link href="/onboarding" className="text-accent hover:text-accent-hover font-semibold transition-colors">
               Sign up for free
             </Link>

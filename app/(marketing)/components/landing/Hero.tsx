@@ -50,7 +50,9 @@ export default function Hero() {
       {/* Background Elements */}
       <div className="absolute inset-0 ">
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#0A0E17]/50 to-[#0A0E17]/100" />
-        <AuroraBackground children={undefined} className="absolute inset-0  " />
+        <AuroraBackground className="absolute inset-0">
+          {null}
+        </AuroraBackground>
       </div>
 
 
@@ -60,7 +62,7 @@ export default function Hero() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 inline-flex items-center space-x-6 bg-gray-200/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200"
+            className="mb-8 inline-flex items-center space-x-6 bg-gray-500/40 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-500"
           >
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-[#00FFC2] rounded-full animate-pulse" />
@@ -109,7 +111,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
-            className="text-xl md:text-2xl text-gray-700 mb-8 max-w-3xl mx-auto"
+            className="text-xl md:text-2xl text-gray-400 mb-8 max-w-3xl mx-auto"
           >
             AI-Powered Signals, News & Research
             <br />
@@ -125,15 +127,15 @@ export default function Hero() {
           >
             <div className="flex items-center space-x-2">
               <TrendingUp className="h-4 w-4 text-[#00FFC2]" color='#00FFC2' />
-              <span>90% Signal Accuracy</span>
+              <span className='text-zinc-400'>90% Signal Accuracy</span>
             </div>
             <div className="flex items-center space-x-2">
               <Shield className="h-4 w-4 text-[#00FFC2]" color='#00FFC2' />
-              <span>256-bit Encryption</span>
+              <span className='text-zinc-400'>256-bit Encryption</span>
             </div>
             <div className="flex items-center space-x-2">
               <Zap className="h-4 w-4 text-[#00FFC2]" color='#00FFC2' />
-              <span>Regulatory Compliance</span>
+              <span className='text-gray-400'>Regulatory Compliance</span>
             </div>
           </motion.div>
 

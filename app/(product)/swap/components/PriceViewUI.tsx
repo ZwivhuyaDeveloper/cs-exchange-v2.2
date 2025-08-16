@@ -5,15 +5,13 @@ import { TokenPicker } from "./ui/tokenPicker";
 import { TokenInputSection } from "./ui/TokenInputSection";
 import { SwapButton } from "./ui/SwapButton";
 import { FinalSwapValue } from "./ui/FinalSwapValue";
-import { AffiliateFeeBadge } from "./ui/SwapFee";
-import { TokenEquivalentValue } from "./ui/TokenEquivalentValue";
 import { TaxInfo } from "./ui/TaxInfo";
 import { TokenSelectorIconList } from "./ui/TokenSelectorIconList";
 import { SlippageTolerance } from "./ui/SlippageTolerance";
 import { PercentageSelector } from "./ui/PercentageSelector";
 import { useState } from "react";
 import { LoaderOne } from "@/src/components/ui/loader";
-import { Dot } from "lucide-react";
+import { SwapFeeBadge } from "./ui/SwapFee";
 
 export interface PriceViewUIProps {
   loading: boolean;
@@ -228,22 +226,20 @@ export default function PriceViewUI({
           <Card className="w-full h-fit bg-transparent rounded-none py-0 border-none shadow-none pt-5">
             <CardContent className="gap-2 flex flex-col">
               {/* Add FinalSwapValue here */}
-              {price && (
-                <div className="flex flex-col">
+              <div className="flex flex-row justify-between">
+                <h3 className="text-sm font-medium "><span>You receive:</span></h3>
+                {price && (
                   <div className="flex flex-row justify-between items-center ">
-                    <p className="text-sm font-medium "><span>You receive:</span></p>
-                    <div className="">
-                      <FinalSwapValue
-                        buyAmount={buyAmount}
-                        buyTokenSymbol={toToken}
-                        chainId={chainId}
-                        tokenMap={tokenMap}
-                        feeAmount={price?.fees?.integratorFee?.amount || '0'}
-                      />
-                    </div>
-                  </div>
+                    <FinalSwapValue
+                      buyAmount={buyAmount}
+                    buyTokenSymbol={toToken}
+                    chainId={chainId}
+                    tokenMap={tokenMap}
+                    feeAmount={price?.fees?.integratorFee?.amount || '0'}
+                  />
                 </div>
               )}
+              </div>
               {/* Affiliate Fee Display */}
               <div className="flex flex-row justify-between items-center w-full">
                 <div>
@@ -251,7 +247,7 @@ export default function PriceViewUI({
                 </div>
                 <div>
                   {price?.fees && (
-                    <AffiliateFeeBadge 
+                    <SwapFeeBadge 
                       price={price} 
                       buyToken={toToken} 
                       tokenMap={tokenMap} 

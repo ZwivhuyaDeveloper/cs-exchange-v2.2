@@ -47,10 +47,13 @@ const TradingViewLiveChart = ({
       containerRef.current.appendChild(script);
     }
     
-    // Cleanup function
+    // Capture the current ref value in the effect's closure
+    const currentContainer = containerRef.current;
+    
+    // Cleanup function to prevent memory leaks
     return () => {
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
+      if (currentContainer) {
+        currentContainer.innerHTML = '';
       }
     };
   }, [token, interval, theme]);

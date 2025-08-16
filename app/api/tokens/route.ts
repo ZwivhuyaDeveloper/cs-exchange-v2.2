@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
   const symbol = searchParams.get("symbol");
   const address = searchParams.get("address");
   const search = searchParams.get("search");
+  const listId = searchParams.get("listId");
   const limit = parseInt(searchParams.get("limit") || "50");
   const page = parseInt(searchParams.get("page") || "1");
 
@@ -41,6 +42,15 @@ export async function GET(request: NextRequest) {
         { symbol: { contains: search, mode: 'insensitive' } },
         { name: { contains: search, mode: 'insensitive' } }
       ];
+    }
+
+    // Filter by token list if provided
+    if (listId) {
+      where.TokenList = {
+        some: {
+          listId: listId
+        }
+      };
     }
 
     // Calculate pagination

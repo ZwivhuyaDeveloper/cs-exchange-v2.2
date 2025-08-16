@@ -32,7 +32,7 @@ export function PercentageSelector({
   };
 
   return (
-    <div className={cn("flex gap-2 w-full overflow-x-auto pb-2 hide-scrollbar ", className)}>
+    <div className={cn("flex gap-2 w-full overflow-x-auto P-1 pb-2 hide-scrollbar ", className)}>
       {percentages.map((percentage) => (
         <Button
           key={percentage}
@@ -40,9 +40,9 @@ export function PercentageSelector({
           variant="outline"
           size="sm"
           className={cn(
-            "flex-none h-10 w-16 text-sm font-medium rounded-lg",
+            "flex-none h-10 w-16 text-sm font-medium rounded-full bg-zinc-200 dark:bg-zinc-900",
             "active:scale-95 transition-transform", // Touch feedback
-            "focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2", // Better focus
+            "focus:outline-none focus:ring-1 focus:ring-blue-500", // Better focus
             "md:h-9 md:w-14 md:text-xs" // Desktop sizes
           )}
           onClick={() => onSelect(calculateAmount(percentage))}

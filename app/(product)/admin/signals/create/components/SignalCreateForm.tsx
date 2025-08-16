@@ -1,6 +1,8 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import { useForm } from 'react-hook-form';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -276,7 +278,16 @@ export default function SignalCreateForm({ userId }: SignalCreateFormProps) {
                       }}
                     >
                       {token.logoURL && (
-                        <img src={token.logoURL} alt={token.symbol} className="w-6 h-6 rounded-full" />
+                        <div className="relative w-6 h-6">
+                          <Image
+                            src={token.logoURL}
+                            alt={token.symbol}
+                            width={24}
+                            height={24}
+                            className="rounded-full object-cover"
+                            unoptimized={true}
+                          />
+                        </div>
                       )}
                       <div>
                         <p className="font-medium">{token.symbol}</p>
@@ -290,7 +301,16 @@ export default function SignalCreateForm({ userId }: SignalCreateFormProps) {
               {selectedToken && (
                 <div className="flex items-center space-x-3 p-3 bg-blue-50 rounded-md">
                   {selectedToken.logoURL && (
-                    <img src={selectedToken.logoURL} alt={selectedToken.symbol} className="w-6 h-6 rounded-full" />
+                    <div className="relative w-6 h-6">
+                      <Image
+                        src={selectedToken.logoURL}
+                        alt={selectedToken.symbol}
+                        width={24}
+                        height={24}
+                        className="rounded-full object-cover"
+                        unoptimized={true}
+                      />
+                    </div>
                   )}
                   <div>
                     <p className="font-medium">{selectedToken.symbol}</p>

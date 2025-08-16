@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Star, TrendingUp, Zap } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -66,7 +67,7 @@ export default function SwapTestimonials() {
 
               {/* Content */}
               <blockquote className="text-gray-500 mb-6 italic">
-                "{testimonial.content}"
+                &ldquo;{testimonial.content}&rdquo;
               </blockquote>
 
               {/* Results */}
@@ -79,11 +80,15 @@ export default function SwapTestimonials() {
 
               {/* Author */}
               <div className="flex items-center space-x-3">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-10 h-10 rounded-full object-cover"
-                />
+                <div className="relative w-10 h-10">
+                  <Image
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    fill
+                    className="rounded-full object-cover"
+                    sizes="40px"
+                  />
+                </div>
                 <div>
                   <div className="font-semibold text-white">{testimonial.name}</div>
                   <div className="text-sm text-gray-500">{testimonial.role}</div>

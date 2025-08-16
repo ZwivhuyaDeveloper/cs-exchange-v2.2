@@ -2,6 +2,7 @@
 
 import { Play, Clock, BookOpen, CheckCircle } from 'lucide-react'
 import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 const tutorials = [
   {
@@ -94,11 +95,15 @@ export default function TutorialsList() {
             >
               {/* Thumbnail */}
               <div className="relative">
-                <img
-                  src={tutorial.thumbnail}
-                  alt={tutorial.title}
-                  className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+                <div className="relative w-full h-48">
+                  <Image
+                    src={tutorial.thumbnail}
+                    alt={tutorial.title}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </div>
                 <div className="absolute inset-0 bg-black/40 group-hover:bg-black/20 transition-colors duration-300" />
                 
                 {/* Play Button for Videos */}

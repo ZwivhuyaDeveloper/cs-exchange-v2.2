@@ -56,8 +56,8 @@ const TokenInputSectionCore = ({
   const tokenInfo = tokenMap && token ? tokenMap[token.toLowerCase()] : null;
   const tokenDecimals = tokenInfo?.decimals || 18;
 
-  // Enhanced validation function
-  const validateAmount = (value: string): { isValid: boolean; error: string | null } => {
+  // Enhanced validation function - memoized with useCallback
+  const validateAmount = useCallback((value: string): { isValid: boolean; error: string | null } => {
     // If external validation is provided, use it
     if (externalValidationError !== undefined || externalIsValidAmount !== undefined) {
       return {
@@ -147,7 +147,7 @@ const TokenInputSectionCore = ({
     }
 
     return { isValid: true, error: null };
-  };
+  }, [externalValidationError, externalIsValidAmount, balance, maxAmount, tokenDecimals, token]);
 
   // Enhanced decimal sanitization
   const sanitizeDecimalPlaces = (value: string, decimals: number): string => {
@@ -212,7 +212,7 @@ const TokenInputSectionCore = ({
       setValidationError(validation.error);
       setIsValid(validation.isValid);
     }
-  }, [amount, balance, maxAmount]);
+  }, [amount, balance, maxAmount, validateAmount]);
 
   // Format number with commas for better readability
   const formatDisplayAmount = useCallback((value: string): string => {

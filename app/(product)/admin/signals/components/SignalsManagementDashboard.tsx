@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -315,11 +316,16 @@ export default function SignalsManagementDashboard({ userId }: SignalsManagement
                       <TableCell>
                         <div className="flex items-center space-x-2">
                           {signal.token.logoURL && (
-                            <img 
-                              src={signal.token.logoURL} 
-                              alt={signal.token.symbol}
-                              className="w-6 h-6 rounded-full"
-                            />
+                            <div className="relative w-6 h-6">
+                              <Image
+                                src={signal.token.logoURL}
+                                alt={signal.token.symbol}
+                                width={24}
+                                height={24}
+                                className="rounded-full object-cover"
+                                unoptimized={true}
+                              />
+                            </div>
                           )}
                           <div>
                             <p className="font-medium">{signal.token.symbol}</p>

@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
 interface TokenUSDValueProps {
@@ -11,7 +11,7 @@ export const TokenUSDValue = ({ amount, tokenSymbol, chainId }: TokenUSDValuePro
   const [usdPrice, setUsdPrice] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const [tokenInfo, setTokenInfo] = useState<any>(null);
   const [tokenError, setTokenError] = useState<string | null>(null);
 
@@ -155,19 +155,17 @@ export const TokenUSDValue = ({ amount, tokenSymbol, chainId }: TokenUSDValuePro
 
   useEffect(() => {
     // Clear previous timeout
-    if (timeoutId) clearTimeout(timeoutId);
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
 
     // Set new timeout to debounce requests
-    const newTimeoutId = setTimeout(() => {
+    timeoutRef.current = setTimeout(() => {
       fetchUsdPrice();
     }, 500); // 500ms debounce
 
-    setTimeoutId(newTimeoutId);
-
     return () => {
-      if (timeoutId) clearTimeout(timeoutId);
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [amount, tokenSymbol, chainId, tokenInfo]);
+  }, [amount, tokenSymbol, chainId, tokenInfo, fetchUsdPrice]);
 
   if (!isValidAmount()) return null;
 

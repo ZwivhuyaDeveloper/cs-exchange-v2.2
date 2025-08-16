@@ -291,7 +291,7 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
                 <ScrollAreaViewport ref={viewportRef} className="w-full h-full">
                   {paginatedTokens.length === 0 ? (
                     <CommandEmpty className="py-8 text-center text-muted-foreground">
-                      No tokens found for "{searchQuery}"
+                      No tokens found for &quot;{searchQuery}&quot;
                     </CommandEmpty>
                   ) : (
                     <div className="p-2 space-y-1">

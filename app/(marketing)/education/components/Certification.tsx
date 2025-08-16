@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Award, CheckCircle, Users } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -125,14 +126,18 @@ export default function EducationCertification() {
         >
           <div className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-100 max-w-3xl mx-auto">
             <blockquote className="text-xl text-gray-500 italic mb-6">
-              "The AlphaChain certification opened doors I never thought possible. Within 3 months of earning my certificate, I landed a position at a top crypto hedge fund."
+              &ldquo;The AlphaChain certification opened doors I never thought possible. Within 3 months of earning my certificate, I landed a position at a top crypto hedge fund.&rdquo;
             </blockquote>
             <div className="flex items-center justify-center space-x-4">
-              <img
-                src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=60&h=60&fit=crop"
-                alt="Sarah Chen"
-                className="w-12 h-12 rounded-full object-cover"
-              />
+              <div className="relative w-12 h-12">
+                <Image
+                  src="https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?w=60&h=60&fit=crop"
+                  alt="Sarah Chen"
+                  fill
+                  className="rounded-full object-cover"
+                  sizes="48px"
+                />
+              </div>
               <div>
                 <div className="font-semibold text-white">Sarah Chen</div>
                 <div className="text-sm text-gray-500">Quantitative Analyst, Crypto Capital</div>

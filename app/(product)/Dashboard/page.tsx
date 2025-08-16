@@ -14,10 +14,7 @@ import LoadingIntro from "@/src/components/ui/loading-intro"
 import { ChartRadarMultiple } from "@/app/(product)/Dashboard/components/ui/Chart-radar"
 import LiquidityDistributionChart from "@/app/(product)/Dashboard/components/ui/LiquidityDistributionChart"
 import "@rainbow-me/rainbowkit/styles.css";
-import NewsCards from "./components/news-cards"
-import NewsCardsWrapper from "./components/news-cards-wrapper"
-import VolumeChart from "./components/ui/VolumeChart"
-import Networks from "./components/ui/Networks"
+
 import dynamic from 'next/dynamic';
 
 // Dynamically import the client component with SSR disabled
@@ -48,12 +45,12 @@ export default function Page() {
 
       {/* Main 3-column layout */}
       <main className="flex-1 flex flex-col items-center w-full h-full px-1 md:px-1">
-        <div className="flex flex-col-reverse lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(156vh-100px)]">{/* 200px header+footer approx */}
+        <div className="flex flex-col-reverse lg:flex-row gap-y-2 lg:gap-y-0 lg:gap-x-1 w-full h-full lg:h-[calc(170vh-100px)]">{/* 200px header+footer approx */}
           {/* Indicators (Left) */}
           <div className="lg:w-[390px] flex w-full md:flex lg:flex-col gap-2 h-full">
             <ScrollArea.Root className="h-full w-full rounded-none border-none overflow-clip gap-y-2" type="auto">
               <ScrollArea.Viewport className="w-full overflow-clip h-full flex flex-col gap-y-2">
-                <div className="border border-px dark:border-zinc-700 border-zinc-2000">
+                <div className="border border-px dark:border-zinc-700 border-zinc-200">
                   <MarketStats tokenSymbol={currentChartToken} />
                 </div>
                 <div className="mt-1 border border-px dark:border-zinc-700 border-zinc-200">
@@ -111,7 +108,7 @@ export default function Page() {
                       chainId={chainId}
                     />
                   </div>
-                  <div className="mt-1 w-[380px] dark:border-zinc-700 border-zinc-100 border-px border">
+                  <div className="mt-1 w-[380px] dark:border-zinc-700 hidden sm:flex h-full border-zinc-100 border-px border">
                     <TrendingNewsClient />
                   </div>
                 </div>

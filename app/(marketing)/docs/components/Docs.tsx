@@ -16,7 +16,9 @@ export default function DocsComingSoon() {
       {/* Background Elements */}
       <div className="absolute inset-0 ">
         <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#0A0E17]/50 to-[#0A0E17]/100" />
-        <AuroraBackground children={undefined} className="absolute inset-0  " />
+        <AuroraBackground className="absolute inset-0">
+          {null}
+        </AuroraBackground>
       </div>
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
         <motion.div
@@ -33,7 +35,7 @@ export default function DocsComingSoon() {
           </h1>
           
           <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto">
-            We're working hard to bring you comprehensive API documentation, integration guides, and developer resources.
+            We&apos;re working hard to bring you comprehensive API documentation, integration guides, and developer resources.
           </p>
         </motion.div>
 
