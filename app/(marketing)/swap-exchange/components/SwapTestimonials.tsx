@@ -56,7 +56,7 @@ export default function SwapTestimonials() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
-              className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-100"
+              className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700"
             >
               {/* Rating */}
               <div className="flex items-center space-x-1 mb-4">
@@ -66,7 +66,7 @@ export default function SwapTestimonials() {
               </div>
 
               {/* Content */}
-              <blockquote className="text-gray-500 mb-6 italic">
+              <blockquote className="text-gray-400 mb-6 italic">
                 &ldquo;{testimonial.content}&rdquo;
               </blockquote>
 
@@ -91,7 +91,7 @@ export default function SwapTestimonials() {
                 </div>
                 <div>
                   <div className="font-semibold text-white">{testimonial.name}</div>
-                  <div className="text-sm text-gray-500">{testimonial.role}</div>
+                  <div className="text-sm text-gray-400">{testimonial.role}</div>
                 </div>
               </div>
             </motion.div>
@@ -105,20 +105,20 @@ export default function SwapTestimonials() {
           className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center mb-12"
         >
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">$50M+</div>
-            <div className="text-gray-500">Daily Volume</div>
+            <div className="text-3xl font-bold text-[#00FFC2] mb-2">$50M+</div>
+            <div className="text-gray-400">Daily Volume</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">100K+</div>
-            <div className="text-gray-500">Active Users</div>
+            <div className="text-3xl font-bold text-[#00FFC2] mb-2">100K+</div>
+            <div className="text-gray-400">Active Users</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">10M+</div>
-            <div className="text-gray-500">Swaps Completed</div>
+            <div className="text-3xl font-bold text-[#00FFC2] mb-2">10M+</div>
+            <div className="text-gray-400">Swaps Completed</div>
           </div>
           <div>
-            <div className="text-3xl font-bold text-accent mb-2">99.9%</div>
-            <div className="text-gray-500">Success Rate</div>
+            <div className="text-3xl font-bold text-[#00FFC2] mb-2">99.9%</div>
+            <div className="text-gray-400">Success Rate</div>
           </div>
         </motion.div>
 

@@ -67,7 +67,7 @@ const plans = [
 
 export default function PricingSection() {
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-[#0A0E17]">
+    <section className="py-20 bg-gradient-to-b from-gray-950 to-[#0A0E17]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -75,7 +75,7 @@ export default function PricingSection() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Choose Your <span className="text-accent">Trading Edge</span>
+            Choose Your <span className="text-[#00FFC2]">Trading Edge</span>
           </h2>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Start free and upgrade as you grow. All plans include our 7-day money-back guarantee.
@@ -91,15 +91,15 @@ export default function PricingSection() {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.2 }}
-                className={`relative bg-gray-100/50 backdrop-blur-sm rounded-2xl p-8 border transition-all duration-300 hover:scale-105 ${
+                className={`relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border transition-all duration-300 hover:scale-105 ${
                   plan.popular 
-                    ? 'border-accent shadow-lg shadow-accent/20' 
-                    : 'border-gray-200 hover:border-accent/50'
+                    ? 'border-[#00FFC2] shadow-lg shadow-[#00FFC2]/20' 
+                    : 'border-gray-700 hover:border-[#00FFC2]/50'
                 }`}
               >
                 {plan.popular && (
                   <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                    <div className="bg-accent text-primary px-4 py-1 rounded-full text-sm font-semibold">
+                    <div className="bg-[#00FFC2] text-[#3A86FF] px-4 py-1 rounded-full text-sm font-semibold">
                       Most Popular
                     </div>
                   </div>
@@ -108,8 +108,8 @@ export default function PricingSection() {
                 <div className="text-center mb-8">
                   <div className={`inline-flex p-3 rounded-xl mb-4 ${
                     plan.popular 
-                      ? 'bg-accent text-primary' 
-                      : 'bg-gray-100 text-accent'
+                      ? 'bg-[#00FFC2] text-[#3A86FF]' 
+                      : 'bg-gray-800 text-[#00FFC2]'
                   }`}>
                     <Icon className="h-6 w-6" />
                   </div>
@@ -124,7 +124,7 @@ export default function PricingSection() {
                 <div className="space-y-3 mb-8">
                   {plan.features.map((feature) => (
                     <div key={feature} className="flex items-center space-x-3">
-                      <Check className="h-5 w-5 text-accent flex-shrink-0" />
+                      <Check className="h-5 w-5 text-[#00FFC2] flex-shrink-0" />
                       <span className="text-gray-300">{feature}</span>
                     </div>
                   ))}
@@ -140,8 +140,8 @@ export default function PricingSection() {
                   href={plan.name === 'Institutional' ? '/contact' : '/trial'}
                   className={`block w-full text-center py-3 px-6 rounded-lg font-semibold transition-colors ${
                     plan.popular
-                      ? 'bg-accent hover:bg-accent-hover text-primary'
-                      : 'bg-gray-100 hover:bg-[#00] text-white hover:text-primary'
+                      ? 'bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-[#3A86FF]'
+                      : 'bg-gray-700 hover:bg-[#00FFC2]/80 text-white hover:text-primary'
                   }`}
                 >
                   {plan.cta}

@@ -42,7 +42,7 @@ export default function TradingHero() {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-xl text-gray-500 mb-8 leading-relaxed"
+              className="text-xl text-gray-400 mb-8 leading-relaxed"
             >
               Execute trades automatically with our advanced trading bots. Connect to major exchanges, set your parameters, and let AI handle the rest while you sleep.
             </motion.p>
@@ -93,7 +93,7 @@ export default function TradingHero() {
             >
               <Link
                 href="/trial"
-                className="bg-accent hover:bg-accent-hover text-primary px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
+                className="bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-[#0A0E17] px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
               >
                 Start Trading Bot
               </Link>
@@ -111,25 +111,25 @@ export default function TradingHero() {
             transition={{ delay: 0.3 }}
             className="relative"
           >
-            <div className="bg-gray-200/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-200 floating">
+            <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border border-gray-700 floating">
               {/* Header */}
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-semibold text-white">Trading Bot Dashboard</h3>
                 <div className="flex items-center space-x-2">
-                  <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
-                  <span className="text-sm text-gray-500">Active</span>
+                  <div className="w-2 h-2 bg-[#00FFC2] rounded-full animate-pulse" />
+                  <span className="text-sm text-gray-400">Active</span>
                 </div>
               </div>
 
               {/* Bot Status */}
               <div className="grid grid-cols-2 gap-4 mb-6">
-                <div className="bg-gray-300/30 rounded-lg p-3">
-                  <div className="text-sm text-gray-500">Total Profit</div>
-                  <div className="text-xl font-bold text-accent">+$12,450</div>
+                <div className="bg-gray-600/30 rounded-lg p-3">
+                  <div className="text-sm text-gray-400">Total Profit</div>
+                  <div className="text-xl font-bold text-[#00FFC2]">+$12,450</div>
                 </div>
-                <div className="bg-gray-300/30 rounded-lg p-3">
-                  <div className="text-sm text-gray-500">Win Rate</div>
-                  <div className="text-xl font-bold text-accent">87%</div>
+                <div className="bg-gray-600/30 rounded-lg p-3">
+                  <div className="text-sm text-gray-400">Win Rate</div>
+                  <div className="text-xl font-bold text-[#00FFC2]">87%</div>
                 </div>
               </div>
 
@@ -137,21 +137,21 @@ export default function TradingHero() {
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold text-white">Recent Trades</h4>
                 <div className="space-y-2">
-                  <div className="flex items-center justify-between bg-gray-300/20 rounded-lg p-2">
+                  <div className="flex items-center justify-between bg-gray-600/20 rounded-lg p-2">
                     <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-accent rounded-full" />
+                      <div className="w-2 h-2 bg-[#00FFC2] rounded-full" />
                       <span className="text-sm text-white">BTC/USDT</span>
                     </div>
-                    <span className="text-sm text-accent">+2.4%</span>
+                    <span className="text-sm text-[#00FFC2]">+2.4%</span>
                   </div>
-                  <div className="flex items-center justify-between bg-gray-300/20 rounded-lg p-2">
+                  <div className="flex items-center justify-between bg-gray-600/20 rounded-lg p-2">
                     <div className="flex items-center space-x-2">
-                      <div className="w-2 h-2 bg-accent rounded-full" />
+                      <div className="w-2 h-2 bg-[#00FFC2] rounded-full" />
                       <span className="text-sm text-white">ETH/USDT</span>
                     </div>
-                    <span className="text-sm text-accent">+1.8%</span>
+                    <span className="text-sm text-[#00FFC2]">+1.8%</span>
                   </div>
-                  <div className="flex items-center justify-between bg-gray-300/20 rounded-lg p-2">
+                  <div className="flex items-center justify-between bg-gray-600/20 rounded-lg p-2">
                     <div className="flex items-center space-x-2">
                       <div className="w-2 h-2 bg-red-400 rounded-full" />
                       <span className="text-sm text-white">SOL/USDT</span>

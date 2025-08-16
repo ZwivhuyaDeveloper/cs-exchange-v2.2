@@ -63,7 +63,7 @@ const features = [
 
 export default function PricingComparison() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -78,9 +78,9 @@ export default function PricingComparison() {
           </p>
         </motion.div>
 
-        <div className="bg-gray-300/50 backdrop-blur-sm rounded-2xl border border-gray-300 overflow-hidden">
+        <div className="bg-gray-700/50 backdrop-blur-sm rounded-2xl border border-gray-700 overflow-hidden">
           {/* Header */}
-          <div className="grid grid-cols-4 gap-4 p-6 border-b border-gray-300 bg-gray-300/30">
+          <div className="grid grid-cols-4 gap-4 p-6 border-b border-gray-700 bg-gray-700/30">
             <div className="text-lg font-semibold text-white">Features</div>
             <div className="text-center">
               <div className="text-lg font-semibold text-white">Free</div>
@@ -105,7 +105,7 @@ export default function PricingComparison() {
               transition={{ delay: categoryIndex * 0.1 }}
             >
               {/* Category Header */}
-              <div className="px-6 py-4 bg-gray-300/30 border-b border-gray-300">
+              <div className="px-6 py-4 bg-gray-700/30 border-b border-gray-700">
                 <h3 className="text-lg font-semibold text-[#00ffc3]">{category.category}</h3>
               </div>
 

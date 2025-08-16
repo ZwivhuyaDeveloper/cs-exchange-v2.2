@@ -39,7 +39,7 @@ const testimonials = [
 
 export default function PricingTestimonials() {
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-[#0A0E17]">
+    <section className="py-20 bg-gradient-to-b from-gray-950 to-[#0A0E17]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -49,7 +49,7 @@ export default function PricingTestimonials() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             What Our <span className="text-[#00ffc3]">Customers Say</span>
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Real results from traders using AlphaChain across all plan tiers
           </p>
         </motion.div>
@@ -61,7 +61,7 @@ export default function PricingTestimonials() {
               initial={{ opacity: 0, y: 50 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.2 }}
-              className="bg-gray-200/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-300 hover:border-[#00ffc3]/50 transition-all duration-300"
+              className="bg-gray-700/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-[#00ffc3]/50 transition-all duration-300"
             >
               {/* Plan Badge */}
               <div className="flex justify-between items-start mb-6">

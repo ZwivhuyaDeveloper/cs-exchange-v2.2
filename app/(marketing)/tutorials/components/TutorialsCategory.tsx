@@ -59,7 +59,7 @@ export default function TutorialsCategories() {
   const [selectedCategory, setSelectedCategory] = useState('beginner')
 
   return (
-    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-50">
+    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -69,7 +69,7 @@ export default function TutorialsCategories() {
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
             Choose Your <span className="text-[#00FFC2]">Learning Path</span>
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Select a category that matches your experience level and goals
           </p>
         </motion.div>
@@ -86,10 +86,10 @@ export default function TutorialsCategories() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`relative bg-gray-100/50 backdrop-blur-sm rounded-2xl p-6 border  cursor-pointer transition-all duration-300 hover:scale-105 ${
+                className={`relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-6 border cursor-pointer transition-all duration-300 hover:scale-105 ${
                   isSelected
-                    ? 'border-accent shadow-lg shadow-[#00FFC2]/20'
-                    : 'border-gray-100 hover:border-[#00FFC2]/50'
+                    ? 'border-[#00FFC2]/50 shadow-lg shadow-[#00FFC2]/20'
+                    : 'border-gray-800 hover:border-[#00FFC2]/50'
                 }`}
               >
                 {/* Background Gradient */}
@@ -109,7 +109,7 @@ export default function TutorialsCategories() {
                   <h3 className="text-xl font-bold text-white mb-2">
                     {category.name}
                   </h3>
-                  <p className="text-gray-500 mb-4">
+                  <p className="text-gray-400 mb-4">
                     {category.description}
                   </p>
 
@@ -118,7 +118,7 @@ export default function TutorialsCategories() {
                       {category.count} tutorials available
                     </span>
                     {isSelected && (
-                      <div className="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                      <div className="w-2 h-2 bg-[#00FFC2]/50 rounded-full animate-pulse" />
                     )}
                   </div>
                 </div>

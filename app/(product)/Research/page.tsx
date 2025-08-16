@@ -116,10 +116,6 @@ export default async function Research() {
   return (
     <PaymentGuard>
     <div className="bg-zinc-100 dark:bg-black">
-      {/* Navigation */}
-      <div>
-        <NavMenu/>
-      </div>
 
       <div className="h-fit w-full justify-center dark:bg-[#0F0F0F] bg-zinc-100 items-center flex mt-1">
         <TickerTape/>

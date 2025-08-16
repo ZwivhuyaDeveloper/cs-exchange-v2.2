@@ -39,7 +39,7 @@ export default function EducationHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-gray-500 mb-12 max-w-3xl mx-auto"
+            className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto"
           >
             Comprehensive courses designed by professional traders to take you from beginner to expert. Learn at your own pace with hands-on projects and real market examples.
           </motion.p>
@@ -81,7 +81,7 @@ export default function EducationHero() {
             transition={{ delay: 0.6 }}
             className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6"
           >
-            <button className="bg-accent hover:bg-accent-hover text-primary px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect">
+            <button className="bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-primary px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect">
               Start Learning Today
             </button>
             <div className="text-sm text-gray-400">

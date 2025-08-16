@@ -5,17 +5,17 @@ import { motion } from 'framer-motion'
 
 export default function EducationProgress() {
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className="text-3xl md:text-4xl font-bold text-gray-100 mb-4">
             Track Your <span className="text-[#00FFC2]">Learning Journey</span>
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Monitor your progress and celebrate your achievements as you master crypto trading
           </p>
         </motion.div>
@@ -25,7 +25,7 @@ export default function EducationProgress() {
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-100"
+            className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700"
           >
             <h3 className="text-2xl font-bold text-white mb-6">Your Progress</h3>
             
@@ -35,14 +35,14 @@ export default function EducationProgress() {
                 <span className="text-gray-500">Overall Completion</span>
                 <span className="text-[#00FFC2] font-semibold">68%</span>
               </div>
-              <div className="w-full bg-gray-200 rounded-full h-3">
+              <div className="w-full bg-gray-700 rounded-full h-3">
                 <div className="bg-gradient-to-r from-[#00FFC2] to-[#00FFC2] h-3 rounded-full w-2/3"></div>
               </div>
             </div>
 
             {/* Course Progress */}
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-200/30 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-gray-700/30 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <CheckCircle className="h-5 w-5 text-[#00FFC2]" />
                   <span className="text-white">Cryptocurrency Fundamentals</span>
@@ -50,7 +50,7 @@ export default function EducationProgress() {
                 <span className="text-[#00FFC2] font-semibold">Completed</span>
               </div>
               
-              <div className="flex items-center justify-between p-4 bg-gray-400/30 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-gray-700/30 rounded-lg">
                 <div className="flex items-center space-x-3">
                   <div className="w-5 h-5 bg-[#00FFC2]/30 rounded-full flex items-center justify-center">
                     <div className="w-2 h-2 bg-[#00FFC2] rounded-full animate-pulse" />
@@ -60,9 +60,9 @@ export default function EducationProgress() {
                 <span className="text-yellow-400 font-semibold">75%</span>
               </div>
               
-              <div className="flex items-center justify-between p-4 bg-gray-200/30 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-gray-700/30 rounded-lg">
                 <div className="flex items-center space-x-3">
-                  <Clock className="h-5 w-5 text-gray-500" />
+                  <Clock className="h-5 w-5 text-gray-400" />
                   <span className="text-white">Risk Management & Psychology</span>
                 </div>
                 <span className="text-gray-500 font-semibold">Not Started</span>
@@ -96,12 +96,12 @@ export default function EducationProgress() {
             
             <div className="space-y-4">
               <div className="flex items-start space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-accent rounded-full flex items-center justify-center">
+                <div className="flex-shrink-0 w-8 h-8 bg-[#00FFC2] rounded-full flex items-center justify-center">
                   <CheckCircle className="h-4 w-4 text-white" color='black' />
                 </div>
                 <div>
                   <h4 className="font-semibold text-white">Foundation Level</h4>
-                  <p className="text-gray-500 text-sm">Master the basics of cryptocurrency and blockchain technology</p>
+                  <p className="text-gray-400 text-sm">Master the basics of cryptocurrency and blockchain technology</p>
                   <div className="text-xs text-[#00FFC2] mt-1">✓ Completed</div>
                 </div>
               </div>
@@ -112,7 +112,7 @@ export default function EducationProgress() {
                 </div>
                 <div>
                   <h4 className="font-semibold text-white">Trading Fundamentals</h4>
-                  <p className="text-gray-500 text-sm">Learn technical analysis and trading strategies</p>
+                  <p className="text-gray-400 text-sm">Learn technical analysis and trading strategies</p>
                   <div className="text-xs text-yellow-400 mt-1">⏳ In Progress (75%)</div>
                 </div>
               </div>
@@ -122,20 +122,20 @@ export default function EducationProgress() {
                   <div className="w-2 h-2 bg-[#3A86FF] rounded-full" />
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-700">Advanced Strategies</h4>
-                  <p className="text-gray-500 text-sm">Master advanced trading techniques and automation</p>
-                  <div className="text-xs text-gray-500 mt-1">🔒 Locked</div>
+                  <h4 className="font-semibold text-white">Advanced Strategies</h4>
+                  <p className="text-gray-400 text-sm">Master advanced trading techniques and automation</p>
+                  <div className="text-xs text-gray-400 mt-1">🔒 Locked</div>
                 </div>
               </div>
               
               <div className="flex items-start space-x-4">
                 <div className="flex-shrink-0 w-8 h-8 bg-[#3A86FF] rounded-full flex items-center justify-center">
-                  <Trophy className="h-4 w-4 text-gray-500" color='WHITE'/>
+                  <Trophy className="h-4 w-4 text-gray-400" color='WHITE'/>
                 </div>
                 <div>
-                  <h4 className="font-semibold text-gray-700">Professional Certification</h4>
-                  <p className="text-gray-500 text-sm">Earn your professional crypto trading certification</p>
-                  <div className="text-xs text-gray-500 mt-1">🔒 Locked</div>
+                  <h4 className="font-semibold text-white">Professional Certification</h4>
+                  <p className="text-gray-400 text-sm">Earn your professional crypto trading certification</p>
+                  <div className="text-xs text-gray-400 mt-1">🔒 Locked</div>
                 </div>
               </div>
             </div>

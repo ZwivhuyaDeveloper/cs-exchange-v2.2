@@ -4,17 +4,17 @@ import { Zap, Twitter, Github, Linkedin, Mail } from 'lucide-react'
 
 export default function Footer() {
   return (
-    <footer className="bg-gray-50/10 border-t border-gray-100">
+    <footer className="bg-gray-950/10 border-t border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-1 md:col-span-2">
             <Link href="/" className="flex items-center space-x-2 mb-4">
-              <div className="p-2 bg-gradient-to-r from-accent to-secondary rounded-lg">
-                <Zap className="h-6 w-6 text-primary" />
+              <div className="p-2 bg-gradient-to-r from-[#00FFC2] to-[#00FFC2] rounded-lg">
+                <Zap className="h-6 w-6 text-[#0A0E17]" />
               </div>
-              <span className="text-xl font-bold text-white">AlphaChain</span>
-              <span className="text-accent font-mono">Signals</span>
+              <span className="text-xl font-bold text-white">Cyclespace Exchange</span>
+              <span className="text-[#00FFC2] font-mono">Signals</span>
             </Link>
             <p className="text-gray-400 mb-6 max-w-md">
               AI-powered crypto trading platform delivering accurate signals, real-time news, and institutional-grade research to traders worldwide.

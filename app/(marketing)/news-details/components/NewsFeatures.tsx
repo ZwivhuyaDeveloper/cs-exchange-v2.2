@@ -29,7 +29,7 @@ const steps = [
 
 export default function NewsFeatures() {
   return (
-    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-50">
+    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -37,7 +37,7 @@ export default function NewsFeatures() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            How It <span className="text-accent">Works</span>
+            How It <span className="text-[#00FFC2]">Works</span>
           </h2>
           <p className="text-xl text-gray-500 max-w-2xl mx-auto">
             From raw data to actionable insights in seconds
@@ -72,7 +72,7 @@ export default function NewsFeatures() {
                     {step.title}
                   </h3>
 
-                  <p className="text-lg text-gray-500 leading-relaxed">
+                  <p className="text-lg text-gray-400 leading-relaxed">
                     {step.description}
                   </p>
 
@@ -81,7 +81,7 @@ export default function NewsFeatures() {
                     {(step.sources || step.features || step.channels)?.map((item, idx) => (
                       <div
                         key={idx}
-                        className="bg-gray-100/50 rounded-lg px-3 py-2 text-center text-sm text-gray-500 border border-gray-100"
+                        className="bg-gray-800/50 rounded-lg px-3 py-2 text-center text-sm text-gray-400 border border-gray-700"
                       >
                         {item}
                       </div>
@@ -92,23 +92,23 @@ export default function NewsFeatures() {
                 {/* Visual */}
                 <div className="flex-1">
                   <div className="relative">
-                    <div className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-100">
+                    <div className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700">
                       {step.step === 1 && (
                         <div className="space-y-4">
                           <div className="flex items-center space-x-3 animate-pulse">
-                            <div className="w-2 h-2 bg-accent rounded-full" />
+                            <div className="w-2 h-2 bg-[#00FFC2] rounded-full" />
                             <div className="text-sm text-gray-500">Scanning CoinDesk...</div>
                           </div>
                           <div className="flex items-center space-x-3 animate-pulse delay-100">
-                            <div className="w-2 h-2 bg-secondary rounded-full" />
+                            <div className="w-2 h-2 bg-[#00FFC2] rounded-full" />
                             <div className="text-sm text-gray-500">Monitoring Twitter feeds...</div>
                           </div>
                           <div className="flex items-center space-x-3 animate-pulse delay-200">
-                            <div className="w-2 h-2 bg-accent rounded-full" />
+                            <div className="w-2 h-2 bg-[#00FFC2] rounded-full" />
                             <div className="text-sm text-gray-500">Checking exchange announcements...</div>
                           </div>
                           <div className="mt-6 text-center">
-                            <div className="text-2xl font-bold text-accent">200+</div>
+                            <div className="text-2xl font-bold text-[#00FFC2]">200+</div>
                             <div className="text-sm text-gray-500">Sources Monitored</div>
                           </div>
                         </div>
@@ -119,47 +119,47 @@ export default function NewsFeatures() {
                           <div className="space-y-3">
                             <div className="flex justify-between items-center">
                               <span className="text-sm text-gray-500">Market Impact</span>
-                              <span className="text-accent font-semibold">High</span>
+                              <span className="text-[#00FFC2] font-semibold">High</span>
                             </div>
                             <div className="w-full bg-gray-700 rounded-full h-2">
-                              <div className="bg-accent h-2 rounded-full w-4/5"></div>
+                              <div className="bg-[#00FFC2] h-2 rounded-full w-4/5"></div>
                             </div>
                           </div>
                           <div className="space-y-3">
                             <div className="flex justify-between items-center">
-                              <span className="text-sm text-gray-500">Sentiment</span>
-                              <span className="text-accent font-semibold">Bullish</span>
+                              <span className="text-sm text-gray-400">Sentiment</span>
+                              <span className="text-[#00FFC2] font-semibold">Bullish</span>
                             </div>
                             <div className="w-full bg-gray-700 rounded-full h-2">
-                              <div className="bg-accent h-2 rounded-full w-3/4"></div>
+                              <div className="bg-[#00FFC2] h-2 rounded-full w-3/4"></div>
                             </div>
                           </div>
                           <div className="text-center mt-6">
-                            <div className="text-2xl font-bold text-accent">95%</div>
-                            <div className="text-sm text-gray-500">Accuracy Rate</div>
+                            <div className="text-2xl font-bold text-[#00FFC2]">95%</div>
+                            <div className="text-sm text-gray-400">Accuracy Rate</div>
                           </div>
                         </div>
                       )}
 
                       {step.step === 3 && (
                         <div className="space-y-4">
-                          <div className="bg-gray-50/30 rounded-lg p-4 border-l-4 border-accent">
+                          <div className="bg-gray-950/30 rounded-lg p-4 border-l-4 border-[#00FFC2]">
                             <div className="flex items-center space-x-2 mb-2">
-                              <Zap className="h-4 w-4 text-accent" />
+                              <Zap className="h-4 w-4 text-[#00FFC2]" />
                               <span className="text-sm font-semibold text-white">Breaking News</span>
                             </div>
                             <p className="text-sm text-gray-400">Bitcoin ETF approval rumors send BTC +5%</p>
                             <div className="text-xs text-gray-500 mt-2">Sent 23 seconds ago</div>
                           </div>
                           <div className="grid grid-cols-3 gap-2 text-center">
-                            <div className="bg-gray-50/30 rounded-lg p-2">
-                              <div className="text-xs text-accent">Mobile</div>
+                            <div className="bg-gray-950/30 rounded-lg p-2">
+                              <div className="text-xs text-[#00FFC2]">Mobile</div>
                             </div>
-                            <div className="bg-gray-50/30 rounded-lg p-2">
-                              <div className="text-xs text-accent">Email</div>
+                            <div className="bg-gray-950/30 rounded-lg p-2">
+                              <div className="text-xs text-[#00FFC2]">Email</div>
                             </div>
-                            <div className="bg-gray-50/30 rounded-lg p-2">
-                              <div className="text-xs text-accent">Telegram</div>
+                            <div className="bg-gray-950/30 rounded-lg p-2">
+                              <div className="text-xs text-[#00FFC2]">Telegram</div>
                             </div>
                           </div>
                         </div>

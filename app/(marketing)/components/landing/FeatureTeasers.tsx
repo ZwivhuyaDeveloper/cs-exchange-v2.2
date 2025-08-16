@@ -42,7 +42,7 @@ const features = [
 
 export default function FeatureTeasers() {
   return (
-    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-50">
+    <section className="py-20 bg-gradient-to-b from-[#0A0E17] to-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <motion.h2
@@ -76,7 +76,7 @@ export default function FeatureTeasers() {
                 className="group "
               >
                 <Link href={feature.href}>
-                  <div className="relative bg-gray-100/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-100 hover:border-[#00FFC2]/50 transition-all duration-300 h-full">
+                  <div className="relative bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700 hover:border-[#00FFC2]/50 transition-all duration-300 h-full">
                     {/* Background Gradient */}
                     <div className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-0 group-hover:opacity-10 rounded-2xl transition-opacity duration-300`} />
                     
@@ -99,7 +99,7 @@ export default function FeatureTeasers() {
                     </p>
 
                     {/* CTA */}
-                    <div className="flex items-center text-accent group-hover:text-white transition-colors">
+                    <div className="flex items-center text-[#00FFC2] group-hover:text-white transition-colors">
                       <span className="font-semibold">Explore Feature</span>
                       <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
                     </div>

@@ -70,7 +70,7 @@ export default function NewsDemo() {
   }
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="py-20 bg-gray-950">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -78,7 +78,7 @@ export default function NewsDemo() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Interactive News <span className="text-accent">Dashboard</span>
+            Interactive News <span className="text-[#00FFC2]">Dashboard</span>
           </h2>
           <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Filter and explore crypto news with real-time sentiment analysis
@@ -98,8 +98,8 @@ export default function NewsDemo() {
                 onClick={() => setActiveCategory(category)}
                 className={`px-4 py-2 rounded-lg font-semibold transition-all duration-300 ${
                   activeCategory === category
-                    ? 'bg-accent text-primary'
-                    : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+                    ? 'bg-[#00FFC2] text-[#0A0E17]'
+                    : 'bg-gray-800 text-gray-400 hover:bg-gray-200'
                 }`}
               >
                 {category}
@@ -111,11 +111,11 @@ export default function NewsDemo() {
           <motion.div
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
-            className="bg-gray-100/50 backdrop-blur-sm rounded-2xl border border-gray-100 overflow-hidden"
+            className="bg-gray-800/50 backdrop-blur-sm rounded-2xl border border-gray-700 overflow-hidden"
           >
-            <div className="p-6 border-b border-gray-100">
+            <div className="p-6 border-b border-gray-800">
               <div className="flex items-center space-x-3">
-                <Filter className="h-5 w-5 text-accent" />
+                <Filter className="h-5 w-5 text-[#00FFC2]" />
                 <span className="font-semibold text-white">
                   {activeCategory} News Feed
                 </span>
@@ -126,7 +126,7 @@ export default function NewsDemo() {
               </div>
             </div>
 
-            <div className="divide-y divide-gray-100">
+            <div className="divide-y divide-gray-700">
               <AnimatePresence mode="wait">
                 {newsItems[activeCategory as keyof typeof newsItems]?.map((item, index) => (
                   <motion.div
@@ -135,7 +135,7 @@ export default function NewsDemo() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ delay: index * 0.1 }}
-                    className="p-6 hover:bg-gray-50/20 transition-colors cursor-pointer"
+                    className="p-6 hover:bg-gray-950/20 transition-colors cursor-pointer"
                     onMouseEnter={() => setHoveredItem(index)}
                     onMouseLeave={() => setHoveredItem(null)}
                   >
@@ -173,21 +173,21 @@ export default function NewsDemo() {
             whileInView={{ opacity: 1, y: 0 }}
             className="mt-8 grid grid-cols-2 md:grid-cols-4 gap-4 text-center"
           >
-            <div className="bg-gray-100/50 rounded-lg p-4">
-              <div className="text-xl font-bold text-accent">1,247</div>
-              <div className="text-sm text-gray-500">Articles Today</div>
+            <div className="bg-gray-800/50 rounded-lg p-4">
+              <div className="text-xl font-bold text-[#00FFC2]">1,247</div>
+              <div className="text-sm text-gray-400">Articles Today</div>
             </div>
-            <div className="bg-gray-100/50 rounded-lg p-4">
-              <div className="text-xl font-bold text-accent">23s</div>
-              <div className="text-sm text-gray-500">Avg. Alert Speed</div>
+            <div className="bg-gray-800/50 rounded-lg p-4">
+              <div className="text-xl font-bold text-[#00FFC2]">23s</div>
+              <div className="text-sm text-gray-400">Avg. Alert Speed</div>
             </div>
-            <div className="bg-gray-100/50 rounded-lg p-4">
-              <div className="text-xl font-bold text-accent">95%</div>
-              <div className="text-sm text-gray-500">Accuracy Rate</div>
+            <div className="bg-gray-800/50 rounded-lg p-4">
+              <div className="text-xl font-bold text-[#00FFC2]">95%</div>
+              <div className="text-sm text-gray-400">Accuracy Rate</div>
             </div>
-            <div className="bg-gray-100/50 rounded-lg p-4">
-              <div className="text-xl font-bold text-accent">24/7</div>
-              <div className="text-sm text-gray-500">Monitoring</div>
+            <div className="bg-gray-800/50 rounded-lg p-4">
+              <div className="text-xl font-bold text-[#00FFC2]">24/7</div>
+              <div className="text-sm text-gray-400">Monitoring</div>
             </div>
           </motion.div>
         </div>

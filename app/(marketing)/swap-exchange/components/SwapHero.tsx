@@ -40,11 +40,11 @@ export default function SwapHero() {
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8 inline-flex items-center space-x-4 bg-gray-200/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-200"
+            className="mb-8 inline-flex items-center space-x-4 bg-gray-800/50 backdrop-blur-sm px-6 py-3 rounded-full border border-gray-700"
           >
             <div className="flex items-center space-x-2">
               <div className="w-2 h-2 bg-[#00FFC2] rounded-full animate-pulse" />
-              <span className="text-sm font-mono text-gray-500">24H VOLUME</span>
+              <span className="text-sm font-mono text-gray-400">24H VOLUME</span>
             </div>
             <div className="text-lg font-mono font-bold text-[#00FFC2]">
               ${swapVolume.toLocaleString()}
@@ -97,7 +97,7 @@ export default function SwapHero() {
               </div>
               <div>
                 <div className="font-semibold text-white">Best Rates</div>
-                <div className="text-sm text-gray-500">Multi-DEX aggregation</div>
+                <div className="text-sm text-gray-400">Multi-DEX aggregation</div>
               </div>
             </div>
             <div className="flex items-center justify-center space-x-3">
@@ -106,7 +106,7 @@ export default function SwapHero() {
               </div>
               <div>
                 <div className="font-semibold text-white">Secure & Safe</div>
-                <div className="text-sm text-gray-500">Non-custodial</div>
+                <div className="text-sm text-gray-400">Non-custodial</div>
               </div>
             </div>
           </motion.div>
@@ -118,21 +118,21 @@ export default function SwapHero() {
             transition={{ delay: 0.8 }}
             className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12 max-w-3xl mx-auto"
           >
-            <div className="bg-gray-100/50 rounded-xl p-4 border border-gray-100">
-              <div className="text-2xl font-bold text-accent mb-1">500+</div>
-              <div className="text-sm text-gray-500">Tokens</div>
+            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+              <div className="text-2xl font-bold text-[#00FFC2] mb-1">500+</div>
+              <div className="text-sm text-gray-400">Tokens</div>
             </div>
-            <div className="bg-gray-100/50 rounded-xl p-4 border border-gray-100">
-              <div className="text-2xl font-bold text-accent mb-1">0.3%</div>
-              <div className="text-sm text-gray-500">Avg Slippage</div>
+            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+              <div className="text-2xl font-bold text-[#00FFC2] mb-1">0.3%</div>
+              <div className="text-sm text-gray-400">Avg Slippage</div>
             </div>
-            <div className="bg-gray-100/50 rounded-xl p-4 border border-gray-100">
-              <div className="text-2xl font-bold text-accent mb-1">15+</div>
-              <div className="text-sm text-gray-500">DEX Sources</div>
+            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+              <div className="text-2xl font-bold text-[#00FFC2] mb-1">15+</div>
+              <div className="text-sm text-gray-400">DEX Sources</div>
             </div>
-            <div className="bg-gray-100/50 rounded-xl p-4 border border-gray-100">
-              <div className="text-2xl font-bold text-accent mb-1">$50M+</div>
-              <div className="text-sm text-gray-500">Daily Volume</div>
+            <div className="bg-gray-800/50 rounded-xl p-4 border border-gray-700">
+              <div className="text-2xl font-bold text-[#00FFC2] mb-1">$50M+</div>
+              <div className="text-sm text-gray-400">Daily Volume</div>
             </div>
           </motion.div>
 

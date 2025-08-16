@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 
 export default function SwapSecurity() {
   return (
-    <section className="py-20 bg-gradient-to-b from-gray-50 to-[#0A0E17]">
+    <section className="py-20 bg-gradient-to-b from-gray-950 to-[#0A0E17]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -13,9 +13,9 @@ export default function SwapSecurity() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Security <span className="text-accent">First</span>
+            Security <span className="text-[#00FFC2]">First</span>
           </h2>
-          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Your funds and privacy are protected by enterprise-grade security measures
           </p>
         </motion.div>
@@ -33,7 +33,7 @@ export default function SwapSecurity() {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">Non-Custodial</h3>
-                <p className="text-gray-500 leading-relaxed">
+                <p className="text-gray-400 leading-relaxed">
                   Your tokens never leave your wallet. We never have access to your funds, ensuring complete control and ownership.
                 </p>
               </div>
@@ -45,7 +45,7 @@ export default function SwapSecurity() {
               </div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">Audited Smart Contracts</h3>
-                <p className="text-gray-500 leading-relaxed">
+                <p className="text-gray-400 leading-relaxed">
                   All smart contracts are audited by leading security firms including CertiK, Quantstamp, and Trail of Bits.
                 </p>
               </div>
@@ -80,28 +80,28 @@ export default function SwapSecurity() {
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
-            className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-100"
+            className="bg-gray-800/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-700"
           >
             <h3 className="text-2xl font-bold text-white mb-8 text-center">Security Metrics</h3>
             
             <div className="space-y-6">
-              <div className="flex justify-between items-center p-4 bg-gray-200/30 rounded-lg">
-                <span className="text-gray-500">Funds Secured</span>
+              <div className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg">
+                <span className="text-gray-400">Funds Secured</span>
                 <span className="text-2xl font-bold text-[#00FFC2]">$2.5B+</span>
               </div>
               
-              <div className="flex justify-between items-center p-4 bg-gray-200/30 rounded-lg">
-                <span className="text-gray-500">Security Audits</span>
+              <div className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg">
+                <span className="text-gray-400">Security Audits</span>
                 <span className="text-2xl font-bold text-[#00FFC2]">12</span>
               </div>
               
-              <div className="flex justify-between items-center p-4 bg-gray-200/30 rounded-lg">
-                <span className="text-gray-500">Uptime</span>
+              <div className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg">
+                <span className="text-gray-400">Uptime</span>
                 <span className="text-2xl font-bold text-[#00FFC2]">99.99%</span>
               </div>
               
-              <div className="flex justify-between items-center p-4 bg-gray-200/30 rounded-lg">
-                <span className="text-gray-300">Successful Swaps</span>
+              <div className="flex justify-between items-center p-4 bg-gray-700/30 rounded-lg">
+                <span className="text-gray-400">Successful Swaps</span>
                 <span className="text-2xl font-bold text-[#00FFC2]">10M+</span>
               </div>
             </div>
@@ -110,21 +110,21 @@ export default function SwapSecurity() {
             <div className="mt-8">
               <h4 className="text-lg font-semibold text-white mb-4 text-center">Audited By</h4>
               <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-200/30 rounded-lg p-3 text-center">
+                <div className="bg-gray-700/30 rounded-lg p-3 text-center">
                   <div className="font-semibold text-[#00FFC2]">CertiK</div>
-                  <div className="text-xs text-gray-500">Smart Contract Audit</div>
+                  <div className="text-xs text-gray-400">Smart Contract Audit</div>
                 </div>
-                <div className="bg-gray-200/30 rounded-lg p-3 text-center">
+                <div className="bg-gray-700/30 rounded-lg p-3 text-center">
                   <div className="font-semibold text-[#00FFC2]">Quantstamp</div>
-                  <div className="text-xs text-gray-500">Security Review</div>
+                  <div className="text-xs text-gray-400">Security Review</div>
                 </div>
-                <div className="bg-gray-200/30 rounded-lg p-3 text-center">
+                <div className="bg-gray-700/30 rounded-lg p-3 text-center">
                   <div className="font-semibold text-[#00FFC2]">Trail of Bits</div>
-                  <div className="text-xs text-gray-500">Code Assessment</div>
+                  <div className="text-xs text-gray-400">Code Assessment</div>
                 </div>
-                <div className="bg-gray-200/30 rounded-lg p-3 text-center">
+                <div className="bg-gray-700/30 rounded-lg p-3 text-center">
                   <div className="font-semibold text-[#00FFC2]">OpenZeppelin</div>
-                  <div className="text-xs text-gray-500">Security Analysis</div>
+                  <div className="text-xs text-gray-400">Security Analysis</div>
                 </div>
               </div>
             </div>
@@ -140,7 +140,7 @@ export default function SwapSecurity() {
           <div className="bg-[#00FFC2]/10 border border-[#00FFC2]/20 rounded-2xl p-8 max-w-3xl mx-auto">
             <Shield className="h-12 w-12 text-[#00FFC2] mx-auto mb-4" color='#00FFC2' />
             <h3 className="text-2xl font-bold text-white mb-4">Our Security Promise</h3>
-            <p className="text-gray-500 leading-relaxed">
+            <p className="text-gray-400 leading-relaxed">
               We&apos;ve secured over $2.5 billion in user funds with zero security incidents. Our commitment to security 
               means continuous monitoring, regular audits, and implementing the latest security best practices to 
               keep your assets safe.

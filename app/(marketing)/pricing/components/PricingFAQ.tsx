@@ -51,7 +51,7 @@ export default function PricingFAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null)
 
   return (
-    <section className="py-20 bg-primary">
+    <section className="py-20 bg-[#0A0E17]">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
@@ -59,7 +59,7 @@ export default function PricingFAQ() {
           className="text-center mb-16"
         >
           <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
-            Frequently Asked <span className="text-accent">Questions</span>
+            Frequently Asked <span className="text-[#00ffc3]">Questions</span>
           </h2>
           <p className="text-xl text-gray-400">
             Everything you need to know about our pricing and plans
@@ -81,9 +81,9 @@ export default function PricingFAQ() {
               >
                 <span className="text-lg font-semibold text-white">{faq.question}</span>
                 {openIndex === index ? (
-                  <ChevronUp className="h-5 w-5 text-accent" />
+                  <ChevronUp className="h-5 w-5 text-[#00ffc3]" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-accent" />
+                  <ChevronDown className="h-5 w-5 text-[#00ffc3]" />
                 )}
               </button>
               
@@ -120,7 +120,7 @@ export default function PricingFAQ() {
             <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
               <a
                 href="mailto:support@alphachain.com"
-                className="bg-accent hover:bg-accent-hover text-primary px-6 py-3 rounded-lg font-semibold transition-colors"
+                className="bg-[#00ffc3] hover:bg-[#00ffc3]/80 text-[#0A0E17] px-6 py-3 rounded-lg font-semibold transition-colors"
               >
                 Email Support
               </a>

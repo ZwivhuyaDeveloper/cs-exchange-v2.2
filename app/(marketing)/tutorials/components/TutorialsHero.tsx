@@ -39,7 +39,7 @@ export default function TutorialsHero() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="text-xl text-gray-500 mb-12 max-w-3xl mx-auto"
+            className="text-xl text-gray-400 mb-12 max-w-3xl mx-auto"
           >
             From beginner basics to advanced strategies, our comprehensive tutorials will help you become a confident crypto trader
           </motion.p>
@@ -52,21 +52,21 @@ export default function TutorialsHero() {
             className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-2xl mx-auto"
           >
             <div className="flex items-center justify-center space-x-3">
-              <BookOpen className="h-6 w-6 text-accent" color='#00FFC2'/>
+              <BookOpen className="h-6 w-6 text-[#00FFC2]" color='#00FFC2'/>
               <div>
                 <div className="text-2xl font-bold text-white">50+</div>
                 <div className="text-sm text-gray-500">Tutorials</div>
               </div>
             </div>
             <div className="flex items-center justify-center space-x-3">
-              <Play className="h-6 w-6 text-accent" color='#00FFC2'/>
+              <Play className="h-6 w-6 text-[#00FFC2]" color='#00FFC2'/>
               <div>
                 <div className="text-2xl font-bold text-white">20+</div>
                 <div className="text-sm text-gray-500">Video Guides</div>
               </div>
             </div>
             <div className="flex items-center justify-center space-x-3">
-              <Clock className="h-6 w-6 text-accent" color='#00FFC2'/>
+              <Clock className="h-6 w-6 text-[#00FFC2]" color='#00FFC2'/>
               <div>
                 <div className="text-2xl font-bold text-white">100+</div>
                 <div className="text-sm text-gray-500">Hours Content</div>
