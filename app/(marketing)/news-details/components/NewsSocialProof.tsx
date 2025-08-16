@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { Clock, Users, Trophy } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -17,7 +18,7 @@ export default function NewsSocialProof() {
             Join <span className="text-accent">5,000+ Traders</span> Saving Time
           </h2>
           <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-            Don't spend hours scrolling through crypto Twitter and news sites
+            Don&apos;t spend hours scrolling through crypto Twitter and news sites
           </p>
         </motion.div>
 
@@ -70,14 +71,18 @@ export default function NewsSocialProof() {
         >
           <div className="bg-gray-100/50 backdrop-blur-sm rounded-2xl p-8 border border-gray-100">
             <p className="text-xl text-gray-400 italic mb-6">
-              "AlphaChain's news dashboard is a game-changer. I used to spend hours every morning catching up on crypto news. Now I get the most important updates delivered instantly with clear sentiment analysis. It's like having a research team working 24/7."
+              &ldquo;AlphaChain&apos;s news dashboard is a game-changer. I used to spend hours every morning catching up on crypto news. Now I get the most important updates delivered instantly with clear sentiment analysis. It&apos;s like having a research team working 24/7.&rdquo;
             </p>
             <div className="flex items-center justify-center space-x-4">
-              <img
-                src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=60&h=60&fit=crop"
-                alt="Marcus Rodriguez"
-                className="w-12 h-12 rounded-full object-cover"
-              />
+              <div className="relative w-12 h-12">
+                <Image
+                  src="https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?w=60&h=60&fit=crop"
+                  alt="Marcus Rodriguez"
+                  fill
+                  className="rounded-full object-cover"
+                  sizes="48px"
+                />
+              </div>
               <div>
                 <div className="font-semibold text-white">Marcus Rodriguez</div>
                 <div className="text-sm text-gray-400">Professional Day Trader</div>

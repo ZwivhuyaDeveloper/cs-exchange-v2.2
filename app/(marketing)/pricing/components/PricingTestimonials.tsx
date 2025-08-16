@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { Star, Building2 } from 'lucide-react'
 import { motion } from 'framer-motion'
 
@@ -82,7 +83,7 @@ export default function PricingTestimonials() {
 
               {/* Content */}
               <blockquote className="text-gray-500 mb-6 italic">
-                "{testimonial.content}"
+                &ldquo;{testimonial.content}&rdquo;
               </blockquote>
 
               {/* Results */}
@@ -93,11 +94,15 @@ export default function PricingTestimonials() {
 
               {/* Author */}
               <div className="flex items-center space-x-4">
-                <img
-                  src={testimonial.image}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                />
+                <div className="relative w-12 h-12">
+                  <Image
+                    src={testimonial.image}
+                    alt={testimonial.name}
+                    fill
+                    className="rounded-full object-cover"
+                    sizes="48px"
+                  />
+                </div>
                 <div>
                   <div className="font-semibold text-white">{testimonial.name}</div>
                   <div className="text-sm text-gray-400">{testimonial.role}</div>
