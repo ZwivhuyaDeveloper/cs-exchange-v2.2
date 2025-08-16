@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --turbopack",
-    "build": "next build --turbopack",
+    "dev": "next dev",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test:api": "jest --config=jest.api.config.js --testPathPattern=app/api/signals/__tests__",
-    "test:watch": "npm run test:api -- --watch",
     "pretty": "prettier --write .",
     "migrate": "ts-node scripts/migrate.ts"
   },
@@ -68,6 +66,7 @@
     "@sanity/image-url": "^1.1.0",
     "@sanity/structure": "^2.36.2",
     "@sanity/types": "^3.96.0",
+    "@sanity/util": "^4.4.1",
     "@sanity/vision": "^4.2.0",
     "@sanity/visual-editing": "^2.12.14",
     "@sanity/webhook": "^4.0.4",
