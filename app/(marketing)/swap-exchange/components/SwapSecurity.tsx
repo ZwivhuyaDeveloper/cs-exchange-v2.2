@@ -141,7 +141,7 @@ export default function SwapSecurity() {
             <Shield className="h-12 w-12 text-[#00FFC2] mx-auto mb-4" color='#00FFC2' />
             <h3 className="text-2xl font-bold text-white mb-4">Our Security Promise</h3>
             <p className="text-gray-500 leading-relaxed">
-              We've secured over $2.5 billion in user funds with zero security incidents. Our commitment to security 
+              We&apos;ve secured over $2.5 billion in user funds with zero security incidents. Our commitment to security 
               means continuous monitoring, regular audits, and implementing the latest security best practices to 
               keep your assets safe.
             </p>

@@ -30,7 +30,7 @@ export default function TermsContent() {
             <section>
               <h2 className="text-2xl font-bold text-white mb-4">1. Acceptance of Terms</h2>
               <p className="text-gray-300 leading-relaxed">
-                By accessing and using AlphaChain Signals ("Service"), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+                By accessing and using AlphaChain Signals (&ldquo;Service&rdquo;), you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
               </p>
             </section>
 
@@ -88,7 +88,7 @@ export default function TermsContent() {
                 <li>Subscriptions are billed in advance on a monthly or annual basis</li>
                 <li>All fees are non-refundable except as required by law</li>
                 <li>We offer a 7-day money-back guarantee for new subscribers</li>
-                <li>Subscription fees may change with 30 days' notice</li>
+                <li>Subscription fees may change with 30 days&apos; notice</li>
                 <li>You may cancel your subscription at any time</li>
               </ul>
             </section>

@@ -15,9 +15,10 @@ export default function TutorialsHero() {
   return (
     <section className="relative py-20 overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 ">
-        <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#0A0E17]/50 to-[#0A0E17]/100" />
-        <AuroraBackground children={undefined} className="absolute inset-0  " />
+      <div className="absolute inset-0">
+        <AuroraBackground className="absolute inset-0">
+          <div className="absolute inset-0 z-10 bg-gradient-to-b from-transparent via-[#0A0E17]/50 to-[#0A0E17]/100" />
+        </AuroraBackground>
       </div>
       
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
