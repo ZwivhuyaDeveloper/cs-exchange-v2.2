@@ -60,27 +60,21 @@ export default async function News() {
       <div className="flex-col-reverse flex md:flex-row lg:flex-row justify-center  sm:mt-1 gap-2 w-full">
 
         {/*Left-Section*/}
-        <div className="lg:w-[460px] w-full gap-2  flex-col h-full">
+        <div className="lg:w-[460px] hidden w-full gap-2  flex-col h-full">
           <div>
             <RelatedNews/>
           </div>
         </div>
 
         {/*middle-Section*/}
-        <div className="w-full flex flex-col px-1 gap-1 mb-10 overflow-hidden sm:w-full">
+        <div className="w-full flex flex-col px-1 gap-1 max-w-7xl mb-10 overflow-hidden sm:w-full">
           <div>
             <NewsSection data={data} />
-          </div>
-          <div>
-            <MiddleSection data={data}  />
-          </div>
-          <div>
-            <EconomicSection/>
           </div>
         </div>
 
         {/*Right-Section*/}
-        <div className="bg-white hidden lg:block w-[460px]">
+        <div className="  dark:bg-zinc-800 dark:border-zinc-700 border border-px hidden">
           <div>
             <ResearchDisplay/>
           </div>

@@ -1,14 +1,12 @@
-import { fullNews } from "@/app/lib/interface";
+import { fullResearch } from "@/app/lib/interface";
 import { client, urlFor } from "@/app/lib/sanity";
 import { NavMenu } from "@/app/(product)/components/layout/NavMenu";
-import RelatedNews from "@/components/News/related-news";
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
 import React from "react";
 import { Badge } from '@/components/ui/badge';
-import Research from "@/components/News/research-display";
-import { getUserAccess } from "@/app/lib/access-control"
+import { getUserAccess } from "@/app/lib/access-control";
 import SubscriptionBanner from "@/app/components/access-control/SubscriptionBanner";
 import ContentWrapper from "@/app/components/access-control/ContentWrapper";
 
@@ -34,15 +32,12 @@ async function getData(slug: string) {
   return data;
 }
 
-import type { Metadata, ResolvingMetadata } from 'next';
-
-type PageProps = {
+export default async function Page({
+  params,
+}: {
   params: { slug: string };
-  searchParams?: { [key: string]: string | string[] | undefined };
-};
-
-export default async function Page({ params }: PageProps) {
-  const data: fullNews = await getData(params.slug);
+}) {
+  const data: fullResearch = await getData(params.slug);
   const userAccess = await getUserAccess();
 
   // Determine content access level based on category or content flags
@@ -53,10 +48,6 @@ export default async function Page({ params }: PageProps) {
   return (
     <div className="bg-zinc-100">
 
-      {/* <NavBar/> */}
-      <div className="">
-        <NavMenu/>
-      </div>
 
       {/* <Ticker/> */}
       <div className="h-fit w-full  justify-center dark:bg-[#0F0F0F] bg-zinc-100 items-center flex mt-1 ">
@@ -100,7 +91,7 @@ export default async function Page({ params }: PageProps) {
             <h1>
               <span className=" mt-8 px-15 text-lg flex gap-1 flex-row justify-between text-start text-zinc-500  font-semibold tracking-wide ">
                 <span className="flex flex-row gap-1"><p className="font-medium text-blue-500">Market</p>Analysis</span>
-                <Badge className="w-fit bg-blue-400/20 text-blue-400 border-px border-blue-400 ">{data.categoryName}</Badge>
+
               </span>
               <span className="mt-5 block px-15 text-3xl text-start font-semibold sm:text-4xl">
                 {data.title}
