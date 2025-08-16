@@ -10,7 +10,6 @@ import ResearchDisplay from "../../News/components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';
 import { formatDate } from "@/app/lib/dateUtils";
 
-
 async function getData(slug: string) {
   const query = `
     *[_type == "news" && slug.current == '${slug}'] {
@@ -39,14 +38,13 @@ async function getData(slug: string) {
 }
 
 export const revalidate = 30;
-
 export const dynamic = 'force-dynamic';
 
+// Fix: Use proper type according to Next.js App Router documentation
 export default async function ArticlePage({
-  params,
+  params
 }: {
   params: { slug: string }
-  searchParams?: { [key: string]: string | string[] | undefined }
 }) {
   const data: fullNews = await getData(params.slug);
 
