@@ -40,8 +40,8 @@ async function getData(slug: string) {
 export const revalidate = 30;
 export const dynamic = 'force-dynamic';
 
-// Fix: Use proper type according to Next.js App Router documentation
-export default async function ArticlePage({
+// Fix: Use the exact type structure Next.js expects
+export default async function Page({
   params
 }: {
   params: { slug: string }
