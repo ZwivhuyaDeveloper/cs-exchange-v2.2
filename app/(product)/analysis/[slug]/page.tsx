@@ -32,14 +32,14 @@ async function getData(slug: string) {
   return data;
 }
 
-import { Metadata, NextPage } from 'next';
+import { Metadata } from 'next';
 
-interface PageProps {
+type Props = {
   params: { slug: string };
   searchParams?: { [key: string]: string | string[] | undefined };
-}
+};
 
-const AnalysisPage: NextPage<PageProps> = async ({ params }) => {
+export default async function AnalysisPage({ params }: Props) {
   const data: fullResearch = await getData(params.slug);
   const userAccess = await getUserAccess(null);
 
