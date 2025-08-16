@@ -32,17 +32,20 @@ async function getData(slug: string) {
   return data;
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { slug: string };
-}) {
+interface PageProps {
+  params: {
+    slug: string;
+  };
+}
+
+export default async function AnalysisPage({ params }: PageProps) {
   const data: fullResearch = await getData(params.slug);
-  const userAccess = await getUserAccess();
+  const userAccess = await getUserAccess(null);
 
   // Determine content access level based on category or content flags
+  type AccessLevel = 'premium' | 'public' | 'pro' | 'analyst' | 'admin';
   const contentAccess = {
-    accessLevel: data.categoryName?.toLowerCase().includes('premium') ? 'premium' : 'public'
+    accessLevel: (data.categoryName?.toLowerCase().includes('premium') ? 'premium' : 'public') as AccessLevel
   };
 
   return (
