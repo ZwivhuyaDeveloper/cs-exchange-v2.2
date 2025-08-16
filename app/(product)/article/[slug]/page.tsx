@@ -10,7 +10,6 @@ import ResearchDisplay from "../../News/components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';
 import { formatDate } from "@/app/lib/dateUtils";
 
-export const revalidate = 30;
 
 async function getData(slug: string) {
   const query = `
@@ -38,6 +37,8 @@ async function getData(slug: string) {
   const data = await client.fetch(query);
   return data;
 }
+
+export const revalidate = 30;
 
 export const dynamic = 'force-dynamic';
 
