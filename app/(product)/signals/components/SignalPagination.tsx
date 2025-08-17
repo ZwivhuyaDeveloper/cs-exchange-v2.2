@@ -61,19 +61,23 @@ export function SignalsPagination({ currentPage, totalPages }: SignalsPagination
 
   return (
     <Pagination className="mt-8">
-      <PaginationContent>
-        <PaginationItem>
-          <Button>
-            <PaginationPrevious
-              onClick={() => handlePageChange(Math.max(1, currentPage - 1))}
-              disabled={currentPage <= 1}
-              className="cursor-pointer"
-            />
-          </Button>
-        </PaginationItem>
-        
-        {/* ... rest of the component ... */}
-      </PaginationContent>
-    </Pagination>
-  );
+    <PaginationContent>
+      <PaginationItem>
+        <PaginationPrevious
+          onClick={() => currentPage > 1 && handlePageChange(Math.max(1, currentPage - 1))}
+          className={currentPage <= 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+        />
+      </PaginationItem>
+      
+      {/* ... rest of the component ... */}
+      
+      <PaginationItem>
+        <PaginationNext
+          onClick={() => currentPage < totalPages && handlePageChange(Math.min(totalPages, currentPage + 1))}
+          className={currentPage >= totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+        />
+      </PaginationItem>
+    </PaginationContent>
+  </Pagination>
+);
 }
