@@ -6,7 +6,7 @@ import {
 
 export async function checkUserPaymentStatus(clerkUserId: string) {
   // Fetch only necessary fields to ensure type safety
-  const userProfile = await prisma.userProfile.findUnique({
+  const userProfile = await prisma.user.findUnique({
     where: { clerkUserId },
     select: {
       id: true,
@@ -26,7 +26,7 @@ export async function checkUserPaymentStatus(clerkUserId: string) {
       
       if (activeSubscription || (payments && payments.length > 0)) {
         // Update local status
-        await prisma.userProfile.update({
+        await prisma.user.update({
           where: { id: userProfile.id },
           data: { isPremium: true }
         });
