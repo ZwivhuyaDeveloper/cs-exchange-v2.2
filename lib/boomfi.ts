@@ -33,7 +33,7 @@ export async function createBoomFiCustomer(customerData: {
 }
 
 export async function createPaymentLink(userId: string, amount: number, currency: string = 'USD') {
-  const user = await prisma.userProfile.findUnique({
+  const user = await prisma.user.findUnique({
     where: { clerkUserId: userId }
   })
 
