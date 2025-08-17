@@ -7,8 +7,7 @@ import NewsSection from "./components/news-section";
 import ResearchDisplay from "./components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';
 import BottomPanel from "../components/layout/BottomPanel";
-import MiddleSection from "./components/middle-section";
-import EconomicSection from "./components/economic-section";
+
 
 
 export const revalidate = 30; // revalidate at most 30 seconds
