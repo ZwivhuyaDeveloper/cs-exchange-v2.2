@@ -40,7 +40,9 @@ async function getData(slug: string) {
 export const revalidate = 30;
 export const dynamic = 'force-dynamic';
 
-export default async function Page({ params }: { params: { slug: string } }) {
+// Updated to handle async params
+export default async function Page(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const data: fullNews = await getData(params.slug);
 
   return (
