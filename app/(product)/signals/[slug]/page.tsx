@@ -7,7 +7,7 @@ import { ArrowUpRight, ExternalLink } from 'lucide-react';
 import Link from 'next/link';
 import { TokenLogo } from '../../components/TokenLogo';
 
-
+// Updated interface to match new async pattern
 interface SignalPageProps {
   params: Promise<{
     slug: string;
@@ -17,6 +17,7 @@ interface SignalPageProps {
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function SignalPage(props: SignalPageProps) {
+  // Await the params promise to get the actual values
   const params = await props.params;
   const signal = await fetchSignalBySlug(params.slug);
 
