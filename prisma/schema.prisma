@@ -22,6 +22,9 @@ model user {
   clerkUserId String @unique
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  boomFiCustomerId   String?   @unique
+  role               String?   // Add this
+  isPremium          Boolean   @default(false)
 }
 
 model Chain {
