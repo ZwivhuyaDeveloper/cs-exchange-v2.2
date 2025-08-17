@@ -72,11 +72,27 @@ export default function ResearchSection({ data }: ResearchSectionProps) {
     return result;
   }, [data, selectedCategory, searchQuery]);
 
+
   // Get the latest article (first item in sorted array)
   const latestReport = useMemo(() => {
-    return data.length > 0 ? data[0] : null;
+    if (data.length === 0) return null;
+    
+    const report = data[0];
+    // Create a full Author object to satisfy type requirements
+    return {
+      ...report,
+      author: report.author || {
+        _id: 'research-team',
+        _type: 'author',
+        name: 'Research Team',
+        slug: {
+          _type: 'slug',
+          current: 'research-team'
+        }
+      }
+    };
   }, [data]);
-
+  
     // Create data for pagination (excludes banner article when shown)
   const paginationData = useMemo(() => {
     const shouldSkipLatest = !selectedCategory && !searchQuery;

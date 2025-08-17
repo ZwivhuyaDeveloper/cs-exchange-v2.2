@@ -79,6 +79,7 @@ export interface PageProps {
 }
 
 export interface simpleResearchCard {
+  author: Author | null;
   title: string;
   smallDescription: string;
   currentSlug: string;
@@ -88,6 +89,7 @@ export interface simpleResearchCard {
   category: any;
   impacts: Impact[];
   tags: Tag[];
+
 }
 
 export interface fullResearch {
