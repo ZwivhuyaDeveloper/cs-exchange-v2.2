@@ -40,10 +40,8 @@ async function getData(slug: string) {
 export const revalidate = 30;
 export const dynamic = 'force-dynamic';
 
-// Fix: Use the exact type structure Next.js expects
-export default async function Page(props: {params: Promise<{ slug: string[]}>}) {
-  const params = await props.params;
-  const data: fullNews = await getData(params.slug[0]);
+export default async function Page({ params }: { params: { slug: string } }) {
+  const data: fullNews = await getData(params.slug);
 
   return (
     <div className="bg-zinc-100 dark:bg-black ">
