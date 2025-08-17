@@ -148,11 +148,11 @@ export default function Hero() {
           >
             <Link
               href="/Dashboard"
-              className="bg-accent hover:bg-accent-hover text-primary px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
+              className="bg-[#00FFC2] hover:bg-[#00FFC2]/80 text-[#0a0e17] px-8 py-4 rounded-lg font-semibold text-lg transition-all duration-300 transform hover:scale-105 glow-effect"
             >
               Dashboard
             </Link>
-            <button className="flex items-center space-x-2 text-white hover:text-accent transition-colors group">
+            <button className="items-center hidden space-x-2 text-white hover:text-accent transition-colors group">
               <div className="p-3 bg-gray-300/50 rounded-full group-hover:bg-[#00FFC2]/20 transition-colors">
                 <Play className="h-5 w-5" />
               </div>
