@@ -39,3 +39,10 @@ next-env.d.ts
 /generated/prisma
 
 /generated/prisma
+
+.sanity.config.js
+.sanity
+.sanity.lock
+.sanity.json
+.sanity.config.ts
+.structure.ts
