@@ -11,7 +11,7 @@ export async function updateUserRole(userId: string, role: string) {
   })
   
   // Update role in our database if needed
-  await prisma.userProfile.update({
+  await prisma.user.update({
     where: { clerkUserId: userId },
     data: { 
       role: role // Make sure your Prisma schema has a role field
@@ -20,7 +20,8 @@ export async function updateUserRole(userId: string, role: string) {
 }
 
 export async function getPremiumStatus(userId: string) {
-  const user = await prisma.userProfile.findUnique({
+
+  const user = await prisma.user.findUnique({
     where: { clerkUserId: userId },
     select: {
       isPremium: true // Explicitly select the field

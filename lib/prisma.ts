@@ -48,14 +48,14 @@ const prismaClientSingleton = () => {
   
   const prisma = new PrismaClient().$extends({
     model: {
-      userProfile: {
+      user: {
         async createWithBoomFi(data: {
           clerkUserId: string;
           email: string;
           firstName?: string;
           lastName?: string;
         }) {
-          const user = await prisma.userProfile.create({
+          const user = await prisma.user.create({
             data: {
               clerkUserId: data.clerkUserId,
               email: data.email,
@@ -73,13 +73,13 @@ const prismaClientSingleton = () => {
               }
             });
             
-            return await prisma.userProfile.update({
+            return await prisma.user.update({
               where: { id: user.id },
               data: { boomFiCustomerId: boomFiCustomer.id }
             });
           } catch (error) {
             console.error('BoomFi customer creation failed:', error);
-            await prisma.userProfile.delete({ where: { id: user.id } });
+            await prisma.user.delete({ where: { id: user.id } });
             throw new Error('User creation failed due to payment system error');
           }
         }
