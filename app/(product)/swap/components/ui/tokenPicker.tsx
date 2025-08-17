@@ -227,7 +227,7 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
         <div className="w-full h-full flex flex-col">
           <DialogHeader className="px-4 pt-4 pb-2">
             <div className="flex items-center justify-between gap-1">
-              <div className="relative items-center w-full bg-white rounded-full">
+              <div className="relative items-center w-full dark:bg-zinc-800 bg-zinc-200 rounded-full">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4  text-black dark:text-white" />
                 <Input
                   placeholder="Search token by symbol, name, or address..."
@@ -240,7 +240,7 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
                 variant="ghost"
                 size="icon"
                 onClick={() => setOpen(false)}
-                className="h-8 w-8 bg-white rounded-full"
+                className="h-8 w-8 bg-white dark:bg-zinc-800 rounded-full"
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -260,8 +260,8 @@ export function TokenPicker({ value, onValueChange, label, chainId, excludedToke
                         "flex items-center gap-2 px-3 py-1 rounded-full text-sm whitespace-nowrap",
                         "transition-colors flex-shrink-0",
                         selectedChain === chain.id
-                          ? "bg-primary text-primary-foreground"
-                          : "hover:bg-accent/50"
+                          ? "bg-blue-500 dark:bg-[#00ffc2] text-white dark:text-black"
+                          : "hover:bg-blue-500/50 dark:hover:bg-[#00ffc2]/50"
                       )}
                     >
                       <Avatar className="h-5 w-5">
