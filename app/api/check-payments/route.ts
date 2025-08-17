@@ -1,11 +1,8 @@
-// app/api/check-payments/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
 import { getAuth } from '@clerk/nextjs/server';
 import rateLimit from '@/lib/rate-limit';
 import { getUserSuccessfulPayments } from '@/lib/boomfi';
-
-const prisma = new PrismaClient();
+import prisma from '@/lib/prisma'; // Import the shared instance
 
 // Rate limiting: 10 requests per minute per IP
 const limiter = rateLimit({
@@ -71,7 +68,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Find user in database
-    let userProfile: UserProfileResult | null = await prisma.userProfile.findUnique({
+    let user: UserProfileResult | null = await prisma.user.findUnique({
       where: { 
         boomFiCustomerId: customerId
       },
@@ -84,8 +81,8 @@ export async function GET(req: NextRequest) {
     });
 
     // If not found, try clerkUserId
-    if (!userProfile) {
-      const userByClerkId = await prisma.userProfile.findUnique({
+    if (!user) {
+      const userByClerkId = await prisma.user.findUnique({
         where: { 
           clerkUserId: customerId
         },
@@ -99,7 +96,7 @@ export async function GET(req: NextRequest) {
       });
       
       if (userByClerkId) {
-        userProfile = userByClerkId;
+        user = userByClerkId;
         // If we found by clerkUserId but not boomFiCustomerId, use the boomFiCustomerId if available
         if (userByClerkId.boomFiCustomerId) {
           customerId = userByClerkId.boomFiCustomerId;
@@ -107,7 +104,7 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    if (!userProfile) {
+    if (!user) {
       return new NextResponse(
         JSON.stringify({ error: 'User not found' }),
         { status: 404, headers: { 'Content-Type': 'application/json' } }
@@ -116,12 +113,12 @@ export async function GET(req: NextRequest) {
 
     // If user is already premium, no need to check BoomFi
     // Prepare success response with rate limit headers
-    if (userProfile.isPremium) {
+    if (user.isPremium) {
       return new NextResponse(
         JSON.stringify({
           hasRecentPayments: true,
           isPremium: true,
-          lastPaymentDate: userProfile.lastPaymentDate?.toISOString()
+          lastPaymentDate: user.lastPaymentDate?.toISOString()
         }),
         {
           status: 200,
@@ -153,10 +150,10 @@ export async function GET(req: NextRequest) {
     }
     
     // Update user status if payment is found
-    if (hasRecentPayments && userProfile) {
-      await prisma.userProfile.update({
+    if (hasRecentPayments && user) {
+      await prisma.user.update({
         where: { 
-          id: userProfile.id
+          id: user.id
         },
         data: { 
           isPremium: true,
@@ -169,8 +166,8 @@ export async function GET(req: NextRequest) {
     return new NextResponse(
       JSON.stringify({ 
         hasRecentPayments,
-        isPremium: hasRecentPayments || userProfile.isPremium,
-        lastPaymentDate: hasRecentPayments ? new Date().toISOString() : userProfile.lastPaymentDate?.toISOString()
+        isPremium: hasRecentPayments || user.isPremium,
+        lastPaymentDate: hasRecentPayments ? new Date().toISOString() : user.lastPaymentDate?.toISOString()
       }),
       {
         status: 200,
