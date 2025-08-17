@@ -9,14 +9,15 @@ import { TokenLogo } from '../../components/TokenLogo';
 
 // Updated interface to match new async pattern
 interface SignalPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function SignalPage({ params }: SignalPageProps) {
+export default async function SignalPage(props: SignalPageProps) {
+  const params = await props.params;
   const signal = await fetchSignalBySlug(params.slug);
 
   if (!signal) {
