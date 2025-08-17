@@ -8,7 +8,8 @@ export default function SignalFilters() {
   
   const handleSortChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const sort = e.target.value;
-    const params = new URLSearchParams(searchParams.toString());
+    // Handle null searchParams case
+    const params = new URLSearchParams(searchParams?.toString() || '');
     
     if (sort) {
       params.set('sort', sort);
@@ -25,7 +26,7 @@ export default function SignalFilters() {
   return (
     <div className="flex items-center justify-between mb-4 p-2 bg-gray-50 rounded-lg">
       <div className="text-sm text-gray-600">
-        {searchParams.get('category') && (
+        {searchParams?.get('category') && (
           <span>Category: <span className="font-medium">{searchParams.get('category')}</span></span>
         )}
       </div>
@@ -35,7 +36,7 @@ export default function SignalFilters() {
         <select
           id="sort"
           onChange={handleSortChange}
-          value={searchParams.get('sort') || 'publishedAt_desc'}
+          value={searchParams?.get('sort') || 'publishedAt_desc'}
           className="border border-gray-300 rounded px-3 py-1 text-sm"
         >
           <option value="publishedAt_desc">Newest First</option>
