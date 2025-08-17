@@ -41,11 +41,12 @@ export const revalidate = 30;
 export const dynamic = 'force-dynamic';
 
 // Fix: Use the exact type structure Next.js expects
-export default async function Page({params}: {params: { slug: string[]}}) {
+export default async function Page(props: {params: Promise<{ slug: string[]}>}) {
+  const params = await props.params;
   const data: fullNews = await getData(params.slug[0]);
 
   return (
-    <div className="bg-zinc-100 dark:bg-black">
+    <div className="bg-zinc-100 dark:bg-black ">
       {/* Ticker */}
       <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
         <div className="border border-px dark:border-zinc-700 border-zinc-200 w-full">

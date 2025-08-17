@@ -9,14 +9,15 @@ import { TokenLogo } from '../../components/TokenLogo';
 
 
 interface SignalPageProps {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-export default async function SignalPage({ params }: SignalPageProps) {
+export default async function SignalPage(props: SignalPageProps) {
+  const params = await props.params;
   const signal = await fetchSignalBySlug(params.slug);
 
   if (!signal) {
@@ -24,18 +25,18 @@ export default async function SignalPage({ params }: SignalPageProps) {
   }
 
   // Helper function to get trend color
-const getTrendColor = (trend: string) => {
-  switch (trend?.toLowerCase()) {
-    case 'bullish':
-      return 'text-green-500';
-    case 'bearish':
-      return 'text-red-500';
-    case 'sideways':
-      return 'text-yellow-500';
-    default:
-      return 'text-gray-500';
-  }
-};
+  const getTrendColor = (trend: string) => {
+    switch (trend?.toLowerCase()) {
+      case 'bullish':
+        return 'text-green-500';
+      case 'bearish':
+        return 'text-red-500';
+      case 'sideways':
+        return 'text-yellow-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
 
   const getDirectionColor = () => {
     switch (signal.direction) {
@@ -82,18 +83,18 @@ const getTrendColor = (trend: string) => {
     }
   };
 
-      // Helper to format risk level text
-    const formatRiskLevel = (level: string) => {
-      if (level === 'very_low') return 'Very Low';
-      if (level === 'low') return 'Low';
-      if (level === 'medium') return 'Medium';
-      if (level === 'high') return 'High';
-      if (level === 'very_high') return 'Very High';
-      return level
-        .split('_')
-        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
-    };
+  // Helper to format risk level text
+  const formatRiskLevel = (level: string) => {
+    if (level === 'very_low') return 'Very Low';
+    if (level === 'low') return 'Low';
+    if (level === 'medium') return 'Medium';
+    if (level === 'high') return 'High';
+    if (level === 'very_high') return 'Very High';
+    return level
+      .split('_')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
