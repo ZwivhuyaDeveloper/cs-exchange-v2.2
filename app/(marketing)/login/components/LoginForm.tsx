@@ -8,7 +8,8 @@ import { motion } from 'framer-motion'
 
 export default function LoginForm() {
   const searchParams = useSearchParams()
-  const onboarded = searchParams.get('onboarded')
+  // Use optional chaining to safely access 'get'
+  const onboarded = searchParams?.get('onboarded')
   const [showPassword, setShowPassword] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
