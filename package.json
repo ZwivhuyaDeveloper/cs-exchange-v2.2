@@ -21,7 +21,7 @@
     "@ai-sdk/react": "^1.2.9",
     "@bigmi/react": "^0.1.1",
     "@clerk/backend": "^2.6.2",
-    "@clerk/nextjs": "^6.26.0",
+    "@clerk/nextjs": "^6.31.1",
     "@clerk/themes": "^2.4.4",
     "@coinbase/coinbase-sdk": "^0.23.0",
     "@dnd-kit/core": "^6.3.1",
