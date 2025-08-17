@@ -144,7 +144,7 @@ export default async function SignalsPage(props: {
       </div>
 
       <div className='w-full flex flex-row gap-1'>
-        <div className='w-[520px] hidden sm:flex bg-white'>
+        <div className='w-[520px] hidden bg-white'>
           <TrendingNews />
         </div>
 

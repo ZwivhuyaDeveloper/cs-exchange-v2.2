@@ -2,12 +2,9 @@ import { simpleNewsCard, simpleResearchCard } from '@/app/lib/interface';
 import React from 'react'
 import { client, urlFor } from "@/app/lib/sanity";
 import Image from 'next/image';
-import { Button } from '../ui/button';
 import Link from 'next/link';
-import { CardContent, Card } from '@/components/ui/card';
-import { PortableText } from 'next-sanity';
-import { Badge } from '@/components/ui/badge';
-import { EyeIcon } from 'lucide-react';
+import { Card } from '@/components/ui/card';
+
 
 
 export const revalidate = 30; // revalidate at most 30 seconds

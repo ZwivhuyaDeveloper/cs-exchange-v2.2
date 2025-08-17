@@ -72,9 +72,25 @@ export default function ResearchSection({ data }: ResearchSectionProps) {
     return result;
   }, [data, selectedCategory, searchQuery]);
 
+
   // Get the latest article (first item in sorted array)
   const latestReport = useMemo(() => {
-    return data.length > 0 ? data[0] : null;
+    if (data.length === 0) return null;
+    
+    const report = data[0];
+    // Create a full Author object to satisfy type requirements
+    return {
+      ...report,
+      author: report.author || {
+        _id: 'research-team',
+        _type: 'author',
+        name: 'Research Team',
+        slug: {
+          _type: 'slug',
+          current: 'research-team'
+        }
+      }
+    };
   }, [data]);
 
     // Create data for pagination (excludes banner article when shown)
@@ -236,42 +252,41 @@ export default function ResearchSection({ data }: ResearchSectionProps) {
             </Card>
           ))}
         </div>
-          {/* Pagination controls */}
-          {totalPages > 1 && (
-            <div className="py-6 flex justify-center">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-                      disabled={currentPage === 1}
-                      className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-                    />
+
+        {/* Pagination controls */}
+        {totalPages > 1 && (
+          <div className="py-6 flex justify-center">
+            <Pagination>
+              <PaginationContent>
+                <PaginationItem>
+                  <PaginationPrevious
+                    onClick={() => currentPage > 1 && setCurrentPage(p => Math.max(p - 1, 1))}
+                    className={currentPage === 1 ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                  <PaginationItem key={page}>
+                    <PaginationLink
+                      isActive={currentPage === page}
+                      onClick={() => setCurrentPage(page)}
+                      className="cursor-pointer"
+                    >
+                      {page}
+                    </PaginationLink>
                   </PaginationItem>
-                  
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        isActive={currentPage === page}
-                        onClick={() => setCurrentPage(page)}
-                        className="cursor-pointer"
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  
-                  <PaginationItem>
-                    <PaginationNext
-                      onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
-                      disabled={currentPage === totalPages}
-                      className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-            </div>
-          )}
+                ))}
+                
+                <PaginationItem>
+                  <PaginationNext
+                    onClick={() => currentPage < totalPages && setCurrentPage(p => Math.min(p + 1, totalPages))}
+                    className={currentPage === totalPages ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          </div>
+        )}
 
         </>
 
