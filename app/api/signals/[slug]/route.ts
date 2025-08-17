@@ -8,10 +8,8 @@ type RouteParams = {
   };
 };
 
-export async function GET(
-  request: Request,
-  { params }: { params: { slug: string } }
-) {
+export async function GET(request: Request, props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   // Access slug directly from params without destructuring
   const slug = params.slug;
 

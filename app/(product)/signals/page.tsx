@@ -13,7 +13,7 @@ import { UpgradeButton } from './components/UpgradeButton';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
-interface SearchParams {
+interface ResolvedSearchParams {
   status?: string;
   category?: string;
   direction?: string;
@@ -21,25 +21,33 @@ interface SearchParams {
   page?: string;
 }
 
-export default async function SignalsPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
+// Updated to handle async searchParams
+export default async function SignalsPage(props: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-  // Ensure searchParams is properly awaited and provide defaults
-  const params = await searchParams;
+  // Resolve the promise to get searchParams
+  const rawSearchParams = await props.searchParams;
   
+  // Convert to our expected interface
+  const searchParams: ResolvedSearchParams = {
+    status: rawSearchParams.status ? String(rawSearchParams.status) : undefined,
+    category: rawSearchParams.category ? String(rawSearchParams.category) : undefined,
+    direction: rawSearchParams.direction ? String(rawSearchParams.direction) : undefined,
+    sort: rawSearchParams.sort ? String(rawSearchParams.sort) : undefined,
+    page: rawSearchParams.page ? String(rawSearchParams.page) : undefined,
+  };
+
   // Parse page number with proper type safety
-  const page = params.page ? parseInt(params.page) : 1;
+  const page = searchParams.page ? parseInt(searchParams.page) : 1;
   const pageSize = 12;
 
   // Prepare filters object with only defined values
   const filters = Object.fromEntries(
     Object.entries({
-      status: params.status,
-      category: params.category,
-      direction: params.direction,
-      sort: params.sort,
+      status: searchParams.status,
+      category: searchParams.category,
+      direction: searchParams.direction,
+      sort: searchParams.sort,
     }).filter(([_, value]) => value !== undefined)
   );
 

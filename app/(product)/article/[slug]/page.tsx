@@ -1,21 +1,14 @@
 import { fullNews } from "@/app/lib/interface";
 import { client, urlFor } from "@/app/lib/sanity";
-import { NavMenu } from "@/app/(product)/components/layout/NavMenu";
 import TickerTape from "@/app/(product)/Dashboard/components/ui/TickerTape";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
-import React from "react";
 import { Badge } from '@/components/ui/badge';
 import { BackButton } from '@/app/(product)/components/ui/BackButton';
 import { KeyPoints } from "@/app/(product)/components/KeyPoints";
 import ResearchDisplay from "../../News/components/research-display";
 import RelatedNews from '@/app/(product)/News/components/related-news';
 import { formatDate } from "@/app/lib/dateUtils";
-
-
-
-
-export const revalidate = 30; // revalidate at most 30 seconds
 
 async function getData(slug: string) {
   const query = `
@@ -29,7 +22,6 @@ async function getData(slug: string) {
           contentImage,
           publishedAt,
           "categoryName": category->name,
-          category,
           "author": author->{
             name,
             avatar
@@ -42,20 +34,19 @@ async function getData(slug: string) {
       }[0]`;
 
   const data = await client.fetch(query);
-  console.log('Fetched article data:', JSON.stringify(data, null, 2));
-  console.log('Key points data:', data?.keyPoints);
   return data;
 }
 
-export default async function Page({
-  params,
-}: {
-  params: { slug: string };
-}) {
+export const revalidate = 30;
+export const dynamic = 'force-dynamic';
+
+// Updated to handle async params
+export default async function Page(props: { params: Promise<{ slug: string }> }) {
+  const params = await props.params;
   const data: fullNews = await getData(params.slug);
 
   return (
-    <div className="bg-zinc-100 dark:bg-black">
+    <div className="bg-zinc-100 dark:bg-black ">
       {/* Ticker */}
       <div className="w-full h-fit flex justify-center items-center py-1 px-1 md:py-1 ">
         <div className="border border-px dark:border-zinc-700 border-zinc-200 w-full">
@@ -63,41 +54,46 @@ export default async function Page({
         </div>
       </div>
 
-
-      <div className=" flex-col-reverse flex md:flex-row lg:flex-row justify-center  sm:mt-1 gap-2 w-full ">
-
-        {/*Left-Section*/}
-        <div className=" hidden w-full sm:w-[340px] ">
+      <div className="flex-col-reverse flex md:flex-row lg:flex-row justify-center sm:mt-1 gap-2 w-full">
+        {/* Left-Section */}
+        <div className="hidden w-full sm:w-[340px]">
           <div>
             <RelatedNews/>
           </div>
         </div>
 
-        {/*Middle-Section*/}
+        {/* Middle-Section */}
         <div className="w-full flex flex-col justify-center items-center mb-20 sm:mb-5 bg-white dark:bg-[#0f0f0f]">
           <div className="w-full px-4 sm:px-8 mt-6">
             <BackButton />
           </div>
-          <h1>
-            <span className=" mt-8 sm:px-15 px-8 text-lg flex gap-1 flex-row justify-between text-start text-zinc-500  font-semibold tracking-wide ">
-              <h1 className="flex flex-row gap-1 font-semibold text-2xl"><p className="font-bold text-[#0E76FD] dark:text-[#00FFC2]">Todays</p>Headlines</h1>
-              <Badge className="w-fit bg-blue-400/20 text-[#0E76FD] dark:text-[#00FFC2] border-px border-[#0E76FD] dark:border-[#00FFC2] dark:bg-[#00FFC2]/10 ">{data.categoryName}</Badge>
-            </span>
-            <span className="mt-5 block sm:px-15 px-8 text-3xl text-start font-semibold sm:text-4xl">
+          <div className="w-full">
+            <div className="mt-8 px-8 flex justify-between items-center">
+              <h1 className="flex gap-1 font-semibold text-2xl">
+                <span className="font-bold text-[#0E76FD] dark:text-[#00FFC2]">Todays</span>
+                <span>Headlines</span>
+              </h1>
+              <Badge className="bg-blue-400/20 text-[#0E76FD] dark:text-[#00FFC2] border border-[#0E76FD] dark:border-[#00FFC2] dark:bg-[#00FFC2]/10">
+                {data.categoryName}
+              </Badge>
+            </div>
+            <h1 className="mt-5 px-8 text-3xl font-semibold sm:text-4xl">
               {data.title}
-            </span>
-          </h1>
-          <div className="justify-center items-center sm:px-0 px-4  flex">
+            </h1>
+          </div>
+          
+          <div className="w-full px-4 sm:px-0 mt-8 flex justify-center">
             <Image
               src={urlFor(data.titleImage).url()}
               width={1000}
               height={500}
               alt="Title Image"
               priority
-              className="rounded-lg mt-8 border"
+              className="rounded-lg border"
             />
           </div>
-          <div className="mt-5 text-lg flex flex-row justify-between items-center w-full sm:px-20 px-4">
+          
+          <div className="mt-5 w-full px-4 sm:px-20 flex justify-between items-center">
             <div className="flex items-center gap-3">
               {data.author?.avatar && (
                 <div className="w-8 h-8 rounded-full overflow-hidden">
@@ -126,7 +122,8 @@ export default async function Page({
               </div>
             </div>
           </div>
-          <div className="sm:mt-16 mt-8 prose text-lg px-6 sm:px-20 prose-blue prose-lg dark:prose-invert prose-li:marker:text-primary prose-a:text-primary">
+          
+          <div className="sm:mt-16 mt-8 px-6 sm:px-20 prose prose-lg prose-blue dark:prose-invert prose-li:marker:text-primary prose-a:text-primary">
             <PortableText value={data.content} />
           </div>
 
@@ -140,38 +137,39 @@ export default async function Page({
             </div>
           )}
 
-          <div className="justify-center sm:px-0 px-4 items-center flex">
+          <div className="w-full px-4 sm:px-0 mt-8 flex justify-center">
             <Image
               src={urlFor(data.headImage).url()}
               width={1000}
               height={400}
-              alt="Title Image"
+              alt="Head Image"
               priority
-              className="rounded-lg mt-8 border"
+              className="rounded-lg border"
             />
           </div>
 
-          <div className="mt-16 prose text-lg px-4 sm:px-20 prose-blue prose-lg dark:prose-invert prose-li:marker:text-primary prose-a:text-primary">
+          <div className="mt-16 px-4 sm:px-20 prose prose-lg prose-blue dark:prose-invert prose-li:marker:text-primary prose-a:text-primary">
             <PortableText value={data.research} />
           </div>
-          <div className="justify-center sm:px-0 px-4 items-center flex">
+          
+          <div className="w-full px-4 sm:px-0 mt-8 flex justify-center">
             <Image
               src={urlFor(data.contentImage).url()}
               width={1000}
               height={400}
-              alt="Title Image"
+              alt="Content Image"
               priority
-              className="rounded-lg mt-8 border"
+              className="rounded-lg border"
             />
           </div>
         </div>
-        {/*Right-Section*/}
+        
+        {/* Right-Section */}
         <div className="bg-white hidden w-[340px]">
           <div>
             <ResearchDisplay/>
           </div>
         </div>
-
       </div>
     </div>
   );
