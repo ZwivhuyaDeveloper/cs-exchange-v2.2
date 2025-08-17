@@ -5,8 +5,8 @@ import prisma from '@/lib/prisma'
 
 export async function updateUserRole(userId: string, role: string) {
   try {
-    // Update Clerk metadata
-    await clerkClient.updateUser(userId, {
+    // Update Clerk metadata - CORRECTED API USAGE
+    await clerkClient.users.updateUser(userId, {
       publicMetadata: { role }
     })
     
