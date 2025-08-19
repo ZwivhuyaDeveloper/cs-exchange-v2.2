@@ -10,6 +10,8 @@ import {
   ClerkProvider
 } from '@clerk/nextjs'
 import { ThemeProvider } from '@/context/ThemeContext';
+import { TermsProvider } from '@/context/TermsContext';
+import TermsAndConditions from './components/agreement/terms-conditions';
 
 const manrope = Manrope({
   subsets: ['latin'],
@@ -31,9 +33,12 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         </head>
         <body className={`${manrope.className} antialiased w-full `}>
           <ThemeProvider>
-            <Providers >
-                {children}
-            </Providers>
+            <TermsProvider>
+              <Providers >
+                  {children}
+              </Providers>
+              <TermsAndConditions/>
+            </TermsProvider>
           </ThemeProvider>  
         </body>
       </html>

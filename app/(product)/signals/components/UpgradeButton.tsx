@@ -1,6 +1,6 @@
 'use client';
 
-import { PaymentButton } from '@/app/components/PaymentButton';
+import { PaymentButton } from '@/app/components/payment-middleware/PaymentButton';
 
 export function UpgradeButton() {
   return (

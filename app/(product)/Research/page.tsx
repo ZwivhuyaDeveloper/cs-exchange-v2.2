@@ -5,7 +5,7 @@ import TickerTape from "../Dashboard/components/ui/TickerTape";
 import ResearchSection from "./components/research-section";
 import ResearchDisplay from "../News/components/research-display";
 import { currentUser } from '@clerk/nextjs/server';
-import PaymentGuard from '@/app/components/PaymentGuard';
+import PaymentGuard from '@/app/components/payment-middleware/PaymentGuard';
 import { UpgradeButton } from './components/UpgradeButton';
 
 export const revalidate = 30; // revalidate at most 30 seconds

@@ -8,7 +8,7 @@ import { SignalsPagination } from './components/SignalPagination';
 import { LoadingCards } from './components/LoadingCard';
 import { Suspense } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
-import PaymentGuard from '@/app/components/PaymentGuard';
+import PaymentGuard from '@/app/components/payment-middleware/PaymentGuard';
 import { UpgradeButton } from './components/UpgradeButton';
 
 export const revalidate = 60; // Revalidate every 60 seconds
