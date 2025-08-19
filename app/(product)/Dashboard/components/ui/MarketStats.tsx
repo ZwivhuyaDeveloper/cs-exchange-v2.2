@@ -196,16 +196,16 @@ export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsPro
 
       <div className='flex flex-row justify-between items-center mb-2'>
         <div className="items-center w-full flex flex-row gap-3">
-          <div className="h-6 w-6 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+          <div className="sm:h-6 sm:w-6 h-8 w-8  dark:bg-zinc-800 bg-zinc-300 rounded-full flex items-center justify-center">
             <Image 
               src={tokenInfo.logoURL || "/placeholder-token.png"}
               alt={tokenInfo.name}
-              className="h-6 w-6  rounded-full dark:bg-zinc-800 bg-white"
+              className="sm:h-6 sm:w-6 h-8 w-8  rounded-full dark:bg-zinc-800 bg-white"
               width={24}
               height={24}
             />
           </div>
-          <h1 className="dark:text-white text-black font-semibold text-md sm:text-md">
+          <h1 className="dark:text-white text-black font-semibold text-lg sm:text-md">
             Market stats for <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
           </h1>
         </div>
@@ -284,18 +284,18 @@ function StatItem({ title, value, change = 0, isCurrency }: {
   ) : 'N/A';
 
   return (
-    <div className="w-full h-23 p-3 rounded-2xl dark:bg-zinc-900 bg-zinc-200/50 backdrop-blur-sm">
+    <div className="w-full h-23 p-4 sm:p-3 rounded-2xl dark:bg-zinc-900 bg-zinc-200/50 backdrop-blur-sm">
       <div className="flex items-center justify-between gap-2">
         <h1 className="text-sm sm:text-xs md:text-xs lg:text-xs font-medium text-zinc-400">{title}</h1>
         {change !== undefined && (
-          <span className={`text-xs font-medium text-[11px] px-2 py-1 rounded-full flex flex-row ${
+          <span className={`text-xs font-medium sm:text-[11px] text-[12px]  px-2 py-1 rounded-full flex flex-row ${
             change >= 0 ? 'bg-green-500/10 text-green-500' : 'bg-red-500/10 text-red-500'
           }`}>
             {change >= 0 ? '' : ''} {formattedChange}%
           </span>
         )}
       </div>
-      <h2 className="text-sm font-semibold mt-1 truncate">
+      <h2 className="sm:text-sm text-md font-semibold mt-1 truncate">
         {formattedValue}
       </h2>
     </div>

@@ -114,7 +114,7 @@ export function TradingChart({
   // Loading state when token info is not available
   if (!tokenInfo || !currentTokenSymbol) {
     return (
-      <Card className="w-full hidden sm:flex-col justify-start border-transparent bg-transparent rounded-none mt-0 h-full">
+      <Card className="w-full hidden sm:flex sm:flex-col justify-start border-transparent bg-transparent rounded-none mt-0 h-full">
         <CardHeader className="flex flex-row items-center justify-between h-[18px]">
           <div className="flex items-center gap-4 flex-row justify-start">
             <div className="h-8 w-8 rounded-full dark:bg-zinc-700 bg-zinc-100 animate-pulse" />
