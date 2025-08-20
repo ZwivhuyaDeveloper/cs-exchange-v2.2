@@ -12,6 +12,9 @@ export interface Token {
     coingeckoId?: string;
     blockchain?: string;
     contractAddress?: string;
+    sparkline_in_7d?: {
+      price: number[];
+    };
   }
   
   export interface Analyst {

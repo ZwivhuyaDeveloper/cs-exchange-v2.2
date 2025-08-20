@@ -38,15 +38,6 @@ export default {
       description: 'URL slug for this signal, auto-generated from name'
     },
     {
-      name: 'coingeckoId',
-      title: 'CoinGecko ID',
-      type: 'string',
-      validation: (Rule: Rule) => Rule.required()
-        .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)
-        .error('Must be a valid CoinGecko ID (lowercase with hyphens)'),
-      description: 'Unique identifier from CoinGecko API (e.g., bitcoin, ethereum)'
-    },
-    {
       name: 'token',
       title: 'Token',
       type: 'reference',

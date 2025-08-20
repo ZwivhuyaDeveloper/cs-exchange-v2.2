@@ -157,6 +157,11 @@ export async function fetchSignalBySlug(slug: string) {
     analysis,
     publishedAt,
     validUntil,
+    timeframe,
+    riskLevel,
+    confidence,
+    technicalAnalysis,
+    marketConditions,
     "token": token->{
       _id,
       name,

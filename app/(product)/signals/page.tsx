@@ -10,6 +10,7 @@ import { Suspense } from 'react';
 import { currentUser } from '@clerk/nextjs/server';
 import PaymentGuard from '@/app/components/payment-middleware/PaymentGuard';
 import { UpgradeButton } from './components/UpgradeButton';
+import { RefreshButton } from './components/RefreshButton';
 
 export const revalidate = 60; // Revalidate every 60 seconds
 
@@ -154,14 +155,17 @@ export default async function SignalsPage(props: {
         <div className='w-full bg-white dark:bg-[#0f0f0f] border border-px border-zinc-200 dark:border-zinc-700 px-2'>
           <div className="mb-8 px-2 mt-3">
             <h1 className="font-bold text-gray-900 text-xl dark:text-white mb-2">Trading Signals</h1>
-            <p className="text-gray-600 dark:text-gray-300 text-md">
-              Latest trading signals and market analysis from our expert analysts.
-              {total > 0 && (
-                <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
-                  Showing {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, total)} of {total}
-                </span>
-              )}
-            </p>
+            <div className="flex justify-between items-center">
+              <p className="text-gray-600 dark:text-gray-300 text-md">
+                Latest trading signals and market analysis from our expert analysts.
+                {total > 0 && (
+                  <span className="ml-2 text-sm text-gray-500 dark:text-gray-400">
+                    Showing {(page - 1) * pageSize + 1} - {Math.min(page * pageSize, total)} of {total}
+                  </span>
+                )}
+              </p>
+              <RefreshButton />
+            </div>
           </div>
 
           <div>

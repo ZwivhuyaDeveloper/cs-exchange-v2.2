@@ -16,7 +16,7 @@ export function TokenPrice({ coingeckoId, initialPrice, initialChange }: TokenPr
   const { data, isLoading, isError } = useQuery({
     queryKey: ['tokenPrice', coingeckoId],
     queryFn: async () => {
-      const res = await fetch(`/api/token/price?id=${coingeckoId}`);
+      const res = await fetch(`/api/price/signals?id=${coingeckoId}`);
       if (!res.ok) throw new Error('Failed to fetch token price');
       return res.json();
     },
@@ -24,8 +24,8 @@ export function TokenPrice({ coingeckoId, initialPrice, initialChange }: TokenPr
       price: initialPrice, 
       priceChange24h: initialChange || 0 
     } : undefined,
-    refetchInterval: 60000, // 1 minute
-    staleTime: 30000, // 30 seconds
+    refetchInterval: 120000, // 2 minutes
+    staleTime: 60000, // 1 minute
     retry: 3,
   });
 
