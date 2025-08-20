@@ -16,7 +16,8 @@ interface SignalPageProps {
 export const revalidate = 60; // Revalidate every 60 seconds
 
 export default async function SignalPage({ params }: SignalPageProps) {
-  const signal = await fetchSignalBySlug(params.slug);
+  const { slug } = params;
+  const signal = await fetchSignalBySlug(slug);
 
   if (!signal || !signal.token) {
     notFound();

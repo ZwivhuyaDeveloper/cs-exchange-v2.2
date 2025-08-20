@@ -19,13 +19,21 @@ export interface Token {
   
   export interface Analyst {
     _id: string;
-    name: string;
-    slug: string;
+    displayName?: string;
+    name?: string;
+    slug?: string;
     image?: string;
     avatar?: string;
-    title?: string;
     bio?: string;
+    specializations?: string[];
+    experience?: number;
+    isVerified?: boolean;
+    tier?: string;
+    joinedAt?: string;
     socialLinks?: Record<string, string>;
+    verification?: {
+      isVerified?: boolean;
+    };
   }
   
   export interface Category {

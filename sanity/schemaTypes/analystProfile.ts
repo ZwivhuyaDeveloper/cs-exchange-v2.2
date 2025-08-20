@@ -20,6 +20,13 @@ export default {
       description: 'Public display name for the analyst'
     },
     {
+      name: 'name',
+      title: 'Name (Legacy)',
+      type: 'string',
+      hidden: true,
+      description: 'Legacy name field for backward compatibility'
+    },
+    {
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -42,6 +49,14 @@ export default {
       options: {
         hotspot: true
       },
+      fields: [
+        {
+          name: 'alt',
+          title: 'Alt Text',
+          type: 'string',
+          description: 'Alternative text for accessibility'
+        }
+      ],
       description: 'Profile picture for the analyst'
     },
     {

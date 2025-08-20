@@ -7,6 +7,7 @@ import {
   ArrowDown,
   ArrowUp,
   BarChart,
+  CheckCircle,
   Clock,
   Info,
   TrendingUp,
@@ -54,6 +55,13 @@ export function SignalCard({ signal }: SignalCardProps) {
   const directionClasses = getDirectionClasses(direction);
   const statusClasses = getStatusClasses(status);
 
+  const tokenLogo = token?.logo || '';
+  const tokenName = token?.name || 'Unknown Token';
+  const tokenSymbol = token?.symbol || '';
+
+  const analystAvatar = analyst?.avatar || '';
+  const analystName = analyst?.name || 'N/A';
+
   // Mock data for sparkline - will be replaced with real data from token
   const sparklineData = token?.sparkline_in_7d?.price || [];
   const isPositiveTrend = sparklineData.length > 1 && sparklineData[sparklineData.length - 1] > sparklineData[0];
@@ -63,10 +71,10 @@ export function SignalCard({ signal }: SignalCardProps) {
       <Card className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-lg transition-all duration-300 rounded-xl overflow-hidden h-full flex flex-col">
         <CardHeader className="p-4 flex flex-row items-start justify-between gap-4">
           <div className="flex items-center gap-3">
-            {token?.logo ? (
+            {tokenLogo ? (
               <Image
-                src={token.logo}
-                alt={`${token.name} logo`}
+                src={tokenLogo}
+                alt={`${tokenName} logo`}
                 width={40}
                 height={40}
                 className="rounded-full"
@@ -76,10 +84,10 @@ export function SignalCard({ signal }: SignalCardProps) {
             )}
             <div>
               <CardTitle className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
-                {token?.name || 'Unknown Token'}
+                {tokenName}
               </CardTitle>
               <div className="flex items-center gap-2">
-                <p className="text-sm text-zinc-500 dark:text-zinc-400">{token?.symbol}</p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">{tokenSymbol}</p>
                 <Badge variant="outline" className={`capitalize text-xs ${statusClasses.bg} ${statusClasses.text} ${statusClasses.border}`}>
                   {status.replace('_', ' ')}
                 </Badge>
@@ -87,18 +95,25 @@ export function SignalCard({ signal }: SignalCardProps) {
             </div>
           </div>
           <div className="flex items-center gap-2 text-right">
-             {analyst?.avatar && (
+             {analystAvatar ? (
                 <Image
-                  src={analyst.avatar}
-                  alt={analyst.name}
+                  src={analystAvatar}
+                  alt={analystName}
                   width={24}
                   height={24}
                   className="rounded-full"
                 />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700" />
               )}
             <div>
               <p className="text-xs text-zinc-500 dark:text-zinc-400">Analyst</p>
-              <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{analyst?.name || 'N/A'}</p>
+              <div className="flex items-center gap-1">
+                <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{analystName}</p>
+                {analyst?.isVerified === true && (
+                  <CheckCircle className="h-4 w-4 text-blue-500" />
+                )}
+              </div>
             </div>
           </div>
         </CardHeader>

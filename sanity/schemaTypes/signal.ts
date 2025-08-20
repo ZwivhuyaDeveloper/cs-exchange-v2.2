@@ -387,10 +387,11 @@ export default {
       direction: 'direction',
       entry: 'entryPrice',
       status: 'status',
-      signalType: 'signalType'
+      signalType: 'signalType',
+      analystName: 'analyst.displayName'
     },
     prepare(selection: Selection) {
-      const { tokenSymbol, tokenName, direction, entry, status, signalType } = selection;
+      const { tokenSymbol, tokenName, direction, entry, status, signalType, analystName } = selection;
       
       // Safeguard all values
       const safeTokenSymbol = tokenSymbol || '';
@@ -398,14 +399,15 @@ export default {
       const safeEntry = entry || 0;
       const safeStatus = status || 'draft';
       const safeSignalType = signalType || '';
+      const safeAnalystName = analystName || 'Unknown Analyst';
       
       const titleText = safeTokenSymbol 
         ? `${safeTokenSymbol} ${safeDirection.toUpperCase()}`
         : `New ${safeDirection.toUpperCase()} Signal`;
       
       const subtitleText = tokenName 
-        ? `${tokenName} | Entry: $${safeEntry.toFixed(2)}`
-        : `Entry: $${safeEntry.toFixed(2)}`;
+        ? `${tokenName} | Entry: $${safeEntry.toFixed(2)} | Analyst: ${safeAnalystName}`
+        : `Entry: $${safeEntry.toFixed(2)} | Analyst: ${safeAnalystName}`;
       
       const signalTypeText = safeSignalType ? ` | ${safeSignalType}` : '';
       

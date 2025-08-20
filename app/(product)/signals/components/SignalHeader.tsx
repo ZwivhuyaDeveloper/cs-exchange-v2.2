@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { TokenPrice } from './TokenPrice';
 import { getDirectionClasses, getStatusClasses } from '@/app/(product)/signals/utils/styling';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight, CheckCircle, Star } from 'lucide-react';
 import { formatDollar } from '@/app/lib/format';
 import { formatCompactNumber } from '@/app/lib/formatters';
 
@@ -16,7 +16,7 @@ interface SignalHeaderProps {
 }
 
 export function SignalHeader({ signal }: SignalHeaderProps) {
-  const { token, direction, status } = signal;
+  const { token, analyst, direction, status } = signal;
   const directionClasses = getDirectionClasses(direction);
   const statusClasses = getStatusClasses(status);
 
@@ -74,6 +74,49 @@ export function SignalHeader({ signal }: SignalHeaderProps) {
           </Button>
         </div>
       </div>
+
+      {/* Analyst Information */}
+      {analyst && (
+        <div className="border-t border-zinc-200 dark:border-zinc-800 mt-6 pt-6">
+          <div className="flex items-center gap-4">
+            {analyst.avatar ? (
+              <Image
+                src={analyst.avatar}
+                alt={analyst.displayName || analyst.name || 'Analyst'}
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+                <span className="text-sm font-bold text-gray-500 dark:text-gray-400">
+                  {analyst.displayName?.[0] || analyst.name?.[0] || 'A'}
+                </span>
+              </div>
+            )}
+            <div className="flex items-center gap-3">
+              <div>
+                <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100 flex items-center gap-2">
+                  {analyst.displayName || analyst.name || 'CS-AI'}
+                  {analyst.isVerified && (
+                    <CheckCircle className="h-5 w-5 text-blue-500" />
+                  )}
+                </h3>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Signal Analyst
+                  {analyst.experience && ` • ${analyst.experience} years experience`}
+                </p>
+              </div>
+              {analyst.tier && (
+                <Badge variant="outline" className="ml-2">
+                  <Star className="h-4 w-4 mr-1" />
+                  {analyst.tier}
+                </Badge>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Bottom Section: Market Data */}
       <div className="border-t border-zinc-200 dark:border-zinc-800 mt-6 pt-6 grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
