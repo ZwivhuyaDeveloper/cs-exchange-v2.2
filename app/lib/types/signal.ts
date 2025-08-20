@@ -42,6 +42,7 @@ export interface Token {
   }
   
   export interface Signal {
+    [x: string]: any;
     _id: string;
     name: string;
     slug: string | { current: string };
