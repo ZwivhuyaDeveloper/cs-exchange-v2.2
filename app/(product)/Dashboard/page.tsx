@@ -91,7 +91,7 @@ export default function Page() {
               {/* Swap (Right) */}
               <div className="lg:w-fit w-full flex flex-col lg:flex-col  gap-1 h-full">
                 <div className="mt-0">
-                  <div className="flex dark:border-zinc-700 bg-white border border-zinc-100 border-px">
+                  <div className="flex dark:border-zinc-700 dark:bg-background bg-white border border-zinc-100 border-px">
                     <Swap
                       fromToken={fromToken}
                       setFromToken={setFromToken}

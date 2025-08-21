@@ -1,240 +1,209 @@
 'use client';
 
 import { Signal } from '@/app/lib/types/signal';
-import { format } from 'date-fns';
 import Image from 'next/image';
 import Link from 'next/link';
-import { FaChartLine, FaChartBar, FaChartPie, FaClock, FaExclamationTriangle, FaThumbsUp } from 'react-icons/fa';
+import {
+  ArrowDown,
+  ArrowUp,
+  BarChart,
+  CheckCircle,
+  Clock,
+  Info,
+  TrendingUp,
+} from 'lucide-react';
+import { TokenPrice } from './TokenPrice';
+import { formatDollar } from '@/app/lib/format';
+import { formatDynamicDateTime } from '@/app/lib/dateUtils';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import { Sparkline } from './Sparkline';
+import {
+  getDirectionClasses,
+  getStatusClasses,
+  getRiskColor,
+  formatRiskLevel,
+} from '../utils/styling';
 
-// Helper function to get trend color
-const getTrendColor = (trend: string) => {
-  switch (trend?.toLowerCase()) {
-    case 'bullish':
-      return 'text-green-500';
-    case 'bearish':
-      return 'text-red-500';
-    case 'sideways':
-      return 'text-yellow-500';
-    default:
-      return 'text-gray-500';
-  }
-};
-
-// Helper function to get risk level color
-const getRiskColor = (level: string) => {
-  switch (level?.toLowerCase()) {
-    case 'very_low':
-      return 'text-green-500';
-    case 'low':
-      return 'text-blue-500';
-    case 'medium':
-      return 'text-yellow-500';
-    case 'high':
-      return 'text-orange-500';
-    case 'very_high':
-      return 'text-red-500';
-    default:
-      return 'text-gray-500';
-  }
-};
-
-// Helper to format risk level text
-const formatRiskLevel = (level: string) => {
-  if (level === 'very_low') return 'Very Low';
-  if (level === 'low') return 'Low';
-  if (level === 'medium') return 'Medium';
-  if (level === 'high') return 'High';
-  if (level === 'very_high') return 'Very High';
-  return level
-    .split('_')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ');
-};
 
 interface SignalCardProps {
   signal: Signal;
 }
 
 export function SignalCard({ signal }: SignalCardProps) {
-  const getDirectionColor = () => {
-    switch (signal.direction) {
-      case 'buy':
-      case 'long':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'sell':
-      case 'short':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-    }
-  };
+  const {
+    token,
+    analyst,
+    direction,
+    status,
+    entryPrice,
+    targetPrices,
+    stopLoss,
+    riskLevel,
+    confidence,
+    timeframe,
+    riskRewardRatio,
+    publishedAt,
+  } = signal;
 
-  const getStatusColor = () => {
-    switch (signal.status) {
-      case 'active':
-        return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
-      case 'target_hit':
-        return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'stop_loss':
-        return 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200';
-      case 'completed':
-        return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
-      default:
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
-    }
-  };
+  const directionClasses = getDirectionClasses(direction);
+  const statusClasses = getStatusClasses(status);
+
+  const tokenLogo = token?.logo || '';
+  const tokenName = token?.name || 'Unknown Token';
+  const tokenSymbol = token?.symbol || '';
+
+  const analystAvatar = analyst?.avatar || '';
+  const analystName = analyst?.name || 'N/A';
+
+  // Mock data for sparkline - will be replaced with real data from token
+  const sparklineData = token?.sparkline_in_7d?.price || [];
+  const isPositiveTrend = sparklineData.length > 1 && sparklineData[sparklineData.length - 1] > sparklineData[0];
 
   return (
-    <Link href={`/signals/${typeof signal.slug === 'object' ? signal.slug.current : signal.slug}`}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200 dark:border-gray-700">
-        {/* Header with token info */}
-        <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
-          <div className="flex items-center space-x-3">
-            <div className="relative w-8 h-8 flex-shrink-0 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center overflow-hidden">
-              {signal.token.logo ? (
+    <Link href={`/signals/${typeof signal.slug === 'object' ? signal.slug.current : signal.slug}`} className="block group">
+      <Card className="bg-white dark:bg-zinc-900/50 border border-zinc-200 dark:border-zinc-800 hover:border-zinc-300 dark:hover:border-zinc-700 hover:shadow-lg transition-all duration-300 rounded-xl overflow-hidden h-full flex flex-col">
+        <CardHeader className="p-4 flex flex-row items-start justify-between gap-4">
+          <div className="flex items-center gap-3">
+            {tokenLogo ? (
+              <Image
+                src={tokenLogo}
+                alt={`${tokenName} logo`}
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+            ) : (
+              <div className="w-10 h-10 rounded-full bg-gray-200 dark:bg-gray-700" />
+            )}
+            <div>
+              <CardTitle className="text-lg font-bold text-zinc-900 dark:text-zinc-100">
+                {tokenName}
+              </CardTitle>
+              <div className="flex items-center gap-2">
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">{tokenSymbol}</p>
+                <Badge variant="outline" className={`capitalize text-xs ${statusClasses.bg} ${statusClasses.text} ${statusClasses.border}`}>
+                  {status.replace('_', ' ')}
+                </Badge>
+              </div>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-right">
+             {analystAvatar ? (
                 <Image
-                  src={signal.token.logo}
-                  alt={signal.token.name || 'Token'}
-                  width={32}
-                  height={32}
-                  className="w-full h-full object-cover"
-                  onError={(e) => {
-                    // Fallback to showing the token symbol if image fails to load
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                    const fallback = target.parentNode?.querySelector('.token-fallback');
-                    if (fallback) {
-                      (fallback as HTMLElement).style.display = 'flex';
-                    }
-                  }}
-                  onLoad={(e) => {
-                    // Hide fallback when image loads successfully
-                    const target = e.target as HTMLImageElement;
-                    const fallback = target.parentNode?.querySelector('.token-fallback');
-                    if (fallback) {
-                      (fallback as HTMLElement).style.display = 'none';
-                    }
-                  }}
+                  src={analystAvatar}
+                  alt={analystName}
+                  width={24}
+                  height={24}
+                  className="rounded-full"
                 />
-              ) : null}
-              <div className="token-fallback absolute inset-0 flex items-center justify-center text-xs font-medium text-gray-500 dark:text-gray-400">
-                {signal.token.symbol?.substring(0, 3) || 'TKN'}
-              </div>
-            </div>
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-gray-200 dark:bg-gray-700" />
+              )}
             <div>
-              <h3 className="font-medium text-sm text-gray-900 dark:text-white">
-                {signal.token.name} ({signal.token.symbol?.toUpperCase()})
-              </h3>
-              <p className="text-xs text-gray-500 dark:text-gray-400">
-                {signal.signalType && `${signal.signalType} • `}
-                {format(new Date(signal.publishedAt), 'MMM d, yyyy')}
-              </p>
+              <p className="text-xs text-zinc-500 dark:text-zinc-400">Analyst</p>
+              <div className="flex items-center gap-1">
+                <p className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">{analystName}</p>
+                {analyst?.isVerified === true && (
+                  <CheckCircle className="h-4 w-4 text-blue-500" />
+                )}
+              </div>
             </div>
           </div>
-          <span
-            className={`px-2 py-1 text-xs font-medium rounded-full ${getDirectionColor()}`}
-          >
-            {signal.direction.toUpperCase()}
-          </span>
-        </div>
+        </CardHeader>
 
-        {/* Signal details */}
-        <div className="p-4">
-
-          <div className="flex justify-between items-center mb-4">
-            <span
-              className={`px-2 py-1 text-xs font-medium rounded-full ${getStatusColor()}`}
-            >
-              <p className='text-xs'>
-                {signal.status.replace('_', ' ').toUpperCase()}
-              </p>
-            </span>
-            {signal.riskRewardRatio && (
-              <span className="text-xs text-gray-500 dark:text-gray-400">
-                R:R {signal.riskRewardRatio.toFixed(2)}
-              </span>
-            )}
-          </div>
-
-          <div className="flex justify-between mb-5">
-            <div>
-              <p className="text-xs text-gray-500 dark:text-gray-400">Entry</p>
-              <p className="font-medium text-xs">${signal.entryPrice.toFixed(2)}</p>
-            </div>
-            {signal.targetPrices?.length > 0 && (
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Targets</p>
-                <p className="font-medium text-xs">
-                  {signal.targetPrices.map((t) => `$${t.toFixed(2)}`).join(' : ')}
-                </p>
-              </div>
-            )}
-            {signal.stopLoss && (
-              <div>
-                <p className="text-xs text-gray-500 dark:text-gray-400">Stop Loss</p>
-                <p className="text-red-600 dark:text-red-400 font-medium text-xs">
-                  ${signal.stopLoss.toFixed(2)}
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Market Data Row */}
-          <div className="grid grid-cols-2 px-1 gap-2 mb-3 mt-4 text-xs">
-            {/* Market Trend */}
-            {signal.marketConditions?.trend && (
-              <div className="flex items-center space-x-1">
-                <FaChartLine className={`${getTrendColor(signal.marketConditions.trend)}`} />
-                <span className="text-gray-500 text-xs dark:text-gray-400">Trend:</span>
-                <span className={`font-medium text-xs ${getTrendColor(signal.marketConditions.trend)}`}>
-                  {signal.marketConditions.trend?.charAt(0).toUpperCase() + signal.marketConditions.trend?.slice(1)}
-                </span>
-              </div>
-            )}
-
-            {/* Timeframe */}
-            {signal.timeframe && (
-              <div className="flex items-center space-x-1">
-                <FaClock className="text-gray-500" />
-                <span className="text-gray-500 dark:text-gray-400 text-xs">Timeframe:</span>
-                <span className="font-medium text-xs">
-                  {signal.timeframe?.split('_').map(word => 
-                    word.charAt(0).toUpperCase() + word.slice(1)
-                  ).join(' ')}
-                </span>
-              </div>
-            )}
-
-            {/* Risk Level */}
-            {signal.riskLevel && (
-              <div className="flex items-center space-x-1">
-                <FaExclamationTriangle className={getRiskColor(signal.riskLevel)} />
-                <span className="text-gray-500 text-xs dark:text-gray-400">Risk:</span>
-                <span className={`font-medium text-xs ${getRiskColor(signal.riskLevel)}`}>
-                  {formatRiskLevel(signal.riskLevel)}
-                </span>
-              </div>
-            )}
-
-            {/* Confidence Level */}
-            {signal.confidence && (
-              <div className="flex items-center space-x-1">
-                <FaThumbsUp className="text-blue-500" />
-                <span className="text-gray-500 text-xs dark:text-gray-400">Confidence:</span>
-                <div className="flex items-center">
-                  <span className="font-medium text-xs">{signal.confidence}/10</span>
-                  <div className="ml-1 w-6 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
-                    <div 
-                      className={`h-full ${signal.confidence >= 7 ? 'bg-green-500' : signal.confidence >= 4 ? 'bg-yellow-500' : 'bg-red-500'}`}
-                      style={{ width: `${signal.confidence * 10}%` }}
+        <CardContent className="p-4 pt-0 flex-grow">
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            {/* Price Info */}
+            <div className="flex flex-col">
+                {token?.coingeckoId ? (
+                    <TokenPrice
+                        coingeckoId={token.coingeckoId}
+                        initialPrice={token.price}
+                        initialChange={token.priceChange24h}
                     />
-                  </div>
-                </div>
-              </div>
-            )}
+                ) : (
+                    <div className="text-lg font-bold">
+                        {formatDollar(token?.price || 0)}
+                    </div>
+                )}
+            </div>
+            {/* Sparkline */}
+            <div className="h-16 -mb-4 -mr-4">
+                 {sparklineData.length > 0 && <Sparkline data={sparklineData} positive={isPositiveTrend} />}
+            </div>
           </div>
-        </div>
-      </div>
+
+          <div className="space-y-3 text-sm">
+            <div className="flex justify-between items-center">
+              <span className="text-zinc-500 dark:text-zinc-400">Entry Price</span>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-100">
+                {formatDollar(entryPrice)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-zinc-500 dark:text-zinc-400">Stop Loss</span>
+              <span className="font-semibold text-red-500">
+                {formatDollar(stopLoss || 0)}
+              </span>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-zinc-500 dark:text-zinc-400">Target 1</span>
+              <span className="font-semibold text-green-500">
+                {formatDollar(targetPrices?.[0] || 0)}
+              </span>
+            </div>
+          </div>
+        </CardContent>
+
+        <CardFooter className="p-4 bg-zinc-50 dark:bg-zinc-900 border-t border-zinc-200 dark:border-zinc-800 grid grid-cols-2 gap-x-4 gap-y-2 text-xs">
+          <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+            <BarChart className={`h-4 w-4 ${getRiskColor(riskLevel || '')}`} />
+            <div>
+              <p className="text-zinc-500 dark:text-zinc-500">Risk</p>
+              <p className={`font-bold ${getRiskColor(riskLevel || '')}`}>
+                {formatRiskLevel(riskLevel || '')}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+            <TrendingUp className="h-4 w-4 text-blue-500" />
+             <div>
+              <p className="text-zinc-500 dark:text-zinc-500">Confidence</p>
+              <p className="font-bold text-blue-500">{confidence}/10</p>
+            </div>
+          </div>
+           <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+            <Clock className="h-4 w-4" />
+             <div>
+              <p className="text-zinc-500 dark:text-zinc-500">Timeframe</p>
+              <p className="font-bold capitalize">{timeframe || 'N/A'}</p>
+            </div>
+          </div>
+           <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400">
+             <Info className="h-4 w-4" />
+             <div>
+              <p className="text-zinc-500 dark:text-zinc-500">R/R Ratio</p>
+              <p className="font-bold">{riskRewardRatio?.toFixed(2) || 'N/A'}</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 text-zinc-600 dark:text-zinc-400 col-span-2">
+            <Clock className="h-4 w-4" />
+            <div>
+              <p className="text-zinc-500 dark:text-zinc-500">Published</p>
+              <p className="font-bold capitalize">
+                  {publishedAt ? formatDynamicDateTime(publishedAt) : 'N/A'}
+                </p>
+            </div>
+          </div>
+        </CardFooter>
+      </Card>
     </Link>
   );
 }

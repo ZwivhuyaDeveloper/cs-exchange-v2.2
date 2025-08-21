@@ -103,10 +103,15 @@ export async function fetchSignals({
       },
       "analyst": analyst->{
         _id,
+        displayName,
         name,
-        title,
         avatar,
-        bio
+        bio,
+        specializations,
+        experience,
+        isVerified,
+        tier,
+        joinedAt
       },
       "category": category->{
         _id,
@@ -157,6 +162,11 @@ export async function fetchSignalBySlug(slug: string) {
     analysis,
     publishedAt,
     validUntil,
+    timeframe,
+    riskLevel,
+    confidence,
+    technicalAnalysis,
+    marketConditions,
     "token": token->{
       _id,
       name,
@@ -169,10 +179,15 @@ export async function fetchSignalBySlug(slug: string) {
     },
     "analyst": analyst->{
       _id,
+      displayName,
       name,
-      title,
       avatar,
-      bio
+      bio,
+      specializations,
+      experience,
+      isVerified,
+      tier,
+      joinedAt
     },
     "category": category->{
       _id,

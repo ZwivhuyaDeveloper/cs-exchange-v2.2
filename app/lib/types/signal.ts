@@ -12,17 +12,28 @@ export interface Token {
     coingeckoId?: string;
     blockchain?: string;
     contractAddress?: string;
+    sparkline_in_7d?: {
+      price: number[];
+    };
   }
   
   export interface Analyst {
     _id: string;
-    name: string;
-    slug: string;
+    displayName?: string;
+    name?: string;
+    slug?: string;
     image?: string;
     avatar?: string;
-    title?: string;
     bio?: string;
+    specializations?: string[];
+    experience?: number;
+    isVerified?: boolean;
+    tier?: string;
+    joinedAt?: string;
     socialLinks?: Record<string, string>;
+    verification?: {
+      isVerified?: boolean;
+    };
   }
   
   export interface Category {
@@ -42,6 +53,7 @@ export interface Token {
   }
   
   export interface Signal {
+    [x: string]: any;
     _id: string;
     name: string;
     slug: string | { current: string };

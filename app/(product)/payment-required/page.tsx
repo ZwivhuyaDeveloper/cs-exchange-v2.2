@@ -1,4 +1,4 @@
-import { PaymentButton } from "@/app/components/PaymentButton";
+import { PaymentButton } from "@/app/components/payment-middleware/PaymentButton";
 
 
 export default function PaymentRequired() {

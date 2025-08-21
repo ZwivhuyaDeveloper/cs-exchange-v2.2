@@ -200,11 +200,11 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
     const width2 = (value2 / total) * 100;
     return (
       <Card className="h-fit gap-3 mx-4 px-0 py-4 border-none dark:bg-zinc-900 bg-zinc-200/50 shadow-none">
-        <CardDescription className="flex justify-between text-xs font-medium px-5 text-zinc-400">
+        <CardDescription className="flex justify-between text-sm sm:text-xs font-medium px-5 text-zinc-400">
           <p>{label1}</p>
           <p>{label2}</p>
         </CardDescription>
-        <CardDescription className="flex justify-between px-5 text-sm/2 font-semibold dark:text-white text-black">
+        <CardDescription className="flex justify-between px-5 text-md sm:text-sm/2 font-semibold dark:text-white text-black">
           <p>{value1.toLocaleString()}</p>
           <p>{value2.toLocaleString()}</p>
         </CardDescription>
@@ -305,11 +305,11 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
     <Card className="h-full w-full rounded-none border-none dark:bg-[#0F0F0F] bg-white flex flex-col gap-2 ">
       <CardTitle className="px-4 gap-3 flex justify-between items-center mb-3">
         <div className="flex flex-row items-center gap-2">
-          <div className="h-6 w-6 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+          <div className="sm:h-6 sm:w-6 h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
             <Image 
               src={tokenInfo.logoURL || "/placeholder-token.png"}
               alt={tokenInfo.name}
-              className="h-6 w-6 rounded-full dark:bg-zinc-800 bg-white"
+              className="sm:h-6 sm:w-6 h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
               width={24}
               height={24}
               onError={(e) => {
@@ -319,7 +319,7 @@ export default function OrderData({ tokenSymbol, chainId = 1 }: OrderDataProps) 
               }}
             />
           </div>
-          <h1 className="dark:text-white text-black font-semibold text-md sm:text-md">
+          <h1 className="dark:text-white text-black font-semibold text-lg sm:text-md">
             Order Data for <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
           </h1>
         </div>

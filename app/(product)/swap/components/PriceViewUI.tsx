@@ -81,7 +81,7 @@ export default function PriceViewUI({
   const [showSlippageSettings, setShowSlippageSettings] = useState(false);
   
   return (
-    <div className="justify-center items-center gap-2 sm:w-fit md:w-fit w-fit h-fit max-h-fit px-1 pb-5">
+    <div className="justify-center items-center gap-2 sm:w-fit md:w-fit w-fit h-fit max-h-fit px-1 sm:px-1 pb-5">
       {apiError && <div className="text-center text-red-500">{apiError}</div>}
       {/* swap */}
       <div className="w-[380px] md:w-[350px] lg:w-[350px] h-fit flex flex-col bg-transparent my-0 justify-start gap-2 px-3">

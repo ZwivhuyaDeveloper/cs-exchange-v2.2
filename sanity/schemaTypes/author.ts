@@ -1,7 +1,7 @@
 import { UserIcon } from '@sanity/icons'
-import { defineField, defineType } from 'sanity'
+import { defineField, defineType } from 'sanity';
 
-export default defineType({
+export const author = defineType({
   name: 'author',
   title: 'News Author',
   icon: UserIcon,
@@ -51,6 +51,7 @@ export default defineType({
         },
       ],
       validation: (rule) => rule.required().error('Profile picture is required'),
+      description: 'Profile picture for the author',
     }),
     defineField({
       name: 'socialLinks',
@@ -93,7 +94,7 @@ export default defineType({
       name: 'email',
       title: 'Contact Email',
       type: 'string',
-      validation: (rule) => rule.email(),
+      validation: (rule) => rule.email().required().error('Email is required'),
     }),
   ],
   preview: {
@@ -102,7 +103,7 @@ export default defineType({
       media: 'avatar',
       role: 'role',
     },
-    prepare(selection) {
+    prepare(selection: any) {
       const { title, media, role } = selection
       return {
         title,
