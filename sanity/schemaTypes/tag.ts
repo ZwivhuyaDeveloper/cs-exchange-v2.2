@@ -1,15 +1,19 @@
 // app/schemas/tag.ts
-export default {
+import { TagIcon } from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
+
+export const tag = defineType({
   name: 'tag',
   type: 'document',
   title: 'Tag',
+  icon: TagIcon,
   fields: [
-    {
+    defineField({
       name: 'name',
       type: 'string',
       title: 'Tag Name',
-    },
-    {
+    }),
+    defineField({
       name: 'color',
       type: 'string',
       title: 'Color',
@@ -22,6 +26,6 @@ export default {
           {title: 'Purple', value: 'purple'},
         ]
       }
-    }
+    }),
   ]
-}
+})

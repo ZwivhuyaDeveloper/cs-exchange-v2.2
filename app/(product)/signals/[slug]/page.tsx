@@ -9,9 +9,9 @@ import { MarketConditions } from '@/app/(product)/signals/components/MarketCondi
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import Link from 'next/link';
 
-interface SignalPageProps {
-  params: { slug: string };
-}
+type SignalPageProps = Promise<{ params: { slug: string } }> extends Promise<infer _>
+  ? { params: { slug: string } }
+  : { params: { slug: string } };
 
 export const revalidate = 60; // Revalidate every 60 seconds
 

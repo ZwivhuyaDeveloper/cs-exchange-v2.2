@@ -33,3 +33,12 @@ export function formatDynamicDateTime(dateString: string): string {
     hour12: true,
   });
 }
+
+export function isRecent(dateString: string, thresholdDays: number = 7): boolean {
+  if (!dateString) return false;
+  const date = new Date(dateString);
+  const now = Date.now();
+  const diffMs = now - date.getTime();
+  const diffDays = diffMs / (1000 * 60 * 60 * 24);
+  return diffDays <= thresholdDays;
+}

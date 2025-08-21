@@ -1,32 +1,34 @@
-import { Rule } from 'sanity';
+import { UserIcon } from '@sanity/icons';
+import { defineField, defineType } from 'sanity';
 
-export default {
+export const analystProfile = defineType({
   name: 'analystProfile',
   title: 'Analyst Profile',
   type: 'document',
+  icon: UserIcon,
   fields: [
-    {
+    defineField({
       name: 'userId',
       title: 'User ID',
       type: 'string',
-      validation: (Rule: Rule) => Rule.required().error('User ID is required'),
+      validation: (rule) => rule.required().error('User ID is required'),
       description: 'Clerk user ID for this analyst'
-    },
-    {
+    }),
+    defineField({
       name: 'displayName',
       title: 'Display Name',
       type: 'string',
-      validation: (Rule: Rule) => Rule.required().error('Display name is required'),
+      validation: (rule) => rule.required().error('Display name is required'),
       description: 'Public display name for the analyst'
-    },
-    {
+    }),
+    defineField({
       name: 'name',
       title: 'Name (Legacy)',
       type: 'string',
       hidden: true,
       description: 'Legacy name field for backward compatibility'
-    },
-    {
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -39,10 +41,10 @@ export default {
             .replace(/[^a-z0-9-]+/g, '-')
             .replace(/^-+|-+$/g, '')
       },
-      validation: (Rule: Rule) => Rule.required().error('Slug is required'),
+      validation: (rule) => rule.required().error('Slug is required'),
       description: 'URL slug for analyst profile'
-    },
-    {
+    }),
+    defineField({
       name: 'avatar',
       title: 'Avatar',
       type: 'image',
@@ -58,15 +60,15 @@ export default {
         }
       ],
       description: 'Profile picture for the analyst'
-    },
-    {
+    }),
+    defineField({
       name: 'bio',
       title: 'Biography',
       type: 'text',
       rows: 4,
       description: 'Brief biography and trading background'
-    },
-    {
+    }),
+    defineField({
       name: 'specializations',
       title: 'Specializations',
       type: 'array',
@@ -90,15 +92,15 @@ export default {
         ]
       },
       description: 'Areas of expertise and specialization'
-    },
-    {
+    }),
+    defineField({
       name: 'experience',
       title: 'Years of Experience',
       type: 'number',
-      validation: (Rule: Rule) => Rule.min(0).max(50),
+      validation: (rule) => rule.min(0).max(50),
       description: 'Years of trading/analysis experience'
-    },
-    {
+    }),
+    defineField({
       name: 'credentials',
       title: 'Credentials & Certifications',
       type: 'array',
@@ -130,8 +132,8 @@ export default {
         }
       ],
       description: 'Professional credentials and certifications'
-    },
-    {
+    }),
+    defineField({
       name: 'socialLinks',
       title: 'Social Media Links',
       type: 'object',
@@ -162,8 +164,8 @@ export default {
           type: 'url'
         }
       ]
-    },
-    {
+    }),
+    defineField({
       name: 'tradingStyle',
       title: 'Trading Style',
       type: 'string',
@@ -180,8 +182,8 @@ export default {
         ]
       },
       description: 'Primary trading style and approach'
-    },
-    {
+    }),
+    defineField({
       name: 'riskTolerance',
       title: 'Risk Tolerance',
       type: 'string',
@@ -196,22 +198,22 @@ export default {
       },
       initialValue: 'medium',
       description: 'General risk tolerance level'
-    },
-    {
+    }),
+    defineField({
       name: 'isVerified',
       title: 'Verified Analyst',
       type: 'boolean',
       initialValue: false,
       description: 'Whether this analyst has been verified by the platform'
-    },
-    {
+    }),
+    defineField({
       name: 'verificationDate',
       title: 'Verification Date',
       type: 'datetime',
       hidden: ({ document }: { document: any }) => !document?.isVerified,
       description: 'Date when analyst was verified'
-    },
-    {
+    }),
+    defineField({
       name: 'tier',
       title: 'Analyst Tier',
       type: 'string',
@@ -226,35 +228,35 @@ export default {
       },
       initialValue: 'bronze',
       description: 'Analyst tier based on performance and experience'
-    },
-    {
+    }),
+    defineField({
       name: 'subscriptionPrice',
       title: 'Monthly Subscription Price (USD)',
       type: 'number',
-      validation: (Rule: Rule) => Rule.min(0),
+      validation: (rule) => rule.min(0),
       description: 'Monthly subscription price for following this analyst'
-    },
-    {
+    }),
+    defineField({
       name: 'isActive',
       title: 'Active',
       type: 'boolean',
       initialValue: true,
       description: 'Whether this analyst profile is currently active'
-    },
-    {
+    }),
+    defineField({
       name: 'joinedAt',
       title: 'Joined Date',
       type: 'datetime',
       initialValue: (new Date()).toISOString(),
-      validation: (Rule: Rule) => Rule.required(),
+      validation: (rule) => rule.required(),
       description: 'Date when analyst joined the platform'
-    },
-    {
+    }),
+    defineField({
       name: 'lastActive',
       title: 'Last Active',
       type: 'datetime',
       description: 'Last time analyst was active on the platform'
-    }
+    }), 
   ],
   preview: {
     select: {
@@ -304,4 +306,4 @@ export default {
       by: [{ field: 'joinedAt', direction: 'desc' }]
     }
   ]
-};
+});

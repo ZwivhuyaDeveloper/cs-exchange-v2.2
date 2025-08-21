@@ -131,7 +131,7 @@ const TermsAndConditions = () => {
       day: 'numeric' 
     })}</p>
     <p className="mt-1">
-      By clicking "I Accept," you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
+      By clicking &quot;I Accept,&quot; you acknowledge that you have read, understood, and agree to be bound by these Terms of Service.
     </p>
   </div>
 </div>

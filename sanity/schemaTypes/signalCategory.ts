@@ -1,17 +1,17 @@
-import { Rule } from 'sanity';
+import { defineField, defineType } from 'sanity';
 
-export default {
+export const signalCategory = defineType({
   name: 'signalCategory',
   title: 'Signal Category',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'name',
       title: 'Category Name',
       type: 'string',
-      validation: (Rule: Rule) => Rule.required().error('Category name is required')
-    },
-    {
+      validation: (rule) => rule.required().error('Category name is required')
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -24,16 +24,16 @@ export default {
             .replace(/[^a-z0-9-]+/g, '-')
             .replace(/^-+|-+$/g, '')
       },
-      validation: (Rule: Rule) => Rule.required().error('Slug is required')
-    },
-    {
+        validation: (rule) => rule.required().error('Slug is required')
+    }),
+    defineField({
       name: 'description',
       title: 'Description',
       type: 'text',
       rows: 3,
       description: 'Brief description of this signal category'
-    },
-    {
+    }),
+    defineField({
       name: 'color',
       title: 'Category Color',
       type: 'string',
@@ -50,34 +50,34 @@ export default {
         ]
       },
       initialValue: 'blue'
-    },
-    {
+    }),
+    defineField({
       name: 'icon',
       title: 'Category Icon',
       type: 'string',
       description: 'Icon name for this category (e.g., TrendingUp, BarChart, etc.)'
-    },
-    {
+    }),
+    defineField({
       name: 'isPremium',
       title: 'Premium Category',
       type: 'boolean',
       initialValue: false,
       description: 'Whether this category requires premium access'
-    },
-    {
+    }),
+    defineField({
       name: 'sortOrder',
       title: 'Sort Order',
       type: 'number',
       initialValue: 0,
       description: 'Order in which categories should be displayed'
-    },
-    {
+    }),
+    defineField({
       name: 'isActive',
       title: 'Active',
       type: 'boolean',
       initialValue: true,
       description: 'Whether this category is currently active'
-    }
+    }),
   ],
   preview: {
     select: {
@@ -90,7 +90,7 @@ export default {
       return {
         title,
         subtitle: `${subtitle || 'No description'} ${isPremium ? '(Premium)' : ''}`,
-        media: undefined // Could add icon here
+        media: undefined
       };
     }
   },
@@ -106,4 +106,4 @@ export default {
       by: [{ field: 'name', direction: 'asc' }]
     }
   ]
-};
+});  

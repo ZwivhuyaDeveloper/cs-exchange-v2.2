@@ -1,4 +1,4 @@
-import { Rule } from 'sanity';
+import { defineField, defineType } from 'sanity';
 
 interface Selection {
   tokenSymbol?: string;
@@ -7,21 +7,22 @@ interface Selection {
   entry: number;
   status: string;
   signalType?: string;
+  analystName?: string;
 }
 
-export default {
+export const signal = defineType({
   name: 'signal',
   title: 'Crypto Signal',
   type: 'document',
   fields: [
-    {
+    defineField({
       name: 'name',
       title: 'Signal Name',
       type: 'string',
-      validation: (Rule: Rule) => Rule.required().error('Signal name is required'),
+      validation: (rule) => rule.required().error('Signal name is required'),
       description: 'Name/title for this signal'
-    },
-    {
+    }),
+    defineField({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
@@ -34,33 +35,33 @@ export default {
             .replace(/[^a-z0-9-]+/g, '-')
             .replace(/^-+|-+$/g, '')
       },
-      validation: (Rule: Rule) => Rule.required().error('Slug is required'),
+      validation: (rule) => rule.required().error('Slug is required'),
       description: 'URL slug for this signal, auto-generated from name'
-    },
-    {
+    }),
+    defineField({
       name: 'token',
       title: 'Token',
       type: 'reference',
       to: [{ type: 'token' }],
-      validation: (Rule: Rule) => Rule.required().error('Token selection is required'),
+      validation: (rule) => rule.required().error('Token selection is required'),
       description: 'Reference to the cryptocurrency token for this signal'
-    },
-    {
+    }),
+    defineField({
       name: 'analyst',
       title: 'Analyst',
       type: 'reference',
       to: [{ type: 'analystProfile' }],
-      validation: (Rule: Rule) => Rule.required().error('Analyst selection is required'),
+      validation: (rule) => rule.required().error('Analyst selection is required'),
       description: 'Reference to the analyst who created this signal'
-    },
-    {
+    }),
+    defineField({
       name: 'category',
       title: 'Signal Category',
       type: 'reference',
       to: [{ type: 'signalCategory' }],
       description: 'Category for organizing and filtering signals'
-    },
-    {
+    }),
+    defineField({
       name: 'direction',
       title: 'Direction',
       type: 'string',
@@ -73,10 +74,10 @@ export default {
         ],
         layout: 'radio'
       },
-      validation: (Rule: Rule) => Rule.required().error('Direction is required'),
+      validation: (rule) => rule.required().error('Direction is required'),
       initialValue: 'buy'
-    },
-    {
+    }),
+    defineField({
       name: 'signalType',
       title: 'Signal Type',
       type: 'string',
@@ -95,54 +96,54 @@ export default {
         ]
       },
       description: 'Type of trading signal'
-    },
-    {
+    }),
+    defineField({
       name: 'entryPrice',
       title: 'Entry Price (USD)',
       type: 'number',
-      validation: (Rule: Rule) => Rule.required().positive(),
+      validation: (rule) => rule.required().positive(),
       description: 'Price at which to enter the position'
-    },
-    {
+    }),
+    defineField({
       name: 'targetPrices',
       title: 'Target Prices',
       type: 'array',
       of: [{ type: 'number' }],
-      validation: (Rule: Rule) => Rule.min(1).required(),
+      validation: (rule) => rule.min(1).required(),
       description: 'Profit target prices in USD'
-    },
-    {
+    }),
+    defineField({
       name: 'stopLoss',
       title: 'Stop Loss (USD)',
       type: 'number',
       description: 'Price at which to exit the position to limit losses'
-    },
-    {
+    }),
+    defineField({
       name: 'riskRewardRatio',
       title: 'Risk/Reward Ratio',
       type: 'number',
       description: 'Risk to reward ratio for this trade'
-    },
-    {
+    }),
+    defineField({
       name: 'positionSize',
       title: 'Recommended Position Size (%)',
       type: 'number',
-      validation: (Rule: Rule) => Rule.min(0).max(100),
+      validation: (rule) => rule.min(0).max(100),
       description: 'Recommended position size as percentage of portfolio'
-    },
-    {
+    }),
+    defineField({
       name: 'publishedAt',
       title: 'Published At',
       type: 'datetime',
       initialValue: (new Date()).toISOString(),
-      validation: (Rule: Rule) => Rule.required(),
+      validation: (rule) => rule.required(),
       options: {
         dateFormat: 'YYYY-MM-DD',
         timeFormat: 'HH:mm',
         timeStep: 15
       }
-    },
-    {
+    }),
+    defineField({
       name: 'status',
       title: 'Status',
       type: 'string',
@@ -158,35 +159,35 @@ export default {
         ]
       },
       initialValue: 'active',
-      validation: (Rule: Rule) => Rule.required()
-    },
-    {
+      validation: (rule) => rule.required()
+    }),
+    defineField({
       name: 'exitPrice',
       title: 'Exit Price (USD)',
       type: 'number',
       description: 'Price at which the position was closed',
       hidden: ({ document }: { document: any }) => !['completed', 'target_hit', 'stop_loss'].includes(document?.status)
-    },
-    {
+    }),
+    defineField({
       name: 'exitDate',
       title: 'Exit Date',
       type: 'datetime',
       description: 'Date when position was closed',
       hidden: ({ document }: { document: any }) => !['completed', 'target_hit', 'stop_loss'].includes(document?.status)
-    },
-    {
+    }),
+    defineField({
       name: 'notes',
       title: 'Analysis & Notes',
       type: 'text',
       rows: 4,
       description: 'Technical/fundamental analysis for this signal'
-    },
-    {
+    }),
+    defineField({
       name: 'technicalAnalysis',
       title: 'Technical Analysis',
       type: 'object',
       fields: [
-        {
+        defineField({
           name: 'indicators',
           title: 'Technical Indicators',
           type: 'array',
@@ -197,22 +198,22 @@ export default {
               'Fibonacci', 'Ichimoku', 'Williams %R', 'CCI', 'ADX', 'ATR'
             ]
           }
-        },
-        {
+        }),
+        defineField({
           name: 'supportLevels',
           title: 'Support Levels',
           type: 'array',
           of: [{ type: 'number' }],
           description: 'Key support price levels'
-        },
-        {
+        }),
+        defineField({
           name: 'resistanceLevels',
           title: 'Resistance Levels',
           type: 'array',
           of: [{ type: 'number' }],
           description: 'Key resistance price levels'
-        },
-        {
+        }),
+        defineField({
           name: 'chartPattern',
           title: 'Chart Pattern',
           type: 'string',
@@ -223,10 +224,10 @@ export default {
               'Channel', 'Other'
             ]
           }
-        }
+        }),
       ]
-    },
-    {
+    }),
+    defineField({
       name: 'timeframe',
       title: 'Timeframe',
       type: 'string',
@@ -240,8 +241,8 @@ export default {
         ]
       },
       initialValue: 'medium'
-    },
-    {
+    }),
+    defineField({
       name: 'riskLevel',
       title: 'Risk Level',
       type: 'string',
@@ -255,22 +256,22 @@ export default {
         ]
       },
       initialValue: 'medium'
-    },
-    {
+    }),
+    defineField({
       name: 'confidence',
       title: 'Confidence Level',
       type: 'number',
-      validation: (Rule: Rule) => Rule.min(1).max(10),
+      validation: (rule) => rule.min(1).max(10),
       description: 'Signal confidence level (1-10)'
-    },
-    {
+    }),
+    defineField({
       name: 'tags',
       title: 'Tags',
       type: 'array',
       of: [{ type: 'string' }],
       description: 'Tags for categorization and filtering'
-    },
-    {
+    }),
+    defineField({
       name: 'associatedContent',
       title: 'Associated Content',
       type: 'reference',
@@ -279,13 +280,13 @@ export default {
         { type: 'research' }
       ],
       description: 'Link to related news or research content'
-    },
-    {
+    }),
+    defineField({
       name: 'marketConditions',
       title: 'Market Conditions',
       type: 'object',
       fields: [
-        {
+        defineField({
           name: 'trend',
           title: 'Overall Market Trend',
           type: 'string',
@@ -297,8 +298,8 @@ export default {
               { title: 'Mixed', value: 'mixed' }
             ]
           }
-        },
-        {
+        }),
+        defineField({
           name: 'volatility',
           title: 'Volatility Level',
           type: 'string',
@@ -310,8 +311,8 @@ export default {
               { title: 'Extreme', value: 'extreme' }
             ]
           }
-        },
-        {
+        }),
+        defineField({
           name: 'volume',
           title: 'Volume Level',
           type: 'string',
@@ -323,10 +324,10 @@ export default {
               { title: 'Extreme', value: 'extreme' }
             ]
           }
-        }
+        })
       ]
-    },
-    {
+    }),
+    defineField({
       name: 'accessLevel',
       title: 'Access Level',
       type: 'string',
@@ -341,16 +342,16 @@ export default {
       },
       initialValue: 'public',
       description: 'Who can access this signal'
-    },
-    {
+    }),
+    defineField({
       name: 'isPremium',
       title: 'Premium Signal (Legacy)',
       type: 'boolean',
       initialValue: false,
       hidden: true,
       description: 'Legacy field - use accessLevel instead'
-    },
-    {
+    }),
+    defineField({
       name: 'priority',
       title: 'Signal Priority',
       type: 'string',
@@ -364,21 +365,21 @@ export default {
       },
       initialValue: 'medium',
       description: 'Priority level for signal notifications'
-    },
-    {
+    }),
+    defineField({
       name: 'featured',
       title: 'Featured Signal',
       type: 'boolean',
       initialValue: false,
       description: 'Whether to feature this signal prominently'
-    },
-    {
+    }),
+    defineField({
       name: 'lastUpdated',
       title: 'Last Updated',
       type: 'datetime',
       initialValue: (new Date()).toISOString(),
       description: 'Last time signal was updated'
-    }
+    }),
   ],
   preview: {
     select: {
@@ -417,4 +418,4 @@ export default {
       }
     }
   }
-}
+})
