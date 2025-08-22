@@ -30,10 +30,14 @@ export interface TokenMetadata {
   id: number;
   symbol: string;
   name: string;
-  chainId: number;
-  coingeckoId?: string;
   logoURL?: string;
-  decimals: number;
+  logoURI?: string;
+  priceUSD?: number;
+  priceChange24h?: number;
+  volume24h?: number;
+  marketCap?: number;
+  chainId?: number;
+  coingeckoId?: string;
   totalSupply?: string;
   createdAt: Date;
   updatedAt: Date;
