@@ -121,7 +121,7 @@ export const SlippageTolerance: React.FC<SlippageToleranceProps> = ({
             variant={"default"}
             size="sm"
             onClick={handleCustomToggle}
-            className="flex-1  bg-[#00FFC2]"
+            className="flex-1  dark:bg-[#00FFC2] bg-blue-500"
           >
             Custom
           </Button>

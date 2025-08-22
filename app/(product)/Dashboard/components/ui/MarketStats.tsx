@@ -110,7 +110,7 @@ export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsPro
           </div>
           <div className="flex flex-row gap-1 items-center">
             <h1 className="text-lg font-semibold">Market Stats for</h1>
-            <h2 className="text-lg font-semibold uppercase dark:text-[#00ffc2] text-blue-500">{tokenSymbol.toUpperCase()}</h2>
+            <h2 className="text-lg font-black uppercase dark:text-[#00ffc2] text-blue-500">{tokenSymbol.toUpperCase()}</h2>
           </div>
         </div>
         <div className='flex items-center gap-2'>

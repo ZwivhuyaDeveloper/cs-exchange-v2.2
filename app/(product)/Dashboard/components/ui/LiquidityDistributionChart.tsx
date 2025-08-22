@@ -249,7 +249,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
             )}
             <CardTitle className="flex items-center gap-2">
               Liquidity Distribution
-              {tokenInfo && <span className="dark:text-[#00FFC2] text-blue-500 font-medium">{tokenSymbol.toUpperCase()}</span>}
+              {tokenInfo && <span className="dark:text-[#00FFC2] text-blue-500 font-black">{tokenSymbol.toUpperCase()}</span>}
             </CardTitle>
           </div>
           <div className="flex items-center gap-2">
