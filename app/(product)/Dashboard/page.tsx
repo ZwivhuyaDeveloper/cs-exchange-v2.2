@@ -24,8 +24,8 @@ const TrendingNewsClient = dynamic(
 );
 
 export default function Page() {
-  const [fromToken, setFromToken] = useState("link");
-  const [toToken, setToToken] = useState("comp");
+  const [fromToken, setFromToken] = useState("dai");
+  const [toToken, setToToken] = useState("aave");
   const [currentChartToken, setCurrentChartToken] = useState(fromToken);
   const [showIntro, setShowIntro] = useState(true);
 

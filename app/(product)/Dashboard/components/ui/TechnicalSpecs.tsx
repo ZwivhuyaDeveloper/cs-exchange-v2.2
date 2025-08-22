@@ -54,7 +54,6 @@ const fetchTechnicalSpecs = async (coingeckoId: string): Promise<TechnicalSpecsD
 };
 
 export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSpecsProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const [tokenInfo, setTokenInfo] = useState<any>(null);
   const [tokenError, setTokenError] = useState<string | null>(null);
 
