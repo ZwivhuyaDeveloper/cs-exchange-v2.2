@@ -12,7 +12,8 @@ const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 // Environment variables
 const COINGECKO_API_KEY = process.env.NEXT_PUBLIC_COINGECKO_API_KEY || process.env.COINGECKO_API_KEY || '';
-const COINGECKO_API_URL = COINGECKO_API_KEY ? 'https://pro-api.coingecko.com/api/v3' : 'https://api.coingecko.com/api/v3';
+// Always use the standard API URL as we're using a demo key
+const COINGECKO_API_URL = 'https://api.coingecko.com/api/v3';
 
 // Rate limiting function
 function checkRateLimit(identifier: string): boolean {
@@ -49,13 +50,20 @@ async function fetchFromCoinGecko(endpoint: string, params: Record<string, strin
     url.searchParams.append(key, value);
   });
   
-  // Add API key if available
-  const headers: HeadersInit = {};
+  // Add API key as a query parameter if available
   if (COINGECKO_API_KEY) {
-    headers["x-cg-demo-api-key"] = COINGECKO_API_KEY;
+    // For demo keys, use the x_cg_demo_api_key parameter
+    url.searchParams.append('x_cg_demo_api_key', COINGECKO_API_KEY);
   }
   
-  const response = await fetch(url.toString(), { headers });
+  console.log('Making request to:', url.toString().replace(COINGECKO_API_KEY, '***'));
+  
+  const response = await fetch(url.toString(), {
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    }
+  });
   
   if (!response.ok) {
     const errorText = await response.text();
@@ -66,6 +74,13 @@ async function fetchFromCoinGecko(endpoint: string, params: Record<string, strin
 }
 
 export async function GET(request: NextRequest) {
+  // Debug log environment variables
+  console.log('Environment variables:', {
+    COINGECKO_API_KEY: COINGECKO_API_KEY ? '***' + COINGECKO_API_KEY.slice(-4) : 'Not set',
+    NEXT_PUBLIC_COINGECKO_API_KEY: process.env.NEXT_PUBLIC_COINGECKO_API_KEY ? '***' + process.env.NEXT_PUBLIC_COINGECKO_API_KEY.slice(-4) : 'Not set',
+    NODE_ENV: process.env.NODE_ENV
+  });
+
   try {
     const { searchParams } = new URL(request.url);
     const action = searchParams.get('action');

@@ -1,4 +1,5 @@
 import { useQuery, useQueries, UseQueryResult } from '@tanstack/react-query';
+import { useState, useEffect } from 'react';
 import {
   TokenMetadata,
   MarketData,
@@ -137,15 +138,58 @@ async function fetchTokenMetadata(symbol: string, chainId: number = 1): Promise<
 }
 
 async function fetchCoinGeckoData(action: string, coingeckoId: string): Promise<any> {
-  const response = await fetch(`${API_ENDPOINTS.coingecko}?action=${action}&id=${coingeckoId}`);
-  if (!response.ok) {
-    throw new Error(`Failed to fetch CoinGecko data: ${response.status}`);
+  try {
+    const url = `${API_ENDPOINTS.coingecko}?action=${action}&id=${coingeckoId}`;
+    console.log(`Fetching CoinGecko data from: ${url}`);
+    
+    const response = await fetch(url);
+    
+    if (!response.ok) {
+      let errorMessage = `Failed to fetch CoinGecko data: ${response.status} ${response.statusText}`;
+      
+      try {
+        // Try to get error details from response
+        const errorData = await response.json();
+        errorMessage = errorData.error || errorData.message || errorMessage;
+      } catch (e) {
+        // If we can't parse JSON, use the status text
+        errorMessage = `${errorMessage} - ${await response.text()}`;
+      }
+      
+      console.error('CoinGecko API error:', {
+        action,
+        coingeckoId,
+        status: response.status,
+        statusText: response.statusText,
+        error: errorMessage
+      });
+      
+      throw new Error(errorMessage);
+    }
+    
+    const result = await response.json();
+    
+    if (!result.success) {
+      const errorMessage = result.error || 'Unknown CoinGecko API error';
+      console.error('CoinGecko API error response:', {
+        action,
+        coingeckoId,
+        error: errorMessage,
+        response: result
+      });
+      throw new Error(errorMessage);
+    }
+    
+    return result.data;
+  } catch (error) {
+    console.error('Error in fetchCoinGeckoData:', {
+      action,
+      coingeckoId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    throw error; // Re-throw to be handled by the caller
   }
-  const result = await response.json();
-  if (!result.success) {
-    throw new Error(result.error || 'CoinGecko API error');
-  }
-  return result.data;
 }
 
 async function fetchTradingData(symbol: string, coingeckoId?: string): Promise<OrderData> {
@@ -277,6 +321,49 @@ export function useDashboardData(tokenSymbol: string, chainId: number = 1) {
       tradingData: tradingDataQuery,
     }
   };
+}
+
+// ============================================================================
+// Token Metadata Hook
+// ============================================================================
+
+export function useTokenMetadata(symbol: string, chainId: number = 1) {
+  const [token, setToken] = useState<TokenMetadata | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchTokenMetadata = async () => {
+      if (!symbol) {
+        setIsLoading(false);
+        return;
+      }
+
+      setIsLoading(true);
+      setError(null);
+
+      try {
+        const response = await fetch(`/api/token-metadata?symbols=${symbol}&chainId=${chainId}`);
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch token metadata');
+        }
+
+        const tokens = await response.json();
+        setToken(tokens[0] || null);
+      } catch (err) {
+        console.error('Error fetching token metadata:', err);
+        setError(err instanceof Error ? err.message : 'Failed to fetch token metadata');
+        setToken(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTokenMetadata();
+  }, [symbol, chainId]);
+
+  return { token, isLoading, error };
 }
 
 // ============================================================================
