@@ -78,14 +78,28 @@ export interface CoinGeckoMarketData {
 // Order Data Types
 // ============================================================================
 
+export type DataSource = 'coingecko' | 'binance';
+
 export interface OrderData {
+  // Basic order metrics
   buys: number;
   sells: number;
   buyVolume: number;
   sellVolume: number;
+  totalVolume: number;
+  
+  // Unique participants
   buyers: Set<string>;
   sellers: Set<string>;
-  source?: 'coingecko' | 'binance';
+  
+  // Derived metrics
+  buySellRatio: number;
+  volumeRatio: number;
+  
+  // Metadata
+  lastUpdated: string;
+  source: DataSource;
+  symbol: string;
 }
 
 export interface BinanceTrade {

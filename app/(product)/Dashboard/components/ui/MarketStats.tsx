@@ -1,15 +1,12 @@
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
+
 import { Skeleton } from "@/components/ui/skeleton";
-import { PercentDiamond, Info } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useTokenMetadata } from '../../services/dashboardService';
 import Image from 'next/image';
 import { InfoCard } from './InfoCard';
 import { getMarketStatsInfo } from './componentData';
-
 import { useMarketData } from '../../services/dashboardService';
+import { useTokenMetadata } from '../../services/dashboardService';
 
 
 interface MarketStatsProps {
@@ -18,19 +15,6 @@ interface MarketStatsProps {
 }
 
 type ErrorType = string | { message: string } | null | undefined;
-
-interface MarketData {
-  volume24h: number;
-  volume24hChange: number;
-  marketCap: number;
-  marketCapChange: number;
-  fdv: number;
-  fdvChange: number;
-  circulatingSupply: number;
-  circulatingSupplyChange: number;
-  price: number;
-  priceChange: number;
-}
 
 export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsProps) {
   const { token: tokenInfo, error: tokenError, isLoading } = useTokenMetadata(tokenSymbol, chainId);
@@ -124,9 +108,9 @@ export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsPro
               />
             )}
           </div>
-          <div className="flex flex-col">
-            <h2 className="text-lg font-semibold">{tokenInfo?.name || tokenSymbol}</h2>
-            <p className="text-sm text-muted-foreground">{tokenInfo?.symbol || tokenSymbol}</p>
+          <div className="flex flex-row gap-1 items-center">
+            <h1 className="text-lg font-semibold">Market Stats for</h1>
+            <h2 className="text-lg font-semibold uppercase dark:text-[#00ffc2] text-blue-500">{tokenInfo?.name || tokenSymbol}</h2>
           </div>
         </div>
         <div className='flex items-center gap-2'>

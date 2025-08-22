@@ -3,6 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
+import { useTokenMetadata } from '../../services/dashboardService';
 import { useEffect, useState } from 'react';
 
 interface MarketStatsProps {
@@ -20,19 +21,8 @@ interface MarketData {
 }
 
 export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProps) {
-  const [tokenInfo, setTokenInfo] = useState<any>(null);
-  const [tokenError, setTokenError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setTokenInfo(null);
-    setTokenError(null);
-    fetch(`/api/token-metadata?symbols=${tokenSymbol}&chainId=${chainId}`)
-      .then(res => res.json())
-      .then(tokens => setTokenInfo(tokens[0]))
-      .catch(() => setTokenError('Failed to load token info'));
-  }, [tokenSymbol, chainId]);
-
-  const coingeckoId = tokenInfo?.coingeckoId;
+  const { token: tokenInfo, isLoading: isTokenLoading, error: tokenError } = useTokenMetadata(tokenSymbol, chainId);
+  const coingeckoId = tokenInfo?.coingeckoId || '';
 
   // Fetch function for market data
   const fetchMarketData = async (): Promise<MarketData> => {
@@ -69,9 +59,9 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
     enabled: !!coingeckoId,
   });
 
-  if (!tokenInfo && !tokenError) {
+  if (isTokenLoading) {
     return (
-      <div className="  hidden lg:flex sm:grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
+      <div className="hidden lg:flex sm:grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
         <div className="w-full h-full rounded-2xl gap-1 flex flex-row justify-between items-center">
           <Skeleton className="h-6 w-32" />
         </div>
@@ -94,31 +84,35 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
   }
 
   if (tokenError) {
+    const errorMessage = tokenError && typeof tokenError === 'object' && 'message' in tokenError 
+      ? String((tokenError as Error).message) 
+      : 'Failed to load token info';
+      
     return (
       <div className="p-4 w-full hidden lg:flex sm:flex dark:bg-zinc-950 bg-white rounded gap-5 h-22">
         <div className='grid grid-col-2 gap-3 w-full'>
           <div className='grid grid-cols-2 gap-3 w-full'>
             <div className='gap-2 flex flex-col'>
-              <Skeleton className='w-full  rounded-3xl h-6'/>
-              <Skeleton className='w-full  rounded-3xl h-8'/>
+              <Skeleton className='w-full rounded-3xl h-6'/>
+              <Skeleton className='w-full rounded-3xl h-8'/>
             </div>
             <div className='gap-2 flex flex-col'>
-              <Skeleton className='w-full  rounded-3xl h-6'/>
-              <Skeleton className='w-full  rounded-3xl h-8'/>
+              <Skeleton className='w-full rounded-3xl h-6'/>
+              <Skeleton className='w-full rounded-3xl h-8'/>
             </div>
             <div className='gap-2 flex flex-col'>
-              <Skeleton className='w-full  rounded-3xl h-6'/>
-              <Skeleton className='w-full  rounded-3xl h-8'/>
+              <Skeleton className='w-full rounded-3xl h-6'/>
+              <Skeleton className='w-full rounded-3xl h-8'/>
             </div>
             <div className='gap-2 flex flex-col'>
-              <Skeleton className='w-full  rounded-3xl h-6'/>
-              <Skeleton className='w-full  rounded-3xl h-8'/>
+              <Skeleton className='w-full rounded-3xl h-6'/>
+              <Skeleton className='w-full rounded-3xl h-8'/>
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-red-500 font-medium text-sm">Error loading token info</h1>
-          <p className="text-zinc-500 text-xs">{tokenError}</p>
+          <p className="text-zinc-500 text-xs">{errorMessage}</p>
           <Button 
             onClick={() => window.location.reload()} 
             size="sm" 
@@ -134,7 +128,7 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
 
   if (isLoading) {
     return (
-      <div className=" hidden lg:flex sm:grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
+      <div className="hidden lg:flex sm:grid-row-2 gap-1 w-full h-22 overflow-hidden rounded-2xl items-center">
         <div className="w-full h-full rounded-2xl gap-1 flex flex-row justify-between items-center">
           <Skeleton className="h-6 w-32" />
         </div>
@@ -157,31 +151,35 @@ export default function ChartStats({ tokenSymbol, chainId = 1 }: MarketStatsProp
   }
 
   if (isError) {
+    const errorMessage = error && typeof error === 'object' && 'message' in error 
+      ? String((error as Error).message) 
+      : 'An error occurred';
+      
     return (
-      <div className="p-4 w-full hidden lg:flex sm:grid-row-2 gap-1 dark:bg-zinc-950 bg-white rounded gap-5 h-22">
+      <div className="p-4 w-full hidden lg:flex sm:grid-row-2 dark:bg-zinc-950 bg-white rounded gap-5 h-22">
         <div className='grid grid-col-2 gap-3 w-full'>
           <div className='grid grid-cols-2 gap-3 w-full'>
             <div className='gap-2 flex flex-col'>
-              <Skeleton className='w-full  rounded-3xl h-6'/>
-              <Skeleton className='w-full  rounded-3xl h-8'/>
+              <Skeleton className='w-full rounded-3xl h-6'/>
+              <Skeleton className='w-full rounded-3xl h-8'/>
             </div>
             <div className='gap-2 flex flex-col'>
-              <Skeleton className='w-full  rounded-3xl h-6'/>
-              <Skeleton className='w-full  rounded-3xl h-8'/>
+              <Skeleton className='w-full rounded-3xl h-6'/>
+              <Skeleton className='w-full rounded-3xl h-8'/>
             </div>
             <div className='gap-2 flex flex-col'>
-              <Skeleton className='w-full  rounded-3xl h-6'/>
-              <Skeleton className='w-full  rounded-3xl h-8'/>
+              <Skeleton className='w-full rounded-3xl h-6'/>
+              <Skeleton className='w-full rounded-3xl h-8'/>
             </div>
             <div className='gap-2 flex flex-col'>
-              <Skeleton className='w-full  rounded-3xl h-6'/>
-              <Skeleton className='w-full  rounded-3xl h-8'/>
+              <Skeleton className='w-full rounded-3xl h-6'/>
+              <Skeleton className='w-full rounded-3xl h-8'/>
             </div>
           </div>
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-red-500 font-medium text-sm">Error loading market data</h1>
-          <p className="text-zinc-500 text-xs">{error?.message}</p>
+          <p className="text-zinc-500 text-xs">{errorMessage}</p>
           <Button 
             onClick={() => refetch()} 
             size="sm" 
