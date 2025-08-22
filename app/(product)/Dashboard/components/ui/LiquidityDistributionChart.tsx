@@ -249,7 +249,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
             )}
             <CardTitle className="flex items-center gap-2">
               Liquidity Distribution
-              {tokenInfo && <span className="text-[#00FFC2] font-medium">{tokenSymbol.toUpperCase()}</span>}
+              {tokenInfo && <span className="dark:text-[#00FFC2] text-blue-500 font-medium">{tokenSymbol.toUpperCase()}</span>}
             </CardTitle>
           </div>
           <div className="flex items-center gap-2">
@@ -263,11 +263,11 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
             <div key={index} className="space-y-1">
               <div className="flex items-center justify-between text-sm">
                 <span className="font-medium">{item.exchange}</span>
-                <span className="dark:text-white text-black">{formatCurrency(item.liquidity)}</span>
+                <span className="dark:text-white font-semibold text-black">{formatCurrency(item.liquidity)}</span>
               </div>
               <div className="h-2 w-full bg-gray-200 dark:bg-gray-800 rounded-full overflow-hidden">
                 <div 
-                  className="h-full bg-[#00FFC2] rounded-full" 
+                  className="h-full dark:bg-[#00FFC2] bg-blue-500 rounded-full" 
                   style={{ width: `${item.marketShare}%` }}
                 />
               </div>
