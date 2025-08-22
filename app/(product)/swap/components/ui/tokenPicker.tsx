@@ -15,7 +15,6 @@ import { Pagination, PaginationContent, PaginationItem, PaginationPrevious, Pagi
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
 
 interface Chain {
   id: number;
