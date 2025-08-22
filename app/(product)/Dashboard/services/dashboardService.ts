@@ -233,8 +233,6 @@ async function fetchTokenMetadata(symbol: string, chainId: number = 1): Promise<
 async function fetchCoinGeckoData(action: string, coingeckoId: string): Promise<any> {
   try {
     const url = `${API_ENDPOINTS.coingecko}?action=${action}&id=${coingeckoId}`;
-    console.log(`Fetching CoinGecko data from: ${url}`);
-    
     const response = await fetch(url);
     
     if (!response.ok) {

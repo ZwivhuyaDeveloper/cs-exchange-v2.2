@@ -142,7 +142,9 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
   }
 
   if (tokenError) {
-    const errorMessage = tokenError ? String(tokenError) : 'An error occurred';
+    const errorMessage = typeof tokenError === 'object' && tokenError !== null && 'message' in tokenError 
+      ? String(tokenError.message) 
+      : 'An error occurred';
     return (
       <Card className="h-full w-full rounded-none border-none dark:bg-[#0F0F0F] bg-white flex flex-col">
         <CardHeader>
@@ -189,7 +191,7 @@ export default function LiquidityDistributionChart({ tokenSymbol, chainId = 1 }:
         <CardContent className="flex-1 flex flex-col items-center justify-center text-center p-4">
           <p className="text-amber-500 font-medium mb-2">Failed to load liquidity data</p>
           <p className="text-sm text-muted-foreground mb-4">
-            {error ? String(error) : 'An unknown error occurred'}
+            {error instanceof Error ? error.message : 'An unknown error occurred'}
           </p>
           <Button 
             variant="outline" 
