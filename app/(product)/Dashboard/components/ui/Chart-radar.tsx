@@ -1,16 +1,17 @@
 "use client"
 
 import { useQuery } from '@tanstack/react-query';
-import { TrendingUp, Activity } from "lucide-react"
+import { TrendingUp, Activity, RefreshCw } from "lucide-react"
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from '@/components/ui/button';
-import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { InfoCard } from './InfoCard';
 import { getRadarChartInfo } from './componentData';
+import { useTokenMetadata } from '../../services/dashboardService';
+import { formatCurrency } from '@/lib/utils';
 
 interface VolumeRadarProps {
   tokenSymbol: string;
@@ -83,19 +84,8 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProps) {
-  const [tokenInfo, setTokenInfo] = useState<any>(null);
-  const [tokenError, setTokenError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setTokenInfo(null);
-    setTokenError(null);
-    fetch(`/api/token-metadata?symbols=${tokenSymbol}&chainId=${chainId}`)
-      .then(res => res.json())
-      .then(tokens => setTokenInfo(tokens[0]))
-      .catch(() => setTokenError('Failed to load token info'));
-  }, [tokenSymbol, chainId]);
-
-  const coingeckoId = tokenInfo?.coingeckoId;
+  const { token: tokenInfo, isLoading: isTokenLoading, error: tokenError } = useTokenMetadata(tokenSymbol, chainId);
+  const coingeckoId = tokenInfo?.coingeckoId || '';
 
   const {
     data: volumeData,
@@ -113,7 +103,7 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
     enabled: !!coingeckoId,
   });
 
-  if (!tokenInfo && !tokenError) {
+  if (isTokenLoading || !tokenInfo) {
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
@@ -130,20 +120,30 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
   }
 
   if (tokenError) {
+    const errorMessage = tokenError ? String(tokenError) : 'An error occurred';
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
           <div className="flex flex-row items-center gap-2">
-            <div className="rounded-full p-1 bg-[#0E76FD]/30 text-[#0E76FD]">
-              <Activity strokeWidth={3} width={18} height={18}/>
+            <div className="rounded-full p-1 bg-red-100 dark:bg-red-900/30">
+              <Activity className="h-4 w-4 text-red-500" />
             </div>
             <CardTitle>24h Volume Distribution</CardTitle>
           </div>
         </CardHeader>
         <CardContent className="pb-0">
-          <div className="flex flex-col gap-2 items-center">
-            <h2 className="text-red-500 font-medium text-sm">Error loading token info</h2>
-            <p className="text-zinc-500 text-xs">{tokenError}</p>
+          <div className="flex flex-col items-center justify-center p-4 text-center">
+            <p className="text-red-500 font-medium mb-2">Failed to load token data</p>
+            <p className="text-sm text-muted-foreground mb-4">{errorMessage}</p>
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={() => window.location.reload()}
+              className="gap-2"
+            >
+              <RefreshCw className="h-4 w-4" />
+              Retry
+            </Button>
           </div>
         </CardContent>
       </Card>
@@ -170,26 +170,30 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
-          <div className="flex flex-row items-center gap-2">
-            <div className="rounded-full p-1 bg-[#00FFC2]/30 text-[#00FFC2]">
-              <Activity strokeWidth={3} width={18} height={18}/>
+          <div className="flex flex-row items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <div className="rounded-full p-1 bg-amber-100 dark:bg-amber-900/30">
+                <Activity className="h-4 w-4 text-amber-500" />
+              </div>
+              <CardTitle>24h Volume Distribution</CardTitle>
             </div>
-            <CardTitle>24h Volume Distribution</CardTitle>
+            <InfoCard {...getRadarChartInfo()} />
           </div>
         </CardHeader>
-        <CardContent className="pb-0">
-          <div className="flex flex-col gap-2 items-center">
-            <h2 className="text-red-500 font-medium text-sm">Error loading volume data</h2>
-            <p className="text-zinc-500 text-xs">{error?.message}</p>
-            <Button 
-              onClick={() => refetch()} 
-              size="sm" 
-              variant="outline"
-              className="w-fit"
-            >
-              Retry
-            </Button>
-          </div>
+        <CardContent className="flex-1 flex flex-col items-center justify-center text-center p-4">
+          <p className="text-amber-500 font-medium mb-2">Failed to load volume data</p>
+          <p className="text-sm text-muted-foreground mb-4">
+            {error ? String(error) : 'An unknown error occurred'}
+          </p>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => refetch()}
+            className="gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Retry
+          </Button>
         </CardContent>
       </Card>
     );
@@ -199,15 +203,26 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
-          <div className="flex flex-row items-center gap-2">
-            <div className="rounded-full p-1 bg-[#0E76FD]/30 text-[#0E76FD]">
-              <Activity strokeWidth={3} width={18} height={18}/>
+          <div className="flex flex-row items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+                <Image 
+                  src={tokenInfo?.logoURL || "/placeholder-token.png"}
+                  alt={tokenInfo?.name || 'Token'}
+                  className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
+                  width={40}
+                  height={40}
+                />
+              </div>
+              <CardTitle className="flex items-center gap-2">
+                Volume Distribution <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
+              </CardTitle>
             </div>
-            <CardTitle>24h Volume Distribution</CardTitle>
+            <InfoCard {...getRadarChartInfo()} />
           </div>
         </CardHeader>
-        <CardContent className="pb-0">
-          <p className="text-zinc-500 text-sm text-center">No volume data available for {tokenSymbol.toUpperCase()}</p>
+        <CardContent>
+          <p className="text-zinc-500 text-sm text-center py-4">No volume data available for {tokenSymbol.toUpperCase()}</p>
         </CardContent>
       </Card>
     );
@@ -251,7 +266,7 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
                      <div className="bg-white dark:bg-zinc-800 p-3 rounded-lg border shadow-lg">
                        <p className="font-semibold">{data.exchange}</p>
                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                         24h Volume: ${data.volume24h.toLocaleString()}
+                             24h Volume: {formatCurrency(data.volume24h)}
                        </p>
                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
                          Market Share: {data.actualMarketShare.toFixed(1)}%

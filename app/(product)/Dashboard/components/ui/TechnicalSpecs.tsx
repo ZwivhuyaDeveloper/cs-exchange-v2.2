@@ -7,12 +7,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleTrigger, CollapsibleContent } from "@/components/ui/collapsible";
-import { ChevronDownIcon, CopyIcon, List } from "lucide-react";
+import { ChevronDownIcon, CopyIcon, List, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from 'sonner';
 import Image from 'next/image';
 import { InfoCard } from './InfoCard';
 import { getTechnicalSpecsInfo } from './componentData';
+import { useTokenMetadata } from '../../services/dashboardService';
 
 interface TechnicalSpecsProps {
   tokenSymbol: string;
@@ -54,27 +55,16 @@ const fetchTechnicalSpecs = async (coingeckoId: string): Promise<TechnicalSpecsD
 };
 
 export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSpecsProps) {
-  const [tokenInfo, setTokenInfo] = useState<any>(null);
-  const [tokenError, setTokenError] = useState<string | null>(null);
-
-  useEffect(() => {
-    setTokenInfo(null);
-    setTokenError(null);
-    fetch(`/api/token-metadata?symbols=${tokenSymbol}&chainId=${chainId}`)
-      .then(res => res.json())
-      .then(tokens => setTokenInfo(tokens[0]))
-      .catch(() => setTokenError('Failed to load token info'));
-  }, [tokenSymbol, chainId]);
-
-  const coingeckoId = tokenInfo?.coingeckoId;
+  const { token: tokenInfo, isLoading: isTokenLoading, error: tokenError } = useTokenMetadata(tokenSymbol, chainId);
+  const coingeckoId = tokenInfo?.coingeckoId || '';
 
   const {
     data: specsData,
-    isLoading,
-    error,
+    isLoading: isSpecsLoading,
+    error: specsError,
     refetch,
-    isError
-  } = useQuery({
+    isError: isSpecsError
+  } = useQuery<TechnicalSpecsData, Error>({
     queryKey: ['technicalSpecs', coingeckoId],
     queryFn: () => fetchTechnicalSpecs(coingeckoId),
     staleTime: 10 * 60 * 1000,
@@ -96,97 +86,63 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
     }
   };
 
-  if (!tokenInfo && !tokenError) {
+  if (tokenError || isSpecsError) {
+    const errorMessage = tokenError 
+      ? String(tokenError)
+      : specsError 
+        ? String(specsError)
+        : 'An error occurred';
+    
     return (
-      <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
-        <CardHeader>
-          <div className="flex items-center gap-2">
+      <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
+        <CardHeader className="items-center">
+          <div className="flex flex-row items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <div className="rounded-full p-1 bg-red-100 dark:bg-red-900/30">
+                <List className="h-4 w-4 text-red-500" />
+              </div>
+              <CardTitle>Technical Specs</CardTitle>
+            </div>
+            <InfoCard {...getTechnicalSpecsInfo()} />
+          </div>
+        </CardHeader>
+        <CardContent className="flex flex-col items-center justify-center p-6 text-center">
+          <p className="text-red-500 font-medium mb-2">
+            {tokenError ? 'Failed to load token data' : 'Failed to load technical specs'}
+          </p>
+          <p className="text-sm text-muted-foreground mb-4">
+            {errorMessage}
+          </p>
+          <Button 
+            variant="outline" 
+            size="sm"
+            onClick={() => window.location.reload()}
+            className="gap-2"
+          >
+            <RefreshCw className="h-4 w-4" />
+            Retry
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
+
+  if (isTokenLoading || (coingeckoId && isSpecsLoading)) {
+    return (
+      <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F] animate-pulse">
+        <CardHeader className="items-center">
+          <div className="flex flex-row items-center gap-2">
             <Skeleton className="h-6 w-6 rounded-full" />
             <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-16" />
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-4 w-full" />
-          ))}
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (tokenError) {
-    return (
-      <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#00FFC2] text-[8px] font-bold"><List width={17} height={17}/></span>
+          {[...Array(6)].map((_, i) => (
+            <div key={i} className="flex justify-between">
+              <Skeleton className="h-4 w-24" />
+              <Skeleton className="h-4 w-32" />
             </div>
-            <h1 className="dark:text-white text-back font-semibold text-md sm:text-md">Technical Specifications</h1>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-2">
-            <h2 className="text-red-500 font-medium text-sm">Error loading token info</h2>
-            <p className="text-zinc-500 text-xs">{tokenError}</p>
-            <Button 
-              onClick={() => window.location.reload()} 
-              size="sm" 
-              variant="outline"
-              className="w-fit"
-            >
-              Retry
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-6 w-6 rounded-full" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-16" />
-          </div>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-4 w-full" />
           ))}
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (isError) {
-    return (
-      <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 [#00FFC2]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#00FFC2] text-[8px] font-bold"><List width={17} height={17}/></span>
-            </div>
-            <h1 className="dark:text-white text-back font-semibold text-md sm:text-md">Technical Specifications</h1>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col gap-2">
-            <h2 className="text-red-500 font-medium text-sm">Error loading technical data</h2>
-            <p className="text-zinc-500 text-xs">{error?.message}</p>
-            <Button 
-              onClick={() => refetch()} 
-              size="sm" 
-              variant="outline"
-              className="w-fit"
-            >
-              Retry
-            </Button>
-          </div>
         </CardContent>
       </Card>
     );
@@ -194,40 +150,59 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
 
   if (!specsData) {
     return (
-      <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none">
-        <CardHeader>
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 bg-[#00FFC2]/20 rounded-full flex items-center justify-center">
-              <span className="text-[#00FFC2] text-[8px] font-bold"><List width={17} height={17}/></span>
+      <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
+        <CardHeader className="items-center">
+          <div className="flex flex-row items-center justify-between w-full">
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+                {tokenInfo?.logoURL ? (
+                  <Image 
+                    src={tokenInfo.logoURL}
+                    alt={tokenInfo.name || 'Token'}
+                    className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
+                    width={32}
+                    height={32}
+                  />
+                ) : (
+                  <List className="h-4 w-4 text-foreground" />
+                )}
+              </div>
+              <CardTitle className="flex items-center gap-2">
+                Technical Specs <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
+              </CardTitle>
             </div>
-            <h1 className="dark:text-white text-back font-semibold text-md sm:text-md">Technical Specifications</h1>
+            <InfoCard {...getTechnicalSpecsInfo()} />
           </div>
         </CardHeader>
-        <CardContent>
-          <p className="text-zinc-500 text-sm">No technical data available for {tokenSymbol.toUpperCase()}</p>
+        <CardContent className="text-center py-6">
+          <p className="text-zinc-500">No technical data available for {tokenSymbol.toUpperCase()}</p>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="w-full border-none dark:bg-[#0F0F0F] bg-white rounded-none sm:mb-5 mb-0">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
-            <Image 
-              src={tokenInfo.logoURL || "/placeholder-token.png"}
-              alt={tokenInfo.name}
-              className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
-              width={40}
-              height={40}
-            />
+    <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
+      <CardHeader className="items-center">
+        <div className="flex flex-row items-center justify-between w-full">
+          <div className="flex items-center gap-2">
+            <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
+              {tokenInfo?.logoURL ? (
+                <Image 
+                  src={tokenInfo.logoURL}
+                  alt={tokenInfo.name || 'Token'}
+                  className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
+                  width={32}
+                  height={32}
+                />
+              ) : (
+                <List className="h-4 w-4 text-foreground" />
+              )}
+            </div>
+            <CardTitle className="flex items-center gap-2">
+              Technical Specs <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
+            </CardTitle>
           </div>
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            Technical Specs <span className="dark:text-[#00FFC2] font-black text-[#0E76FD]">{tokenSymbol.toUpperCase()}</span>
-          </CardTitle>
-        </div>
-        <div className="flex items-center gap-2">
           <InfoCard {...getTechnicalSpecsInfo()} />
         </div>
       </CardHeader>
