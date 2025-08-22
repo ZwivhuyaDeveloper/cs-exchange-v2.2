@@ -15,12 +15,17 @@ import { useTheme } from "@/context/ThemeContext";
 import ChartStats from "./chart-stats";
 import { CandlestickChart, X } from "lucide-react";
 import LiveChart2 from "./live-chart2";
-import { useTokenMetadata } from "../../services/dashboardService";
+
 
 interface TradingChartProps {
   buyTokenSymbol?: string;
   sellTokenSymbol?: string;
   setCurrentChartToken: (token: string) => void;
+}
+
+interface TokenMarketData {
+  currentPrice: number;
+  priceChange24h: number;
 }
 
 export function TradingChart({ 
@@ -30,6 +35,8 @@ export function TradingChart({
 }: TradingChartProps) {
   const [showBuyChart, setShowBuyChart] = useState(true);
   const [showLiveChart, setShowLiveChart] = useState(false);
+  const [marketData, setMarketData] = useState<TokenMarketData | null>(null);
+  const [loadingMarketData, setLoadingMarketData] = useState(true);
   const [tokens, setTokens] = useState<any[]>([]);
   const [tokenError, setTokenError] = useState<string | null>(null);
   const { resolvedTheme } = useTheme();
@@ -50,12 +57,6 @@ export function TradingChart({
   }, []);
 
   // Helper to get token info by symbol
-  const getTradingViewSymbol = (symbol: string) => {
-    const token = tokens.find(t => t.symbol.toLowerCase() === symbol.toLowerCase());
-    return token?.symbol ? `${token.symbol}USDT` : `${symbol}USDT`;
-  };
-
-  // Helper to get token info by symbol
   const getTokenInfo = (symbol?: string) => {
     if (!symbol) return undefined;
     const token = tokens.find(t => t.symbol.toLowerCase() === symbol.toLowerCase());
@@ -68,9 +69,8 @@ export function TradingChart({
 
   // Determine which token to display in the chart
   const currentTokenSymbol = showBuyChart ? buyTokenSymbol : sellTokenSymbol;
-  const { token: tokenInfo, isLoading: isTokenLoading } = useTokenMetadata(currentTokenSymbol || '', 1);
-  // Generate TradingView symbol by appending USDT to the token symbol
-  const tradingViewSymbol = tokenInfo?.symbol ? `${tokenInfo.symbol}USDT` : '';
+  const tokenInfo = getTokenInfo(currentTokenSymbol);
+  const tradingViewSymbol = tokenInfo?.tradingViewSymbol;
 
   // Update parent component with current chart token
   useEffect(() => {
@@ -79,12 +79,40 @@ export function TradingChart({
     }
   }, [currentTokenSymbol, setCurrentChartToken]);
 
+  // Fetch market data when token changes
+  useEffect(() => {
+    const fetchMarketData = async () => {
+      if (!tokenInfo || !currentTokenSymbol) return;
+      setLoadingMarketData(true);
+      try {
+        if (!tokenInfo.coingeckoId) throw new Error("CoinGecko ID not found");
+        const response = await fetch(
+          `https://api.coingecko.com/api/v3/simple/price?ids=${tokenInfo.coingeckoId}&vs_currencies=usd&include_24hr_change=true`
+        );
+        if (!response.ok) throw new Error('Failed to fetch market data');
+        const data = await response.json();
+        const tokenData = data[tokenInfo.coingeckoId];
+        if (tokenData) {
+          setMarketData({
+            currentPrice: tokenData.usd,
+            priceChange24h: tokenData.usd_24h_change
+          });
+        }
+      } catch (error) {
+        setMarketData(null);
+      } finally {
+        setLoadingMarketData(false);
+      }
+    };
+    fetchMarketData();
+  }, [currentTokenSymbol, tokenInfo]);
+
   // Get the other token for the toggle button
   const otherTokenSymbol = showBuyChart ? sellTokenSymbol : buyTokenSymbol;
-  const { token: otherTokenInfo } = useTokenMetadata(otherTokenSymbol || '', 1);
+  const otherTokenInfo = getTokenInfo(otherTokenSymbol);
 
   // Loading state when token info is not available
-  if (isTokenLoading || !tokenInfo || !currentTokenSymbol) {
+  if (!tokenInfo || !currentTokenSymbol) {
     return (
       <Card className="w-full hidden sm:flex sm:flex-col justify-start border-transparent bg-transparent rounded-none mt-0 h-full">
         <CardHeader className="flex flex-row items-center justify-between h-[18px]">
@@ -131,8 +159,29 @@ export function TradingChart({
                 {tokenInfo.name} <span className="dark:text-[#00FFC2] text-[#0E76FD] font-bold">({tokenInfo.symbol})</span>
               </div>
             </div>
-            {/* Price & percentage change - Handled by ChartStats component */}
-            <div className="h-6"></div>
+            {/* Price & percentage change */}
+            {loadingMarketData ? (
+              <div className="flex flex-row gap-2">
+                <div className="h-4 w-16 bg-zinc-700 rounded animate-pulse" />
+                <div className="h-4 w-10 bg-zinc-700 rounded animate-pulse" />
+              </div>
+            ) : marketData ? (
+              <div className="flex flex-row items-center gap-2">
+                <p className="sm:text-[16px] text-xs font-semibold ">
+                  ${marketData.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                </p>
+                <p className={`text-xs font-medium w-fit rounded-2xl px-2 py-1 ${
+                  marketData.priceChange24h >= 0 
+                    ? 'text-green-500 bg-green-500/10' 
+                    : 'text-red-500 bg-red-500/10'
+                }`}>
+                  {marketData.priceChange24h >= 0 ? '+' : ''}
+                  {marketData.priceChange24h.toFixed(2)}%
+                </p>
+              </div>
+            ) : (
+              <div className="text-xs text-zinc-500">Price data unavailable</div>
+            )}
           </div>
         </div>
         <div className="flex flex-row items-center gap-2 justify-center w-3xl h-fit">
@@ -180,8 +229,29 @@ export function TradingChart({
                     <span className="dark:text-[#00FFC2] text-[#0E76FD] font-bold text-sm">({tokenInfo.symbol})</span>
                   </div>
                 </div>
-                {/* Price & percentage change - Handled by ChartStats component */}
-                <div className="h-6"></div>
+                {/* Price & percentage change */}
+                {loadingMarketData ? (
+                  <div className="hidden sm:flex flex-row gap-2">
+                    <div className="h-4 w-16 bg-zinc-700 rounded animate-pulse" />
+                    <div className="h-4 w-10 bg-zinc-700 rounded animate-pulse" />
+                  </div>
+                ) : marketData ? (
+                  <div className="flex flex-row items-center gap-2">
+                    <p className="lg:text-md md:text-md text-md font-semibold ">
+                      ${marketData.currentPrice.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}
+                    </p>
+                    <p className={`text-xs font-medium w-fit rounded-2xl px-2 py-1 ${
+                      marketData.priceChange24h >= 0 
+                        ? 'text-green-500 bg-green-500/10' 
+                        : 'text-red-500 bg-red-500/10'
+                    }`}>
+                      {marketData.priceChange24h >= 0 ? '+' : ''}
+                      {marketData.priceChange24h.toFixed(2)}%
+                    </p>
+                  </div>
+                ) : (
+                  <div className="text-xs text-zinc-500">Price data unavailable</div>
+                )}
               </div>
             </div>
             <div className="flex flex-row items-center gap-2 justify-center w-3xl h-fit">

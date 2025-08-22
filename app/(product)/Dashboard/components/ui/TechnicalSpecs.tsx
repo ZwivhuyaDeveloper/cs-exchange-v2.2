@@ -87,11 +87,9 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
   };
 
   if (tokenError || isSpecsError) {
-    const errorMessage = tokenError 
-      ? String(tokenError)
-      : specsError 
-        ? String(specsError)
-        : 'An error occurred';
+    const errorMessage = tokenError && typeof tokenError === 'object' && 'message' in tokenError 
+      ? String(tokenError.message) 
+      : specsError?.message || 'An error occurred';
     
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
