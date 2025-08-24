@@ -30,9 +30,6 @@ export default function MarketStats({ tokenSymbol, chainId = 1 }: MarketStatsPro
     hasMarketData: !!marketData
   });
 
-  // Derive the coingeckoId if needed
-  const coingeckoId = tokenInfo?.coingeckoId;
-
   // Show loading state if either query is still loading
   if (isLoading || marketLoading) {
     return (

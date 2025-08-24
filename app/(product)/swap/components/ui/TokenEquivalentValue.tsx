@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
-import { formatUnits, parseUnits } from 'ethers';
+import { parseUnits } from 'ethers';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 

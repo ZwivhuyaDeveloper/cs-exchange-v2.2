@@ -1,7 +1,7 @@
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
+import { Card, CardContent, CardTitle, CardDescription } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ArrowUpRight, ArrowDownRight, Activity, RefreshCw, Scale } from 'lucide-react';
+import { Activity, Scale } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useOrderData, useTokenMetadata } from '../../services/dashboardService';
 import { formatNumber, formatCurrency } from '@/lib/utils';

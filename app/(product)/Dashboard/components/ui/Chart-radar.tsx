@@ -1,7 +1,6 @@
 "use client"
 
-import { useQuery } from '@tanstack/react-query';
-import { TrendingUp, Activity, RefreshCw } from "lucide-react"
+import { Activity, RefreshCw } from "lucide-react"
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ChartConfig, ChartContainer, ChartTooltip, ChartTooltipContent, ChartLegend, ChartLegendContent } from "@/components/ui/chart"
@@ -10,13 +9,8 @@ import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import { InfoCard } from './InfoCard';
 import { getRadarChartInfo } from './componentData';
-import { useTokenMetadata } from '../../services/dashboardService';
+import { useVolumeData } from '../../services/dashboardService';
 import { formatCurrency } from '@/lib/utils';
-
-interface VolumeRadarProps {
-  tokenSymbol: string;
-  chainId?: number;
-}
 
 interface VolumeData {
   exchange: string;
@@ -25,52 +19,10 @@ interface VolumeData {
   actualMarketShare: number;
 }
 
-interface ExchangeData {
-  name: string;
-  volume_24h: number;
+interface VolumeRadarProps {
+  tokenSymbol: string;
+  chainId?: number;
 }
-
-const fetchVolumeData = async (coingeckoId: string): Promise<VolumeData[]> => {
-  if (!coingeckoId) throw new Error('Token not supported');
-  const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
-  const headers: HeadersInit = {};
-  if (apiKey) headers["x-cg-demo-api-key"] = apiKey;
-  const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coingeckoId}/tickers`, { headers });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch volume data: ${res.status} ${res.statusText}`);
-  }
-  const data = await res.json();
-  const exchanges = data.tickers || [];
-  const exchangeMap = new Map<string, ExchangeData>();
-  exchanges.forEach((ticker: any) => {
-    const exchange = ticker.market?.name || 'Unknown';
-    const volume = ticker.converted_volume?.usd || 0;
-    if (exchangeMap.has(exchange)) {
-      exchangeMap.get(exchange)!.volume_24h += volume;
-    } else {
-      exchangeMap.set(exchange, {
-        name: exchange,
-        volume_24h: volume
-      });
-    }
-  });
-  const totalVolume = Array.from(exchangeMap.values()).reduce((sum, ex) => sum + ex.volume_24h, 0);
-  const volumeData = Array.from(exchangeMap.values())
-    .filter(ex => ex.volume_24h > 0)
-    .sort((a, b) => b.volume_24h - a.volume_24h)
-    .slice(0, 6)
-    .map(ex => {
-      const marketShare = totalVolume > 0 ? (ex.volume_24h / totalVolume) * 100 : 0;
-      const scaledMarketShare = marketShare * 3;
-      return {
-        exchange: ex.name,
-        volume24h: ex.volume_24h,
-        marketShare: scaledMarketShare,
-        actualMarketShare: marketShare
-      };
-    });
-  return volumeData;
-};
 
 const chartConfig = {
   volume24h: {
@@ -84,26 +36,15 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProps) {
-  const { token: tokenInfo, isLoading: isTokenLoading, error: tokenError } = useTokenMetadata(tokenSymbol, chainId);
-  const coingeckoId = tokenInfo?.coingeckoId || '';
+  const { 
+    volumeData = [], 
+    token, 
+    isLoading, 
+    error, 
+    refetch 
+  } = useVolumeData(tokenSymbol, chainId);
 
-  const {
-    data: volumeData,
-    isLoading,
-    error,
-    refetch,
-    isError
-  } = useQuery({
-    queryKey: ['volumeRadar', coingeckoId],
-    queryFn: () => fetchVolumeData(coingeckoId),
-    staleTime: 5 * 60 * 1000,
-    gcTime: 10 * 60 * 1000,
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    enabled: !!coingeckoId,
-  });
-
-  if (isTokenLoading || !tokenInfo) {
+  if (isLoading || !token) {
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
@@ -119,56 +60,8 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
     );
   }
 
-  if (tokenError) {
-    const errorMessage = typeof tokenError === 'object' && tokenError !== null && 'message' in tokenError 
-      ? String(tokenError.message) 
-      : 'An error occurred';
-    return (
-      <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
-        <CardHeader className="items-center">
-          <div className="flex flex-row items-center gap-2">
-            <div className="rounded-full p-1 bg-red-100 dark:bg-red-900/30">
-              <Activity className="h-4 w-4 text-red-500" />
-            </div>
-            <CardTitle>24h Volume Distribution</CardTitle>
-          </div>
-        </CardHeader>
-        <CardContent className="pb-0">
-          <div className="flex flex-col items-center justify-center p-4 text-center">
-            <p className="text-red-500 font-medium mb-2">Failed to load token data</p>
-            <p className="text-sm text-muted-foreground mb-4">{errorMessage}</p>
-            <Button 
-              variant="outline" 
-              size="sm"
-              onClick={() => window.location.reload()}
-              className="gap-2"
-            >
-              <RefreshCw className="h-4 w-4" />
-              Retry
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (isLoading) {
-    return (
-      <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
-        <CardHeader className="items-center">
-          <div className="flex flex-row items-center gap-2">
-            <Skeleton className="h-6 w-6 rounded-full" />
-            <Skeleton className="h-4 w-32" />
-          </div>
-        </CardHeader>
-        <CardContent className="pb-0">
-          <Skeleton className="mx-auto aspect-square max-h-[250px] w-full rounded-lg" />
-        </CardContent>
-      </Card>
-    );
-  }
-
-  if (isError) {
+  if (error) {
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
@@ -184,9 +77,7 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
         </CardHeader>
         <CardContent className="flex-1 flex flex-col items-center justify-center text-center p-4">
           <p className="text-amber-500 font-medium mb-2">Failed to load volume data</p>
-          <p className="text-sm text-muted-foreground mb-4">
-            {error instanceof Error ? error.message : 'An unknown error occurred'}
-          </p>
+          <p className="text-sm text-muted-foreground mb-4">{errorMessage}</p>
           <Button 
             variant="outline" 
             size="sm"
@@ -201,7 +92,7 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
     );
   }
 
-  if (!volumeData || volumeData.length === 0) {
+  if (volumeData.length === 0) {
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
@@ -209,8 +100,8 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
             <div className="flex items-center gap-2">
               <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
                 <Image 
-                  src={tokenInfo?.logoURL || "/placeholder-token.png"}
-                  alt={tokenInfo?.name || 'Token'}
+                  src={token?.logoURL || "/placeholder-token.png"}
+                  alt={token?.name || 'Token'}
                   className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
                   width={40}
                   height={40}
@@ -237,8 +128,8 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
           <div className="flex flex-row items-center gap-2">
             <div className="h-8 w-8 dark:bg-[#00FFC2]/20 bg-[#0E76FD]/20 rounded-full flex items-center justify-center">
               <Image 
-                src={tokenInfo.logoURL || "/placeholder-token.png"}
-                alt={tokenInfo.name}
+                src={token?.logoURL || "/placeholder-token.png"}
+                alt={token?.name || 'Token'}
                 className="h-8 w-8 rounded-full dark:bg-zinc-800 bg-white"
                 width={40}
                 height={40}
@@ -263,12 +154,12 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
               cursor={false}
                              content={({ active, payload }) => {
                  if (active && payload && payload.length) {
-                   const data = payload[0].payload as VolumeData;
+                   const data = payload[0].payload;
                    return (
                      <div className="bg-white dark:bg-zinc-800 p-3 rounded-lg border shadow-lg">
                        <p className="font-semibold">{data.exchange}</p>
                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
-                             24h Volume: {formatCurrency(data.volume24h)}
+                         24h Volume: {formatCurrency(data.volume24h)}
                        </p>
                        <p className="text-sm text-zinc-600 dark:text-zinc-400">
                          Market Share: {data.actualMarketShare.toFixed(1)}%
@@ -296,14 +187,18 @@ export function ChartRadarMultiple({ tokenSymbol, chainId = 1 }: VolumeRadarProp
             <PolarGrid strokeWidth={2} />
             <ChartLegend content={<ChartLegendContent />} />
             <Radar
+              name="24h Volume"
               dataKey="volume24h"
+              stroke="#0E76FD"
               fill="#0E76FD"
               className="fill-[#0E76FD] dark:fill-[#00FFC2]"
               fillOpacity={0.6}
             />
             <Radar 
-              dataKey="marketShare" 
-              fill="var(--color-marketShare)" 
+              name="Market Share"
+              dataKey="marketShare"
+              stroke="#8884d8"
+              fill="#8884d8"
               fillOpacity={0.4}
             />
           </RadarChart>
