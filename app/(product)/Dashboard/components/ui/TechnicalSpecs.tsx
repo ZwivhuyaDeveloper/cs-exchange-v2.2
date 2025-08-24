@@ -1,8 +1,6 @@
 // components/TechnicalSpecs.tsx
 'use client';
 
-import { useQuery } from '@tanstack/react-query';
-import { useState, useEffect } from 'react';
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,66 +11,18 @@ import { toast } from 'sonner';
 import Image from 'next/image';
 import { InfoCard } from './InfoCard';
 import { getTechnicalSpecsInfo } from './componentData';
-import { useTokenMetadata } from '../../services/dashboardService';
+import { useTechnicalSpecs, useTokenMetadata } from '../../services/dashboardService';
 
 interface TechnicalSpecsProps {
   tokenSymbol: string;
   chainId?: number;
 }
 
-interface TechnicalSpecsData {
-  marketCapRank: number;
-  hashingAlgorithm: string;
-  blockTime: number;
-  genesisDate: string;
-  tokenAddress: string;
-  categories: string[];
-  description: string;
-}
-
-const fetchTechnicalSpecs = async (coingeckoId: string): Promise<TechnicalSpecsData> => {
-  if (!coingeckoId) throw new Error('Token not supported');
-  const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
-  const headers: HeadersInit = {};
-  if (apiKey) headers["x-cg-demo-api-key"] = apiKey;
-  const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coingeckoId}`, { headers });
-  if (!res.ok) {
-    throw new Error(`Failed to fetch technical data: ${res.status} ${res.statusText}`);
-  }
-  const data = await res.json();
-  const platforms = data.platforms ? Object.entries(data.platforms) : [];
-  const foundAddress = platforms.find(([_, addr]) => typeof addr === "string" && addr);
-  const tokenAddress = typeof foundAddress?.[1] === "string" ? foundAddress[1] : 'N/A';
-  return {
-    marketCapRank: data.market_cap_rank,
-    hashingAlgorithm: data.hashing_algorithm || 'N/A',
-    blockTime: data.block_time_in_minutes,
-    genesisDate: data.genesis_date ? new Date(data.genesis_date).toLocaleDateString() : 'N/A',
-    tokenAddress,
-    categories: data.categories || [],
-    description: data.description?.en || 'No description available'
-  };
-};
+import { TechnicalSpecsData } from '../../types/dashboard';
 
 export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSpecsProps) {
-  const { token: tokenInfo, isLoading: isTokenLoading, error: tokenError } = useTokenMetadata(tokenSymbol, chainId);
-  const coingeckoId = tokenInfo?.coingeckoId || '';
-
-  const {
-    data: specsData,
-    isLoading: isSpecsLoading,
-    error: specsError,
-    refetch,
-    isError: isSpecsError
-  } = useQuery<TechnicalSpecsData, Error>({
-    queryKey: ['technicalSpecs', coingeckoId],
-    queryFn: () => fetchTechnicalSpecs(coingeckoId),
-    staleTime: 10 * 60 * 1000,
-    gcTime: 30 * 60 * 1000,
-    retry: 3,
-    retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    enabled: !!coingeckoId,
-  });
+  const { technicalSpecs, token: tokenInfo, isLoading, error, refetch } = useTechnicalSpecs(tokenSymbol, chainId);
+  const isError = !!error;
 
   const copyToClipboard = async (text: string) => {
     try {
@@ -86,10 +36,8 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
     }
   };
 
-  if (tokenError || isSpecsError) {
-    const errorMessage = tokenError && typeof tokenError === 'object' && 'message' in tokenError 
-      ? String(tokenError.message) 
-      : specsError?.message || 'An error occurred';
+  if (isError) {
+    const errorMessage = error?.message || 'An error occurred';
     
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
@@ -106,7 +54,7 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
         </CardHeader>
         <CardContent className="flex flex-col items-center justify-center p-6 text-center">
           <p className="text-red-500 font-medium mb-2">
-            {tokenError ? 'Failed to load token data' : 'Failed to load technical specs'}
+            Failed to load technical specs
           </p>
           <p className="text-sm text-muted-foreground mb-4">
             {errorMessage}
@@ -125,7 +73,7 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
     );
   }
 
-  if (isTokenLoading || (coingeckoId && isSpecsLoading)) {
+  if (isLoading) {
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F] animate-pulse">
         <CardHeader className="items-center">
@@ -146,7 +94,7 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
     );
   }
 
-  if (!specsData) {
+  if (!technicalSpecs) {
     return (
       <Card className="rounded-none shadow-none bg-white dark:bg-[#0F0F0F]">
         <CardHeader className="items-center">
@@ -210,13 +158,13 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
           <span className="text-sm text-muted-foreground">Contract Address</span>
           <div className="flex items-center gap-2">
             <span className="text-sm font-mono truncate max-w-[160px]">
-              {specsData.tokenAddress}
+              {technicalSpecs.tokenAddress || 'N/A'}
             </span>
             <Button
               variant="ghost"
               size="icon"
               className="h-6 w-6"
-              onClick={() => copyToClipboard(specsData.tokenAddress)}
+              onClick={() => copyToClipboard(technicalSpecs.tokenAddress)}
             >
               <CopyIcon className="h-4 w-4" />
             </Button>
@@ -227,12 +175,12 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
         <div className="flex flex-col gap-2">
           <span className="text-sm text-muted-foreground">Categories</span>
           <div className="flex flex-wrap gap-2">
-            {specsData.categories?.map((category) => (
+            {technicalSpecs.categories?.map((category) => (
               <Badge key={category} variant="outline" className='font-semibold dark:text-[#00FFC2] text-[#0E76FD] border-none border-[#0E76FD]/0 bg-[#0E76FD]/10 dark:bg-[#00FFC2]/20'>
                 {category}
               </Badge>
             ))}
-            {!specsData.categories?.length && (
+            {!technicalSpecs.categories?.length && (
               <span className="text-sm text-muted-foreground">Uncategorized</span>
             )}
           </div>
@@ -241,28 +189,30 @@ export default function TechnicalSpecs({ tokenSymbol, chainId = 1 }: TechnicalSp
         {/* Technical Specs */}
         <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">Algorithm</span>
-          <Badge variant="outline">{specsData.hashingAlgorithm}</Badge>
+          <Badge variant="outline">{technicalSpecs.hashingAlgorithm}</Badge>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">Block Time</span>
           <span className="text-sm font-medium">
-            {specsData.blockTime} minutes
+            {technicalSpecs.blockTime ? `${technicalSpecs.blockTime} min` : 'N/A'}
           </span>
         </div>
         <div className="flex justify-between items-center">
           <span className="text-sm text-muted-foreground">Genesis Date</span>
           <span className="text-sm font-medium">
-            {specsData.genesisDate}
+            {technicalSpecs.genesisDate || 'N/A'}
           </span>
         </div>
 
-        {/* Expandable Description */}  
-        <div className='w-full'>
-          <h3 className='w-full'>
-            <p className="text-sm text-muted-foreground mt-2 whitespace-pre-line w-ful">
-              {specsData.description}
-            </p>
-          </h3>
+        {/* Description */}
+        <div className="w-full mt-4">
+          <h3 className="text-sm font-medium mb-2">Description</h3>
+          <div 
+            className="prose prose-sm dark:prose-invert max-w-none text-muted-foreground"
+            dangerouslySetInnerHTML={{ 
+              __html: technicalSpecs.description.replace(/\n/g, '<br />')
+            }} 
+          />
         </div>
       </CardContent>
     </Card>

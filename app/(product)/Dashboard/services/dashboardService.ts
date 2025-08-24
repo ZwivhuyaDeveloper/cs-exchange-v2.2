@@ -1,4 +1,5 @@
 import { useQuery, useQueries, UseQueryResult } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { useState, useEffect } from 'react';
 import {
   TokenMetadata,
@@ -225,9 +226,33 @@ function transformOrderData(rawData: any, source: DataSource = 'coingecko', symb
 async function fetchTokenMetadata(symbol: string, chainId: number = 1): Promise<TokenMetadata[]> {
   const response = await fetch(`${API_ENDPOINTS.tokenMetadata}?symbols=${symbol}&chainId=${chainId}`);
   if (!response.ok) {
-    throw new Error(`Failed to fetch token metadata: ${response.status}`);
+    throw new Error(`Failed to fetch token metadata: ${response.statusText}`);
   }
   return response.json();
+}
+
+export async function fetchVolumeData(coingeckoId: string): Promise<VolumeData[]> {
+  if (!coingeckoId) throw new Error('Token not supported');
+  
+  try {
+    const data = await fetchCoinGeckoData('tickers', coingeckoId);
+    return transformVolumeData(data);
+  } catch (error) {
+    console.error('Error fetching volume data:', error);
+    throw error;
+  }
+}
+
+export async function fetchLiquidityData(coingeckoId: string): Promise<LiquidityData[]> {
+  if (!coingeckoId) throw new Error('Token not supported');
+  
+  try {
+    const data = await fetchCoinGeckoData('tickers', coingeckoId);
+    return transformLiquidityData(data);
+  } catch (error) {
+    console.error('Error fetching liquidity data:', error);
+    throw error;
+  }
 }
 
 async function fetchCoinGeckoData(action: string, coingeckoId: string): Promise<any> {
@@ -342,12 +367,11 @@ export function useDashboardData(tokenSymbol: string, chainId: number = 1) {
 
   const liquidityDataQuery = useQuery({
     queryKey: ['liquidityData', coingeckoId],
-    queryFn: () => fetchCoinGeckoData('liquidity-data', coingeckoId!),
+    queryFn: () => fetchLiquidityData(coingeckoId!),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 15 * 60 * 1000, // 15 minutes
     retry: 3,
     enabled: !!coingeckoId,
-    select: transformLiquidityData,
   });
 
   const technicalSpecsQuery = useQuery({
@@ -520,19 +544,133 @@ export function useOrderData(tokenSymbol: string, chainId: number = 1) {
   };
 }
 
-export function useVolumeData(tokenSymbol: string, chainId: number = 1) {
-  const { volumeData, isLoading, error } = useDashboardData(tokenSymbol, chainId);
-  return { volumeData, isLoading, error };
+interface VolumeDataResult {
+  volumeData: VolumeData[];
+  token: TokenMetadata | null;
+  isLoading: boolean;
+  error: Error | null;
+  refetch: () => void;
 }
 
-export function useLiquidityData(tokenSymbol: string, chainId: number = 1) {
-  const { liquidityData, isLoading, error } = useDashboardData(tokenSymbol, chainId);
-  return { liquidityData, isLoading, error };
+export function useVolumeData(tokenSymbol: string, chainId: number = 1): VolumeDataResult {
+  const { token, isLoading: isTokenLoading, error: tokenError } = useTokenMetadata(tokenSymbol, chainId);
+  const coingeckoId = token?.coingeckoId || '';
+
+  const queryResult = useQuery<VolumeData[], Error>({
+    queryKey: ['volumeData', coingeckoId, chainId],
+    queryFn: () => fetchVolumeData(coingeckoId),
+    enabled: !!coingeckoId,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 5 * 60 * 1000, // 5 minutes
+    retry: 2
+  });
+
+  // Convert string errors to Error objects
+  const error = tokenError 
+    ? new Error(typeof tokenError === 'string' ? tokenError : 'Failed to fetch token metadata')
+    : queryResult.error || null;
+
+  return {
+    volumeData: queryResult.data || [],
+    token: token || null,
+    isLoading: isTokenLoading || queryResult.isLoading,
+    error,
+    refetch: queryResult.refetch
+  };
 }
 
-export function useTechnicalSpecs(tokenSymbol: string, chainId: number = 1) {
-  const { technicalSpecs, isLoading, error } = useDashboardData(tokenSymbol, chainId);
-  return { technicalSpecs, isLoading, error };
+interface LiquidityDataResult {
+  liquidityData: LiquidityData[];
+  token: TokenMetadata | null;
+}
+
+export const useLiquidityData = (tokenSymbol: string, chainId: number = 1) => {
+  const { token, isLoading: isMetadataLoading, error: metadataError } = useTokenMetadata(tokenSymbol, chainId);
+  const coingeckoId = token?.coingeckoId;
+
+  const queryResult = useQuery<LiquidityDataResult, Error>({
+    queryKey: ['liquidityData', tokenSymbol, chainId],
+    queryFn: async () => {
+      if (!coingeckoId) {
+        throw new Error('CoinGecko ID not found for token');
+      }
+      const liquidityData = await fetchLiquidityData(coingeckoId);
+      return { liquidityData, token };
+    },
+    enabled: !!coingeckoId && !isMetadataLoading && !metadataError,
+    staleTime: 5 * 60 * 1000, // 5 minutes
+    refetchInterval: 5 * 60 * 1000, // 5 minutes
+    retry: 2
+  });
+
+  return {
+    ...queryResult,
+    data: queryResult.data?.liquidityData,
+    token: token || null, // Use the token from the hook's scope, not from queryResult.data
+  };
+}
+
+
+export async function fetchTechnicalSpecs(coingeckoId: string): Promise<TechnicalSpecsData> {
+  if (!coingeckoId) throw new Error('Token not supported');
+  const apiKey = process.env.NEXT_PUBLIC_COINGECKO_API_KEY;
+  const headers: HeadersInit = {};
+  if (apiKey) headers["x-cg-demo-api-key"] = apiKey;
+  const res = await fetch(`https://api.coingecko.com/api/v3/coins/${coingeckoId}`, { headers });
+  if (!res.ok) {
+    throw new Error(`Failed to fetch technical data: ${res.status} ${res.statusText}`);
+  }
+  const data = await res.json();
+  const platforms = data.platforms ? Object.entries(data.platforms) : [];
+  const foundAddress = platforms.find(([_, addr]) => typeof addr === "string" && addr);
+  const tokenAddress = typeof foundAddress?.[1] === "string" ? foundAddress[1] : 'N/A';
+  return {
+    marketCapRank: data.market_cap_rank,
+    hashingAlgorithm: data.hashing_algorithm || 'N/A',
+    blockTime: data.block_time_in_minutes,
+    genesisDate: data.genesis_date ? new Date(data.genesis_date).toLocaleDateString() : 'N/A',
+    tokenAddress,
+    categories: data.categories || [],
+    description: data.description?.en || 'No description available'
+  };
+}
+
+interface TechnicalSpecsResult {
+  technicalSpecs: TechnicalSpecsData | null;
+  token: TokenMetadata | null;
+  isLoading: boolean;
+  error: Error | null;
+  refetch: () => void;
+}
+
+export function useTechnicalSpecs(tokenSymbol: string, chainId: number = 1): TechnicalSpecsResult {
+  const { token, isLoading: isTokenLoading, error: tokenError } = useTokenMetadata(tokenSymbol, chainId);
+  const coingeckoId = token?.coingeckoId || '';
+  
+  const { data, isLoading, error, refetch } = useQuery<TechnicalSpecsData, Error>({
+    queryKey: ['technicalSpecs', coingeckoId, chainId],
+    queryFn: () => fetchTechnicalSpecs(coingeckoId),
+    enabled: !!coingeckoId,
+    staleTime: 60 * 60 * 1000, // 1 hour
+    retry: 2
+  });
+
+  // Convert errors to a consistent Error type
+  const normalizedError = useMemo(() => {
+    const err = tokenError || error;
+    if (!err) return null;
+    if (err instanceof Error) return err;
+    if (typeof err === 'string') return new Error(err);
+    return new Error('An unknown error occurred');
+  }, [tokenError, error]);
+
+  return {
+    technicalSpecs: data || null,
+    token: token || null,
+    isLoading: isTokenLoading || isLoading,
+    error: normalizedError,
+    refetch
+  };
 }
 
 // ============================================================================
